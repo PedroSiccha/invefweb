@@ -8,6 +8,7 @@ use App\Desembolso;
 use App\Prestamo;
 use App\Movimiento;
 use App\Caja;
+use App\proceso;
 
 class DesembolsoController extends Controller
 {
@@ -73,7 +74,9 @@ class DesembolsoController extends Controller
         $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto 
                 FROM caja 
                 WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
-        $nuevoMonto = $maxCaja[0]->monto - $prestamo[0]->monto;
+
+        $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $prestamo[0]->monto, 1);
+        //$nuevoMonto = $maxCaja[0]->monto - $prestamo[0]->monto;
 
         if ($desm[0]->id == null) {
             $numero = "1";  

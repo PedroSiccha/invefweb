@@ -54,6 +54,17 @@ class proceso extends Model
         $lafecha=$mifecha[3]."/".$mifecha[2]."/".$mifecha[1];
         return $lafecha;
     }
+
+    public static function actualizarCaja($caja, $monto, $operacion )
+    {
+        $actualizar = 0;
+        if ($operacion == 1) { //Desembolso
+            
+            $actualizar = (FLOAT)$caja - (FLOAT)$monto;
+        }
+
+        return $actualizar;
+    }
 }
     
 
