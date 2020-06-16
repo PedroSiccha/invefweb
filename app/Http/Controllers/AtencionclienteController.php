@@ -324,7 +324,7 @@ class AtencionclienteController extends Controller
                                          WHERE c.tipoprestamo_id = tp.id AND c.garantia_id = g.id AND c.empleado_id = e.id AND c.estado = "PRESTAMO" AND c.cliente_id = "'.$id.'"');
                                          
                                          
-
+ 
         $tipoPrestamo = \DB::SELECT('SELECT * FROM tipoprestamo'); 
         $tipoGarantia = \DB::SELECT('SELECT * FROM tipogarantia WHERE detalle != "tj"');
         $tipoJoya = \DB::SELECT('SELECT * FROM tipogarantia WHERE detalle != "tp"');
@@ -343,7 +343,7 @@ class AtencionclienteController extends Controller
         
         
         
-        return view('atencioncliente.perfil', compact('cliente', 'cantCotizacion', 'cantCotPendiente', 'cantCotAceptadas', 'cantPrestamo', 'cantPrePendiente', 'cantPreAceptadas', 'prestamo', 'cotizacion', 'cotizacion', 'listCotizaciones', 'tipoPrestamo', 'tipoGarantia', 'tipoJoya', 'almacen', 'distrito', 'provincia', 'departamento', 'ocupacion', 'tipoDocumento', 'usuario', 'notificacion', 'cantNotificaciones', 'hPrestamo'));
+        return view('atencioncliente.perfil', compact('cliente', 'cantPrestamo', 'cantPrePendiente', 'cantPreAceptadas', 'prestamo', 'cotizacion', 'cotizacion', 'listCotizaciones', 'tipoPrestamo', 'tipoGarantia', 'tipoJoya', 'almacen', 'distrito', 'provincia', 'departamento', 'ocupacion', 'tipoDocumento', 'usuario', 'notificacion', 'cantNotificaciones', 'hPrestamo'));
     }
 
     
@@ -493,9 +493,18 @@ class AtencionclienteController extends Controller
     {
         $prestamo_id = $request->id;
 
-        $notificacion = \DB::SELECT('SELECT d.* 
+        $prestamo = \DB::SELECT('SELECT cotizacion_id FROM prestamo WHERE id = "'.$prestamo_id.'"');
+
+        $cotizacion = \DB::SELECT('SELECT id FROM prestamo WHERE cotizacion_id = "'.$prestamo[0]->cotizacion_id.'"');
+
+        foreach ($cotizacion as $c) {
+
+            $notificacion = \DB::SELECT('SELECT d.* 
                                      FROM prestamo_documento pd, documento d
-                                     WHERE pd.documento_id = d.id AND pd.prestamo_id = "'.$prestamo_id.'"');
+                                     WHERE pd.documento_id = d.id AND pd.prestamo_id = "'.$c->id.'"');
+        }
+
+       // dd($notificacion);
 
         return response()->json(["view"=>view('atencioncliente.verNotifi', compact('notificacion'))->render()]);
 
