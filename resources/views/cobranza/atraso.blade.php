@@ -31,7 +31,7 @@
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Cod.Prestamo</th>
+                                                <th>Cod.</th>
                                                 <th>Nombres</th>
                                                 <th>DNI</th>
                                                 <th>Garantía</th>
@@ -48,7 +48,7 @@
                                             @foreach ($listAtrasos as $la)
                                                 <tr>
                                                     <td>{{ $la->prestamo_id }}</td>
-                                                    <td>{{ $la->nombre }} {{ $la->apellido }}</td>
+                                                    <td><a href="{{ Route('perfilCliente', [$la->cliente_id]) }}">{{ $la->nombre }} {{ $la->apellido }}</a></td>
                                                     <td>{{ $la->dni }}</td>
                                                     <td>{{ $la->garantia }}</td>
                                                     <td>{{ $la->fecfin }}</td>

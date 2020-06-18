@@ -68,7 +68,7 @@
 
                                                 <tr>
                                                     <td>{{ $pr->prestamo_id }}</td>
-                                                    <td>{{ $pr->nombre }} {{ $pr->apellido }}</td>
+                                                    <td><a href="{{ Route('perfilCliente', [$pr->cliente_id]) }}">{{ $pr->nombre }} {{ $pr->apellido }}</a></td>
                                                     <td>{{ cambiaf_a_espanol($pr->fecfin) }}</td>
                                                     <td>{{$dias}} días</td>
                                                     <td>S/. {{ $pr->monto }}</td>

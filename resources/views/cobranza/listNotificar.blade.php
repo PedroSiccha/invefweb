@@ -94,7 +94,7 @@ $pro = new proceso();
         ?>
             <tr  class="{{ $color }}" >
                 <td>{{ $ln->prestamo_id }}</td>
-                <td>{{ $ln->nombre }} {{ $ln->apellido }}</td>
+                <td><a href="{{ Route('perfilCliente', [$ln->cliente_id]) }}">{{ $ln->nombre }} {{ $ln->apellido }}</a></td>
                 <td>{{ $ln->dni }}</td> 
                 <td>{{ $ln->garantia }}</td>
                 <td>{{ cambiaf_a_espanol($ln->fecfin) }}</td>

@@ -44,7 +44,7 @@
                                             @foreach ($listLiquidacion as $ll)
                                             <tr>
                                                 <td>{{ $ll->prestamo_id }}</td>
-                                                <td>{{ $ll->nombre }}{{ $ll->apellido }}</td>
+                                                <td><a href="{{ Route('perfilCliente', [$ll->cliente_id]) }}">{{ $ll->nombre }}{{ $ll->apellido }}</a></td>
                                                 <td>{{ $ll->dni }}</td>
                                                 <td>{{ $ll->garantia }}</td>
                                                 <td>{{ $ll->monto }}</td>

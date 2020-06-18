@@ -31,7 +31,7 @@
                                     <table class="table table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Cod.Prestamo</th>
+                                                <th>Cod.</th>
                                                 <th>Nombres</th>
                                                 <th>DNI</th>
                                                 <th>Garantía</th>
@@ -85,7 +85,7 @@
 
                                                 <tr>
                                                     <td>{{ $pr->prestamo_id }}</td>
-                                                    <td>{{ $pr->nombre }} {{ $pr->apellido }}</td>
+                                                    <td><a href="{{ Route('perfilCliente', [$pr->cliente_id]) }}">{{ $pr->nombre }} {{ $pr->apellido }}</a></td>
                                                     <td>{{ $pr->dni }}</td>
                                                     <td>{{ $pr->garantia }}</td>
                                                     <td>{{ $pr->fecinicio }}</td>

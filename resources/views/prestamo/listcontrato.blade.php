@@ -31,19 +31,19 @@
                 <table class="footable table table-stripped toggle-arrow-tiny">
                     <thead>
                     <tr>
-                        <th data-toggle="true">Código de Préstamo</th>
+                        <th data-toggle="true">Cód</th>
                         <th>Nombres</th>
                         <th>DNI</th>
                         <th>Garantia</th>
                         <th>Fecha de Inicio</th>
                         <th>Action</th>
-                    </tr>
+                    </tr> 
                     </thead>
                     <tbody>
                     @foreach ($prestamo as $pr)
                         <tr>
                             <td>{{ $pr->prestamo_id }}</td>
-                            <td>{{ $pr->nombre }} {{ $pr->apellido }}</td>
+                            <td><a href="{{ Route('perfilCliente', [$pr->cliente_id]) }}">{{ $pr->nombre }} {{ $pr->apellido }}</a></td>
                             <td>{{ $pr->dni }}</td>
                             <td>{{ $pr->garantia }}</td>
                             <td>{{ $pr->fecinicio }}</td>

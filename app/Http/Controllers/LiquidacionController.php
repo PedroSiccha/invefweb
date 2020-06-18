@@ -35,7 +35,7 @@ class LiquidacionController extends Controller
             $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
         }
 
-        $listLiquidacion = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.monto, p.intpagar*2 AS interes, m.mora*15 AS mora, p.monto+m.mora*15+p.intpagar*2 AS total
+        $listLiquidacion = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.monto, p.intpagar*2 AS interes, m.mora*15 AS mora, p.monto+m.mora*15+p.intpagar*2 AS total, cl.id AS cliente_id
                                          FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
                                          WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "LIQUIDACION"');
 

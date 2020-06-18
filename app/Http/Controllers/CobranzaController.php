@@ -40,7 +40,7 @@ class CobranzaController extends Controller
             $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
         }
 
-        $listAtrasos = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio
+        $listAtrasos = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
                                       WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 30 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id');
 
@@ -195,7 +195,7 @@ class CobranzaController extends Controller
 
         $listTipoArch = \DB::SELECT('SELECT * FROM tipodocumento');
 
-        $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje
+        $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
                                       WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id 
                                       ORDER BY p.fecfin ASC');
@@ -228,7 +228,7 @@ class CobranzaController extends Controller
     {
         $dato = $request->datoCliente; 
         
-        $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje
+        $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
                                       WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id  AND (cl.nombre LIKE "%'.$dato.'%" OR cl.apellido LIKE "%'.$dato.'%" OR cl.dni LIKE "%'.$dato.'%") ORDER BY p.fecfin ASC');
 
