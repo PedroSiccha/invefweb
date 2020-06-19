@@ -65,15 +65,15 @@ class DesembolsoController extends Controller
                                  FROM tipocaja 
                                  WHERE tipo = "caja chica"');
         $caja = \DB::SELECT('SELECT MAX(id) AS id 
-                FROM caja 
-                WHERE estado = "ABIERTA" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
+                             FROM caja 
+                             WHERE estado = "ABIERTA" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
         $garantia = \DB::SELECT('SELECT g.* FROM prestamo p
                     INNER JOIN cotizacion c ON p.cotizacion_id = c.id
                     INNER JOIN garantia g ON c.garantia_id = g.id
                     WHERE p.id = "'.$request->id.'"');
-        $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto 
-                FROM caja 
-                WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
+        $maxCaja = \DB::SELECT('SELECT id, monto 
+                                FROM caja 
+                                WHERE id = "'.$caja[0]->id.'"');
 
         $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $prestamo[0]->monto, 1);
         //$nuevoMonto = $maxCaja[0]->monto - $prestamo[0]->monto;

@@ -463,6 +463,7 @@ class PrestamoController extends Controller
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, cl.id AS cliente_id, p.fecinicio
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g
                                  WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id');
+
         return view('prestamo.listcontrato', compact('prestamo', 'usuario', 'notificacion', 'cantNotificaciones'));
     }
 
@@ -638,14 +639,14 @@ class PrestamoController extends Controller
     {
         $idContrato = \DB::SELECT('SELECT MAX(id) AS id FROM prestamo');
 
-        $contrato = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, CONCAT(d.direccion, " - ", di.distrito, " - ", pr.provincia, " - ", de.departamento) AS direccion, p.monto, p.fecfin, p.total, g.nombre AS garantia, g.detalle AS detgarantia, m.mora AS mora, p.intpagar
+        $contrato = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, CONCAT(d.direccion, " - ", di.distrito, " - ", pr.provincia, " - ", de.departamento) AS direccion, p.monto, p.fecfin, p.total, g.nombre AS garantia, g.detalle AS detgarantia, m.mora AS mora, p.intpagar 
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, direccion d, distrito di, provincia pr, departamento de
                                  WHERE c.cliente_id = cl.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.cotizacion_id = c.id AND cl.direccion_id = d.id AND d.distrito_id = di.id AND di.provincia_id = pr.id AND pr.departamento_id = de.id AND p.id = "'.$idContrato[0]->id.'"');
 
         return view('prestamo.printContrato', compact('contrato'));
     }
 
-    public function buscarClienteContrato(Request $request)
+    public function buscarClienteContrato(Request $request) 
     {
 
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, cl.id AS cliente_id, p.fecinicio
@@ -675,7 +676,7 @@ class PrestamoController extends Controller
     public function imprimirContrato($id)
     {
 
-        $contrato = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, CONCAT(d.direccion, " - ", di.distrito, " - ", pr.provincia, " - ", de.departamento) AS direccion, p.monto, p.fecfin, p.total, g.nombre AS garantia, g.detalle AS detgarantia, m.mora AS mora
+        $contrato = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, CONCAT(d.direccion, " - ", di.distrito, " - ", pr.provincia, " - ", de.departamento) AS direccion, p.monto, p.fecfin, p.total, g.nombre AS garantia, g.detalle AS detgarantia, m.mora AS mora, p.intpagar
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, direccion d, distrito di, provincia pr, departamento de
                                  WHERE c.cliente_id = cl.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.cotizacion_id = c.id AND cl.direccion_id = d.id AND d.distrito_id = di.id AND di.provincia_id = pr.id AND pr.departamento_id = de.id AND p.id = "'.$id.'"');
 
