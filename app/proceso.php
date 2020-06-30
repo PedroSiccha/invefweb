@@ -61,10 +61,17 @@ class proceso extends Model
         if ($operacion == 1) { //Desembolso
             
             $actualizar = (FLOAT)$caja - (FLOAT)$monto;
+
+        }elseif ($operacion == 2) {
+
+            $actualizar = (FLOAT)$caja + (FLOAT)$monto;
+
         }
 
         return $actualizar;
     }
+
+    
 }
     
 

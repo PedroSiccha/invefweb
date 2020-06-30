@@ -11,6 +11,8 @@ use App\Casillero;
 use App\Notificacion;
 use App\PrestamoDocumento;
 use App\Documento;
+use App\proceso;
+use App\Cliente;
 use Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -338,23 +340,31 @@ class CobranzaController extends Controller
                                  FROM prestamo p
                                  WHERE p.id = "'.$idPrestamo.'"');
 
-        $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
-
-        $caja = \DB::SELECT('SELECT id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
+        $tipocaja = \DB::SELECT('SELECT * 
+                                 FROM tipocaja 
+                                 WHERE tipo = "caja chica"');
+        $caja = \DB::SELECT('SELECT MAX(id) AS id 
+                             FROM caja 
+                             WHERE estado = "ABIERTA" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
 
         $users_id = Auth::user()->id;
         $empleado = \DB::SELECT('SELECT e.id AS id FROM empleado e WHERE e.users_id = "'.$users_id.'"');
         $empleado_id = $empleado[0]->id;
-
-        $caja = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "ABIERTA" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
 
         $garantia = \DB::SELECT('SELECT g.* FROM prestamo p
                                  INNER JOIN cotizacion c ON p.cotizacion_id = c.id
                                  INNER JOIN garantia g ON c.garantia_id = g.id
                                  WHERE p.id = "'.$idPrestamo.'"');
 
-
         $totalPago = $mora + $interes + $monto;
+
+        $maxCaja = \DB::SELECT('SELECT id, monto 
+                                FROM caja 
+                                WHERE id = "'.$caja[0]->id.'"');
+
+        $cliente = \DB::SELECT('SELECT cl.id AS cliente_id, cl.evaluacion
+                                FROM prestamo p, cotizacion c, cliente cl
+                                WHERE p.cotizacion_id = c.id AND cl.id = c.cliente_id AND p.id = "'.$idPrestamo.'"');
 
         if ($pago == $totalPago) {
             
@@ -401,16 +411,28 @@ class CobranzaController extends Controller
                             
                         $cas = Casillero::where('id', '=',  $garantia_casillero[0]->casillero_id)->first();
                         $cas->estado = "RECOGER";
-                        if ($cas->save()) {
+                        if ($cas->save()) { 
 
                             $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
                             $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
-
-                            $nuevoMonto = $maxCaja[0]->monto + $pago;
+                            
+                            $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $pago, 2);
 
                             $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
                             $caja->monto = $nuevoMonto;
-                            $caja->save();
+                            if ($caja->save()) {
+
+                                $nuevaEvaluacio = $cliente[0]->evaluacion + 20;
+
+                                if ( $nuevaEvaluacio >= 100) {
+                                    $nuevaEvaluacio = 100;
+                                }
+                                
+                                $cli = Cliente::where('id', '=', $cliente[0]->cliente_id)->first();
+                                $cli->evaluacion = $nuevaEvaluacio;
+                                $cli->save();
+
+                            }
                         }
 /*
                         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar
@@ -474,11 +496,23 @@ class CobranzaController extends Controller
                             $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
                             $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
 
-                            $nuevoMonto = $maxCaja[0]->monto + $pago;
+                            $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $pago, 2);
 
                             $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
                             $caja->monto = $nuevoMonto;
-                            $caja->save();
+                            if ($caja->save()) {
+                                
+                                $nuevaEvaluacio = $cliente[0]->evaluacion + 10;
+
+                                if ( $nuevaEvaluacio >= 100) {
+                                    $nuevaEvaluacio = 100;
+                                }
+
+                                $cli = Cliente::where('id', '=', $cliente[0]->cliente_id)->first();
+                                $cli->evaluacion = $nuevaEvaluacio;
+                                $cli->save();
+                                
+                            }
 
                     /*    $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar
                                                     FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
@@ -537,6 +571,10 @@ class CobranzaController extends Controller
         $nuevaFechaInicio = date("Y-m-d", strtotime($fechaInicio."+ 1 month"));
         $fechaFin = $prestamo[0]->fecfin;
         $nuevaFechaFin = date("Y-m-d", strtotime($fechaFin."+1 month"));
+
+        $cliente = \DB::SELECT('SELECT cl.id AS cliente_id, cl.evaluacion
+                                FROM prestamo p, cotizacion c, cliente cl
+                                WHERE p.cotizacion_id = c.id AND cl.id = c.cliente_id AND p.id = "'.$idPrestamo.'"');
 
 
 
@@ -597,13 +635,29 @@ class CobranzaController extends Controller
                         $mov->moraPagar = $mora;
                         $mov->caja_id = $caja[0]->id;
                         if ($mov->save()) {
+
+                            $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
+                            $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
                             
-                            $nuevoMonto = $caja[0]->monto + $pago;
+                            $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $pago, 2);
 
                             $caja = Caja::where('id', '=', $caja[0]->id)->first();
                             $caja->monto = $nuevoMonto;
+
                             if ($caja->save()) {
-                                $aux = "1";
+
+                                $nuevaEvaluacio = $cliente[0]->evaluacion + 5;
+
+                                if ( $nuevaEvaluacio >= 100) {
+                                    $nuevaEvaluacio = 100;
+                                }
+                                
+                                $cli = Cliente::where('id', '=', $cliente[0]->cliente_id)->first();
+                                $cli->evaluacion = $nuevaEvaluacio;
+                                $cli->save();
+
+                                $aux = 1;
+
                             }
                         }
                     }
@@ -668,12 +722,26 @@ class CobranzaController extends Controller
                         $mov->moraPagar = $mora;
                         $mov->caja_id = $caja[0]->id;
                         if ($mov->save()) {
+
+                            $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
+                            $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
                             
-                            $nuevoMonto = $caja[0]->monto + $pago;
+                            $nuevoMonto = proceso::actualizarCaja($maxCaja[0]->monto, $pago, 2);
 
                             $caja = Caja::where('id', '=', $caja[0]->id)->first();
                             $caja->monto = $nuevoMonto;
                             if ($caja->save()) {
+
+                                $nuevaEvaluacio = $cliente[0]->evaluacion + 5;
+
+                                if ( $nuevaEvaluacio >= 100) {
+                                    $nuevaEvaluacio = 100;
+                                }
+                                
+                                $cli = Cliente::where('id', '=', $cliente[0]->cliente_id)->first();
+                                $cli->evaluacion = $nuevaEvaluacio;
+                                $cli->save();
+                                
                                 $aux = "1";
                             }
                         }
