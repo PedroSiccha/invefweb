@@ -102,7 +102,8 @@ class CobranzaController extends Controller
 
         $ingreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                 FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA"');//Muestra los ingresos de la caja abierta actualmente
+                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA"
+                                ORDER BY m.created_at DESC');//Muestra los ingresos de la caja abierta actualmente
 
         $cantIngreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                     FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
@@ -114,7 +115,8 @@ class CobranzaController extends Controller
 
         $egreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA"');//Muestra los egresos de la caja abierta actualmente
+                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA"
+                               ORDER BY m.created_at DESC');//Muestra los egresos de la caja abierta actualmente
 
         $cantEgreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                    FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
@@ -143,7 +145,7 @@ class CobranzaController extends Controller
                                  WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "CERRADA" AND caja_id = "'.$id.'"');//Muestra los egresos de la caja abierta actualmente
 
         return response()->json(["view"=>view('cobranza.divDetalleCaja',compact('ingresoCd', 'egresoCd'))->render()]);
-    }
+    } 
 
     public function buscarFechaDiaCaja(Request $request){
         $FechaInicio = $request->FechaInicio;
@@ -945,7 +947,7 @@ class CobranzaController extends Controller
                     $mov->serie = $serie;
                     $mov->estado = "ACTIVO";
                     $mov->monto = $pago;
-                    $mov->concepto = "DEPOSITO CANCELACIÓN ".$idPrestamo;
+                    $mov->concepto = "DEPOSITO CANCELACIÓN ".$idPrestamo; 
                     $mov->tipo = "INGRESO";
                     $mov->empleado = $empleado_id;
                     $mov->importe = $pago;

@@ -51,7 +51,14 @@
                                     <td>{{ $e->unidad }}</td>
                                     <td>{{ $e->nombre }} {{ $e->marca }}</td>
                                     <td>{{ $e->valor }}</td>
-                                    <td>@mdo</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning" onclick="editarInventario('{{ $e->idinventario }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="bajaInventario('{{ $e->idinventario }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -377,6 +384,104 @@
         </div>
     </div>
 </div>
+
+<div class="modal inmodal fade" id="editInventario" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">INVENTARIO</h4>
+                <small class="font-bold">Registrar Nuevo.</small>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Nombre</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Nombre" class="form-control" id="nombreE">
+                            <input type="text" placeholder="Nombre" class="form-control" id="idE" hidden>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Marca</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Marca" class="form-control" id="marcaE">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Unidad</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Cantidad de Muebles" class="form-control" id="unidadE">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Valor</label>
+                        <div class="input-group m-b col-sm-9">
+                            <div class="input-group-prepend">
+                                <span class="input-group-addon">S/.</span>
+                            </div>
+                            <input type="text" placeholder="Valor por Unidad" class="form-control" id="valorE">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="editarPatrimonio()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="elimInventario" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">INVENTARIO</h4>
+                <small class="font-bold">Registrar Nuevo.</small>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Nombre</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Nombre" class="form-control" id="nombreEl" readonly>
+                            <input type="text" placeholder="Nombre" class="form-control" id="idEl" hidden>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Marca</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Marca" class="form-control" id="marcaEl" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Unidad</label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Cantidad de Muebles" class="form-control" id="unidadEl">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 form-group row">
+                        <label class="col-sm-3 col-form-label">Valor</label>
+                        <div class="input-group m-b col-sm-9">
+                            <div class="input-group-prepend">
+                                <span class="input-group-addon">S/.</span>
+                            </div>
+                            <input type="text" placeholder="Valor por Unidad" class="form-control" id="valorEl" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="eliminPatrimonio()">ACEPTAR</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
     <script>
@@ -409,6 +514,26 @@
 
         function nuevoInventario() {
             $('#nuevoInventario').modal('show');
+
+            
+        }
+
+        function editarInventario(id, unidad, nombre, marca, valor){
+            $('#editInventario').modal('show');
+            $('#idE').val(id);
+            $('#unidadE').val(unidad);
+            $('#nombreE').val(nombre);
+            $('#marcaE').val(marca);
+            $('#valorE').val(valor);
+        }
+
+        function bajaInventario(id, unidad, nombre, marca, valor){
+            $('#elimInventario').modal('show');
+            $('#idEl').val(id);
+            $('#unidadEl').val(unidad);
+            $('#nombreEl').val(nombre);
+            $('#marcaEl').val(marca);
+            $('#valorEl').val(valor);
         }
 
         function guardarPatrimonio() {

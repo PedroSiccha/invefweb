@@ -517,7 +517,13 @@ class AdministracionController extends Controller
         $user = Auth::user()->id;
         $empleado = \DB::SELECT('SELECT id FROM empleado WHERE users_id = "'.$user.'"');
 
-        $caja = \DB::SELECT('SELECT MAX(c.id) AS id FROM caja c, tipocaja tc WHERE c.tipocaja_id = tc.id AND c.estado = "abierta" AND tc.codigo = "CC"');
+        $caja = \DB::SELECT('SELECT MAX(c.id) AS id 
+                             FROM caja c, tipocaja tc 
+                             WHERE c.tipocaja_id = tc.id AND c.estado = "abierta" AND tc.codigo = "CC"');
+
+        $cajaM = \DB::SELECT('SELECT monto FROM caja WHERE id = "'.$caja[0]->id.'"');
+
+        $actualizarCaja = $cajaM[0]->monto - $monto;
 
         $mov = new Movimiento();
         $mov->estado = "ACTIVO";
@@ -535,7 +541,17 @@ class AdministracionController extends Controller
         $mov->garantia = "";
 
         if ($mov->save()) {
-            $resp = "1";            
+
+            $caja = Caja::where('id', '=', $caja[0]->id)->first();
+            $caja->fecha = date('d-m-Y');
+            $caja->inicio = date('H:i:s');
+            $caja->fin = date('H:i:s');
+            $caja->monto = $actualizarCaja;
+            if ($caja->save()) {
+                $resp = "1";
+            }
+
+                       
         }
 
         $cajaChica = \DB::SELECT('SELECT * 
@@ -548,15 +564,20 @@ class AdministracionController extends Controller
     public function guardarGastosCG(Request $request)
     {
         $user = Auth::user()->id;
-        $cajaG = \DB::SELECT('SELECT MAX(id) AS id, montofin 
-                             FROM caja 
-                             WHERE tipocaja_id = "2"');
+        $cajaG = \DB::SELECT('SELECT MAX(id) AS id 
+                              FROM caja 
+                              WHERE tipocaja_id = "2"');
+
+        $cm = \DB::SELECT('SELECT monto
+                           FROM caja
+                           WHERE id = "'.$cajaG[0]->id.'"');
+
         $rec=$request->recibo;
         $nomRec = $request->conceptoCG;
         $comprobante = $request->comprobanteCG;
         $monto = $request->montoCG;
         $concepto = $request->garantiaCG;
-        $actualizarCaja = $cajaG[0]->montofin - $monto;
+        $actualizarCaja = $cm[0]->monto - $monto;
         $subido="";
         $urlGuardar="";
 
@@ -601,7 +622,7 @@ class AdministracionController extends Controller
             if ($mov->save()) {
                 
                 $caja = Caja::where('id', '=', $cajaG[0]->id)->first();
-                $caja->monto = $cajaG[0]->montofin;
+                $caja->monto = $actualizarCaja;
                 $caja->fecha = date('d-m-Y');
                 $caja->inicio = date('H:i:s');
                 $caja->fin = date('H:i:s');
@@ -667,7 +688,7 @@ class AdministracionController extends Controller
                                 FROM caja c
                                 LEFT JOIN sede s ON c.sede_id = s.id
                                 INNER JOIN tipocaja tc ON tc.id = c.tipocaja_id
-                                GROUP BY c.tipocaja_id');
+                                WHERE c.estado = "abierta"');
 
         return view('administracion.gestionCapital', compact('usuario', 'sede', 'listCaja', 'capital', 'notificacion', 'cantNotificaciones'));
     }
