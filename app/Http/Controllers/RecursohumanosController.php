@@ -68,8 +68,12 @@ class RecursohumanosController extends Controller
 
         $tipoUsuario = \DB::SELECT('SELECT * FROM rol');
 
+        $sede = \DB::SELECT('SELECT s.id, s.nombre, d.direccion, di.distrito  
+                             FROM sede s, direccion d, distrito di
+                             WHERE s.direccion_id = d.id AND d.distrito_id = di.id');
 
-        return view('rrhh.empleado', compact('empleado', 'usuario', 'tipodocumento', 'turno', 'planilla', 'distrito', 'provincia', 'departamento', 'tipoUsuario', 'notificacion', 'cantNotificaciones'));
+
+        return view('rrhh.empleado', compact('empleado', 'usuario', 'tipodocumento', 'turno', 'planilla', 'distrito', 'provincia', 'departamento', 'tipoUsuario', 'notificacion', 'cantNotificaciones', 'sede'));
     }
 
     public function baja(Request $request)
@@ -369,7 +373,8 @@ class RecursohumanosController extends Controller
                     $emp->valoracion = "100";
                     $emp->users_id = $users[0]->id;
                     $emp->foto = $urlGuardar;
-                    if ($emp->save()) {
+                    $emp->sede_id = $request->sede_id;
+                    if ($emp->save()) { 
 
                         $userRol = new RoleUser();
                         $userRol->estado = "1";

@@ -202,6 +202,15 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label>Asignar Sede</label> 
+                                                    <select class="form-control m-b" name="sede_id" id="sede_id">
+                                                        <option>Asignar a una sede...</option>
+                                                        @foreach ($sede as $s)
+                                                            <option value="{{ $s->id }}">{{ $s->nombre }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div>
                                                 <button class="btn btn-sm btn-primary float-right m-t-n-xs" type="submit"><strong>Guardar</strong></button>
@@ -288,7 +297,7 @@
             }else{
                 var genero = "Femenino";
             }
-            
+             
             if (nombreform == "fempleado") {
                 var miurl = "{{ Route('guardarEmpleado') }}";
             }

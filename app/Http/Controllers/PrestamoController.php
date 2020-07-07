@@ -437,7 +437,7 @@ class PrestamoController extends Controller
 
         $garantia = \DB::SELECT('SELECT p.id AS prestamo_id, g.id AS garantia_id, g.nombre AS garantia, g.detalle AS detgarantia, CONCAT(ca.nombre, " - ", s.nombre, " - ", a.nombre) AS casillero, ca.estado
                                  FROM garantia g, cotizacion c, prestamo p, casillero ca, stand s, almacen a, garantia_casillero ga
-                                 WHERE c.garantia_id = g.id AND p.cotizacion_id = c.id AND ga.garantia_id = g.id AND ga.casillero_id = ca.id AND ca.Stand_id = s.id AND s.Almacen_id = a.id AND ca.estado != "LIBRE"');
+                                 WHERE c.garantia_id = g.id AND p.cotizacion_id = c.id AND ga.garantia_id = g.id AND ga.casillero_id = ca.id AND ca.Stand_id = s.id AND s.Almacen_id = a.id AND ca.estado != "LIBRE" AND p.sede_id = "'.$usuario[0]->sede.'"');
         return view('prestamo.garantia', compact('garantia', 'usuario', 'notificacion', 'cantNotificaciones'));
     }
 
@@ -462,7 +462,7 @@ class PrestamoController extends Controller
 
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, cl.id AS cliente_id, p.fecinicio
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g
-                                 WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id');
+                                 WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND p.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('prestamo.listcontrato', compact('prestamo', 'usuario', 'notificacion', 'cantNotificaciones'));
     }

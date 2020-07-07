@@ -38,7 +38,7 @@ class DesembolsoController extends Controller
 
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, p.created_at, cl.id AS cliente_id
                                  FROM prestamo p, cotizacion c, cliente cl
-                                 WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND p.estado = "ACTIVO"');
+                                 WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND p.estado = "ACTIVO" AND p.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('desembolso.desembolso', compact('prestamo', 'usuario', 'notificacion', 'cantNotificaciones'));
     }

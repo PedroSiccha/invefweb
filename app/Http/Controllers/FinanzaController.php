@@ -219,13 +219,13 @@ class FinanzaController extends Controller
             $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
         }
 
-        $cajaChica = \DB::SELECT('SELECT * 
-                                  FROM movimiento 
-                                  WHERE codigo <> "GA" AND MONTH(NOW()) = MONTH(created_at)');
+        $cajaChica = \DB::SELECT('SELECT m.* 
+                                  FROM movimiento m, caja c
+                                  WHERE m.caja_id = c.id AND m.codigo <> "GA" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'"');
 
         $cajaGrande = \DB::SELECT('SELECT m.*, d.url AS documento 
-                                   FROM movimiento m, movimiento_documento md, documento d 
-                                   WHERE md.movimiento_id = m.id AND md.documento_id = d.id AND codigo = "GA" AND MONTH(NOW()) = MONTH(m.created_at)');
+                                   FROM movimiento m, movimiento_documento md, documento d, caja c 
+                                   WHERE m.caja_id = c.id AND md.movimiento_id = m.id AND md.documento_id = d.id AND m.codigo = "GA" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('finanza.gastos', compact('usuario', 'cajaChica', 'cajaGrande', 'notificacion', 'cantNotificaciones'));
     }

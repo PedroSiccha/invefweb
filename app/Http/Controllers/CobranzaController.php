@@ -44,7 +44,7 @@ class CobranzaController extends Controller
 
         $listAtrasos = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
-                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 30 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id');
+                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 30 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND p.sede_id = "'.$usuario[0]->sede.'"');
 
 
         return view('cobranza.atraso', compact('usuario', 'listAtrasos', 'notificacion', 'cantNotificaciones'));
@@ -73,41 +73,41 @@ class CobranzaController extends Controller
         $cajaGrande = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cg"');
         $banco = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "b"');
  
-        $idMax = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$cajaChica[0]->id.'"'); //Maximo ID de la caja abierta
+        $idMax = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$cajaChica[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"'); //Maximo ID de la caja abierta
         if ($idMax[0]->id == null) { // Verifica si la caja está existe o no existe ninguna caja
             $ver = "1";
             $caja = \DB::SELECT('SELECT "0.00" AS monto');
         }else {
             $ver = "0";
-            $caja = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMax[0]->id.'"');
+            $caja = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMax[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"');
         }
 
-        $idMaxCg = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$cajaGrande[0]->id.'"'); //Maximo ID de la caja abierta
+        $idMaxCg = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$cajaGrande[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"'); //Maximo ID de la caja abierta
         if ($idMaxCg[0]->id == null) { // Verifica si la caja está existe o no existe ninguna caja
             $ver = "1";
             $cajaGrande = \DB::SELECT('SELECT "0.00" AS monto');
         }else {
             $ver = "0";
-            $cajaGrande = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMaxCg[0]->id.'"');
+            $cajaGrande = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMaxCg[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"');
         }
 
-        $idMaxB = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$banco[0]->id.'"'); //Maximo ID de la caja abierta
+        $idMaxB = \DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$banco[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"'); //Maximo ID de la caja abierta
         if ($idMaxB[0]->id == null) { // Verifica si la caja está existe o no existe ninguna caja
             $ver = "1";
             $banco = \DB::SELECT('SELECT "0.00" AS monto');
         }else {
             $ver = "0";
-            $banco = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMaxB[0]->id.'"');
+            $banco = \DB::SELECT('SELECT * FROM caja WHERE id = "'.$idMaxB[0]->id.'" AND sede_id = "'.$usuario[0]->sede.'"');
         }
 
         $ingreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                 FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA"
+                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"
                                 ORDER BY m.created_at DESC');//Muestra los ingresos de la caja abierta actualmente
 
         $cantIngreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                     FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                    WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA"');        
+                                    WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"');        
 
         if ($cantIngreso == null) {
             $cantIngreso = \DB::SELECT('SELECT "0.00" AS monto');
@@ -115,18 +115,18 @@ class CobranzaController extends Controller
 
         $egreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA"
+                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"
                                ORDER BY m.created_at DESC');//Muestra los egresos de la caja abierta actualmente
 
         $cantEgreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                    FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                   WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA"');
+                                   WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"');
 
         if($cantEgreso == null) {
             $cantEgreso = \DB::SELECT('SELECT "0.00" AS monto');
         }
 
-        $controlCaja = \DB::SELECT('SELECT * FROM caja WHERE ESTADO = "CERRADA"');
+        $controlCaja = \DB::SELECT('SELECT * FROM caja WHERE ESTADO = "CERRADA" AND sede_id = "'.$usuario[0]->sede.'"');
 
         return view('cobranza.caja',compact('ver', 'caja', 'ingreso', 'egreso', 'usuario', 'controlCaja', 'notificacion', 'cantNotificaciones', 'cajaGrande', 'banco', 'cantIngreso', 'cantEgreso'));
         
@@ -201,7 +201,7 @@ class CobranzaController extends Controller
 
         $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
-                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id 
+                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id AND p.sede_id = "'.$usuario[0]->sede.'"
                                       ORDER BY p.fecfin ASC');
 
         return view('cobranza.notificar', compact('listNotificar', 'usuario', 'notificacion', 'cantNotificaciones', 'listTipoArch'));

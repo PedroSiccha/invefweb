@@ -400,7 +400,7 @@ class AdministracionController extends Controller
 
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.monto, p.fecinicio, p.fecfin 
                                  FROM prestamo p, cotizacion c, garantia g, cliente cl
-                                 WHERE p.cotizacion_id = c.id AND c.garantia_id = g.id AND c.cliente_id = cl.id
+                                 WHERE p.cotizacion_id = c.id AND c.garantia_id = g.id AND c.cliente_id = cl.id AND p.sede_id = "'.$usuario[0]->sede.'"
                                  ORDER BY p.id');
 
         $interes = \DB::SELECT('SELECT * FROM interes');
@@ -681,14 +681,14 @@ class AdministracionController extends Controller
         $listCaja = \DB::SELECT('SELECT c.id AS caja_id, c.estado, c.monto, c.fecha, c.inicio, c.fin, c.montofin, c.empleado, s.id AS sede_id, s.nombre, c.tipocaja_id
                                  FROM caja c
                                  LEFT JOIN sede s ON c.sede_id = s.id
-                                 WHERE c.sede_id != ""
+                                 WHERE c.sede_id = "'.$usuario[0]->sede.'"
                                  GROUP BY c.tipocaja_id');
 
         $capital = \DB::SELECT('SELECT c.id AS caja_id, c.estado, c.monto, c.fecha, c.inicio, c.fin, c.montofin, c.empleado, s.id AS sede_id, s.nombre, c.tipocaja_id, tc.tipo AS tipocaja
                                 FROM caja c
                                 LEFT JOIN sede s ON c.sede_id = s.id
                                 INNER JOIN tipocaja tc ON tc.id = c.tipocaja_id
-                                WHERE c.estado = "abierta"');
+                                WHERE c.estado = "abierta" AND c.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('administracion.gestionCapital', compact('usuario', 'sede', 'listCaja', 'capital', 'notificacion', 'cantNotificaciones'));
     }

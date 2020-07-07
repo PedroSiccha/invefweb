@@ -37,7 +37,7 @@ class LiquidacionController extends Controller
 
         $listLiquidacion = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.monto, p.intpagar*2 AS interes, m.mora*15 AS mora, p.monto+m.mora*15+p.intpagar*2 AS total, cl.id AS cliente_id
                                          FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
-                                         WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "LIQUIDACION"');
+                                         WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "LIQUIDACION" AND p.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('liquidacion.producto', compact('usuario', 'listLiquidacion', 'notificacion', 'cantNotificaciones'));
     }
@@ -166,7 +166,7 @@ class LiquidacionController extends Controller
 
         $listVendido = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto AS montoPrestamo, (i.porcentaje*p.monto/100)*2 AS porcentajeInteres, m.mora*15 AS moraPrestamo, (p.monto + (i.porcentaje*p.monto/100)*2 +  m.mora*15) AS totalPrestamo, mo.importe AS pago, g.id AS garantia_id, g.nombre AS garantia
         FROM prestamo p, cotizacion c, garantia g, tipocredito_interes tci, interes i, mora m, movimiento mo
-        WHERE p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id AND p.mora_id = m.id AND mo.codprestamo = p.id AND p.estado = "VENDIDO" AND mo.codigo = "V"');
+        WHERE p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id AND p.mora_id = m.id AND mo.codprestamo = p.id AND p.estado = "VENDIDO" AND mo.codigo = "V" AND p.sede_id = "'.$usuario[0]->sede.'"');
 
         return view('liquidacion.vendido', compact('usuario', 'listVendido', 'notificacion', 'cantNotificaciones'));
     }
