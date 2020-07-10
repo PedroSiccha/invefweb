@@ -1286,9 +1286,10 @@ class CobranzaController extends Controller
         $doc->asunto = $asunto;
         $doc->url = $urlGuardar;
         $doc->fecha = date('Y-m-d');
+        $doc->estado = "NOTIFICACION"
         $doc->tipodocumento_id = $tipodocumento_id;
         if ($doc->save()) {
-            $documento = \DB::SELECT('SELECT MAX(id) AS id FROM documento');
+            $documento = \DB::SELECT('SELECT MAX(id) AS id FROM documento WHERE estado = "NOTIFICACION"');
 
             $pdoc = new PrestamoDocumento();
             $pdoc->asunto = $asunto;

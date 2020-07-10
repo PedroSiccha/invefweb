@@ -43,6 +43,7 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/verificarDNI', 'AtencionclienteController@verificarDNI')->name('verificarDNI');
     Route::post('/direCliente', 'AtencionclienteController@direCliente')->name('direCliente');
     Route::post('/verNotificacion', 'AtencionclienteController@verNotificacion')->name('verNotificacion');
+    Route::post('/verPagos', 'AtencionclienteController@verPago')->name('verPagos');
 
     /* Módulo de Prestamos */
     Route::get('/evaluacion', 'PrestamoController@evaluacion')->name('evaluacion');

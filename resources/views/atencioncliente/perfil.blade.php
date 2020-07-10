@@ -306,7 +306,7 @@
                         <div class="col-lg-12">
                             <h4>Pagos en:</h4> 
                             <h5> BCP: <b>375-30500414-0-56</b></h5>
-                            <h5> Banco de la Nación: <b>04-393-261108</b></h5>
+                            <h5> B. N.: <b>04-393-261108</b></h5>
                             <h5> Interbank: <b>6223172545805</b></h5>
                             <h4 style="text-align: center"><b>"CONFIRMAR SU PAGO A LA EMPRESA"</b></h4>
                             </p>
@@ -318,6 +318,7 @@
                             <button class="btn btn-warning btn-xs" {{ $verBoton }} onclick="Renovar('{{ $pr->prestamo_id }}', '{{ $pr->monto }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }}', '{{ $dias }}', '{{ $pro->cambiaf_a_espanol($pr->fecfin) }}')"><i class="fa fa-share"></i> Renovars</button>
                             <button class="btn btn-info btn-xs" onclick="Detalle('{{ $pr->prestamo_id }}', '{{ $pr->nombre }}', '{{ $pro->cambiaf_a_espanol($pr->fecinicio) }}', '{{ $pro->cambiaf_a_espanol($pr->fecfin) }}', '{{ $dias }}', '{{ $pr->monto }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }}', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }}', '{{ $pr->estado }}')"><i class="fa fa-exclamation-triangle"></i> Ver Detalles</button>
                             <button class="btn btn-danger btn-xs" onclick="verNotificacion('{{ $pr->prestamo_id }}')"><i class="fa fa-exclamation-triangle"></i> Ver Notificaciones</button>
+                            <button class="btn btn-success btn-xs" type="button" onclick="historialPago('{{ $pr->prestamo_id }}')"><i class="fa fa-money"></i>Historial de Pagos</button>
                         </div>    
                     </div>
                 </div>
@@ -1022,17 +1023,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Detalle de Prestamo <span id = "detId">Codigo</span></h4>
+                <h4 class="modal-title">Detalle de Prestamos <span id = "detId">Codigo</span></h4>
             </div>
             <div class="modal-body">
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>#</th>
+                        <th></th>
                         <th>Monto</th>
                         <th>Garantia</th>
                         <th>Fec Inicio</th>
                         <th>Fec Fin</th>
+                        <th>Adminitración</th>
                         
                     </tr>
                     </thead>
@@ -1044,7 +1046,7 @@
                                 <td>{{ $hp->garantia }}</td>
                                 <td>{{ $hp->fecinicio }}</td>
                                 <td> {{ $hp->fecfin }} </td>
-                                
+                                <td><button class="btn btn-success btn-xs" type="button" onclick="historialPago('{{ $hp->prestamo_id }}')"><i class="fa fa-money"></i>Historial de Pagos</button></td>
                             </tr>        
                         @endforeach
                     </tbody>
@@ -1078,6 +1080,27 @@
     </div>
 </div>
 <!-- Fin Historial -->
+
+<!-- Historial de Pago -->
+<div class="modal inmodal fade" id="hPago" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Ver Histortial de Pagos</span></h4>
+            </div>
+            <div class="modal-body" id="verPagos">
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-success dim" data-dismiss="modal"> ACEPTAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Historial -->
+
 @endsection
 @section('script')
     <script src="js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
@@ -1124,6 +1147,15 @@
                 $("#verNotifi").empty();
                 $("#verNotifi").html(data.view);
 
+            });
+        }
+
+        function historialPago(id){
+            $('#hPago').modal('show');
+
+            $.post( "{{ Route('verPagos') }}", {id: id, _token:'{{ csrf_token() }}'}).done(function(data) {
+                $("#verPagos").empty();
+                $("#verPagos").html(data.view);
             });
         }
         

@@ -598,8 +598,8 @@ class AdministracionController extends Controller
         $doc->nombre = $nomRec;
         $doc->asunto = "RECIBO DE PAGO";
         $doc->url = $urlGuardar;
-        $doc->fecha = date("Y-m-a");
-        $doc->estado = "ACTIVO";
+        $doc->fecha = date("Y-m-d");
+        $doc->estado = "GA";
         $doc->tipodocumento_id = "1";
         if ($doc->save()) {
             

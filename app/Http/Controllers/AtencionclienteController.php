@@ -500,11 +500,30 @@ class AtencionclienteController extends Controller
         foreach ($cotizacion as $c) {
 
             $notificacion = \DB::SELECT('SELECT d.* 
-                                     FROM prestamo_documento pd, documento d
-                                     WHERE pd.documento_id = d.id AND pd.prestamo_id = "'.$c->id.'"');
+                                         FROM prestamo_documento pd, documento d
+                                         WHERE pd.documento_id = d.id AND pd.prestamo_id = "'.$c->id.'" AND d.estado = "NOTIFICACION"');
         }
 
        // dd($notificacion);
+
+        return response()->json(["view"=>view('atencioncliente.verNotifi', compact('notificacion'))->render()]);
+
+    }
+
+    public function verPago(Request $request)
+    {
+        $prestamo_id = $request->id;
+
+        $prestamo = \DB::SELECT('SELECT cotizacion_id FROM prestamo WHERE id = "'.$prestamo_id.'"');
+
+        $cotizacion = \DB::SELECT('SELECT id FROM prestamo WHERE cotizacion_id = "'.$prestamo[0]->cotizacion_id.'"');
+
+        foreach ($cotizacion as $c) {
+
+            $notificacion = \DB::SELECT('SELECT d.* 
+                                         FROM prestamo_documento pd, documento d
+                                         WHERE pd.documento_id = d.id AND pd.prestamo_id = "'.$c->id.'" AND d.estado = "PAGO"');
+        }
 
         return response()->json(["view"=>view('atencioncliente.verNotifi', compact('notificacion'))->render()]);
 
