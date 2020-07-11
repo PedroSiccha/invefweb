@@ -826,6 +826,44 @@
 </div>
 <!-- Fin Detalle -->
 
+<!-- Comisión de Prestamo -->
+<div class="modal inmodal fade" id="comision" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Comisión</h4>
+                <small class="font-bold"><span id = "detDni">Registrar si existe comision del banco, si no ignorar</span></small>
+            </div>
+            <div class="modal-body">
+                <table class="table m-b-xs">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <strong>Comisión</strong>
+                        </td>
+                        <td>
+                            <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="imputComision" placeholder="S/. 0.00"></div>
+                        </td>
+                    </tr>
+                    <tr hidden>
+                        <td>
+                            <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="imputId" placeholder="S/. 0.00"></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-success dim" onclick="ingresarComision()"> ACEPTAR</button>
+                <button type="button" class="btn btn-outline btn-danger dim" data-dismiss="modal"> SIN COMISION</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Detalle -->
+
 
 
 @endsection
@@ -994,7 +1032,7 @@
         }
 
         function depositarPago() {
-            
+             //alert("Depositar");
             var idPrestamo = $("#idPrestamoP").val();
             var dia = $("#diaPago").val();
             var mora = $("#pagoMora").val();
@@ -1004,13 +1042,48 @@
             var monto = $("#pagoMonto").val();
             
             $.post( "{{ Route('depositarPrestamo') }}", {idPrestamo: idPrestamo, dia: dia, mora: mora, pago: pago, interes: interes, serie: serie, monto: monto, _token:'{{csrf_token()}}'}).done(function(data) {
-                        $("#tabCliente").empty();
-                        $("#tabCliente").html(data.view);
-                        swal("Correcto", "El pago de S/." +importe+", se realizó correctamente", "success");
-                        window.open('{{ Route('printTicket') }}', '_blank');
+                       // $("#tabCliente").empty();
+                        //$("#tabCliente").html(data.view);
+                        if( data.resp == 0){
+                            swal("Error", "Hubo un problema al registrar su pago", "error");
+                        }else if(data.resp == 1){
+
+                            swal("Correcto", "El pago se realizó correctamente", "success");
+                            //window.open('{{ Route('printTicket') }}', '_blank');
+                            $("#imputId").val(data.idPrestamo);
+                            $('#comision').modal('show');
+
+                        }else if(data.resp == 2){
+                            swal("Error", "Monto incorrecto", "error");
+                        }
+                        
                     });
             
         }
+
+        function ingresarComision() {
+            var idPrestamo = $("#imputId").val();
+            var comision = $("#imputComision").val();
+
+            $.post( "{{ Route('ingresarComision') }}", {idPrestamo: idPrestamo, comision: comision, _token:'{{csrf_token()}}'}).done(function(data) {
+                // $("#tabCliente").empty();
+                 //$("#tabCliente").html(data.view);
+                 if( data.resp == 0){
+                     swal("Error", "Hubo un problema al registrar su pago", "error");
+                 }else if(data.resp == 1){
+
+                     swal("Correcto", "Gracias por registrar el deposito", "success");
+                     //window.open('{{ Route('printTicket') }}', '_blank');
+                     $('#comision').modal('hide');
+
+                 }else if(data.resp == 2){
+                     swal("Error", "Monto incorrecto", "error");
+                 }
+                 
+             });
+        }
+
+
         function cancelarRenovar() {
 
             var idPrestamo = $("#idPrestamoR").val();

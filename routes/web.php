@@ -115,6 +115,7 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/renovarDepositoPrestamo', 'CobranzaController@renovarDepositoPrestamo')->name('renovarDepositoPrestamo');
     Route::post('/guardarNotificar', 'CobranzaController@guardarNotificar')->name('guardarNotificar');
     Route::post('/consultarMovimiento', 'CobranzaController@consultarMovimiento')->name('consultarMovimiento');
+    Route::post('/ingresarComision', 'CobranzaController@ingresarComision')->name('ingresarComision');
 
     /* Módulo de Liquidación */
     Route::get('/producto', 'LiquidacionController@producto')->name('producto');

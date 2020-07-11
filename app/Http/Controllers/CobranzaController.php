@@ -102,12 +102,12 @@ class CobranzaController extends Controller
 
         $ingreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                 FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"
+                                WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'" AND DATE_FORMAT(m.created_at, "%Y-%m-%d") = CURDATE()
                                 ORDER BY m.created_at DESC');//Muestra los ingresos de la caja abierta actualmente
 
         $cantIngreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                     FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                    WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"');        
+                                    WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "INGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'" AND DATE_FORMAT(m.created_at, "%Y-%m-%d") = CURDATE()');        
 
         if ($cantIngreso == null) {
             $cantIngreso = \DB::SELECT('SELECT "0.00" AS monto');
@@ -115,19 +115,19 @@ class CobranzaController extends Controller
 
         $egreso = \DB::SELECT('SELECT m.*, cl.nombre AS nombreCl, cl.apellido AS apellidoCl, e.nombre AS nombreEm, e.apellido AS apellidoEm
                                FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"
+                               WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'" AND DATE_FORMAT(m.created_at, "%Y-%m-%d") = CURDATE()
                                ORDER BY m.created_at DESC');//Muestra los egresos de la caja abierta actualmente
 
         $cantEgreso = \DB::SELECT('SELECT SUM(m.monto) monto
                                    FROM movimiento m, caja c, prestamo p, cotizacion co, cliente cl, empleado e
-                                   WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"');
+                                   WHERE m.caja_id = c.id AND m.codprestamo = p.id AND p.cotizacion_id = co.id AND m.empleado = e.id AND co.cliente_id = cl.id AND m.tipo = "EGRESO" AND c.estado = "ABIERTA" AND c.sede_id = "'.$usuario[0]->sede.'"  AND DATE_FORMAT(m.created_at, "%Y-%m-%d") = CURDATE()');
 
         if($cantEgreso == null) {
             $cantEgreso = \DB::SELECT('SELECT "0.00" AS monto');
         }
 
         $controlCaja = \DB::SELECT('SELECT * FROM caja WHERE ESTADO = "CERRADA" AND sede_id = "'.$usuario[0]->sede.'"');
-
+ 
         return view('cobranza.caja',compact('ver', 'caja', 'ingreso', 'egreso', 'usuario', 'controlCaja', 'notificacion', 'cantNotificaciones', 'cajaGrande', 'banco', 'cantIngreso', 'cantEgreso'));
         
     }
@@ -202,7 +202,7 @@ class CobranzaController extends Controller
         $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
                                       WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id AND p.sede_id = "'.$usuario[0]->sede.'"
-                                      ORDER BY p.fecfin ASC');
+                                      ORDER BY DATEDIFF(NOW(), p.fecinicio) DESC');
 
         return view('cobranza.notificar', compact('listNotificar', 'usuario', 'notificacion', 'cantNotificaciones', 'listTipoArch'));
     }
@@ -234,7 +234,8 @@ class CobranzaController extends Controller
         
         $listNotificar = \DB::SELECT('SELECT p.id AS prestamo_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.fecfin, DATEDIFF(CURDATE(), p.fecinicio) AS dia, p.monto, p.intpagar, p.estado, cl.facebook, cl.whatsapp, cl.correo, cl.telefono, m.mora, cl.referencia, p.fecinicio, i.porcentaje, cl.id AS cliente_id
                                       FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
-                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id  AND (cl.nombre LIKE "%'.$dato.'%" OR cl.apellido LIKE "%'.$dato.'%" OR cl.dni LIKE "%'.$dato.'%") ORDER BY p.fecfin ASC');
+                                      WHERE p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND DATEDIFF(CURDATE(), p.fecinicio) > 24 AND p.estado = "ACTIVO DESEMBOLSADO" AND p.mora_id = m.id AND tci.id = p.tipocredito_interes_id AND tci.interes_id = i.id  AND (cl.nombre LIKE "%'.$dato.'%" OR cl.apellido LIKE "%'.$dato.'%" OR cl.dni LIKE "%'.$dato.'%") 
+                                      ORDER BY DATEDIFF(NOW(), p.fecinicio) DESC');
 
         return response()->json(["view"=>view('cobranza.listNotificar',compact('listNotificar'))->render()]);
     }
@@ -261,7 +262,7 @@ class CobranzaController extends Controller
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar, i.porcentaje
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
                                  WHERE c.cliente_id = cl.id AND p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "ACTIVO DESEMBOLSADO" AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id
-                                 ORDER BY p.fecfin ASC');
+                                 ORDER BY DATEDIFF(NOW(), p.fecinicio) DESC');
 
         $cantPrestamo = \DB::SELECT('SELECT COUNT(*) AS cantidad FROM prestamo WHERE estado = "ACTIVO DESEMBOLSADO"');
 
@@ -273,7 +274,7 @@ class CobranzaController extends Controller
 
         $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar, i.porcentaje
                                  FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
-                                 WHERE c.cliente_id = cl.id AND p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "ACTIVO DESEMBOLSADO" AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id AND (cl.nombre LIKE "%'.$request->dato.'%" OR cl.apellido LIKE "%'.$request->dato.'%" OR cl.dni LIKE "%'.$request->dato.'%")');
+                                 WHERE c.cliente_id = cl.id AND p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "ACTIVO DESEMBOLSADO" AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id AND (cl.nombre LIKE "%'.$request->dato.'%" OR cl.apellido LIKE "%'.$request->dato.'%" OR cl.dni LIKE "%'.$request->dato.'%") ORDER BY DATEDIFF(NOW(), p.fecinicio) DESC');
 
         return response()->json(["view"=>view('cobranza.tabCliente',compact('prestamo'))->render()]);
     }
@@ -896,6 +897,7 @@ class CobranzaController extends Controller
         $serie = $request->serie;
         $interes = $request->interes;
         $monto = $request->monto;
+        $resp = 0;
         
         $prestamo = \DB::SELECT('SELECT *
                                  FROM prestamo p
@@ -973,20 +975,11 @@ class CobranzaController extends Controller
 
                             $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
                             $caja->monto = $nuevoMonto;
-                            $caja->save();
+                            if ($caja->save()) {
+                                $resp = 1;
+                            }
                         }
-/*
-                        $prestamo = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar
-                                                    FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m
-                                                    WHERE c.cliente_id = cl.id AND p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "ACTIVO DESEMBOLSADO" AND (cl.nombre LIKE "%'.$request->dato.'%" OR cl.apellido LIKE "%'.$request->dato.'%" OR cl.dni LIKE "%'.$request->dato.'%")');
-
-                        
-
-                        return response()->json(["view"=>view('cobranza.tabCliente',compact('prestamo'))->render()]);
-                        */
                     }
-                    
-                    
                     
                 }
                 
@@ -1034,20 +1027,54 @@ class CobranzaController extends Controller
                     $mov->caja_id = $caja[0]->id;
                     if ($mov->save()) {
 
-                            $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "b"');
-                            $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
+                        $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "b"');
+                        $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
 
-                            $nuevoMonto = $maxCaja[0]->monto + $pago;
+                        $nuevoMonto = $maxCaja[0]->monto + $pago;
 
-                            $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
-                            $caja->monto = $nuevoMonto;
-                            $caja->save();
+                        $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
+                        $caja->monto = $nuevoMonto;
+                        if ($caja->save()) {
+                            $resp = 1;
+                        }
                     }
                 }
             }
         }else {
-            dd("pagoTotal con vuelto");
+            $resp = 2;
         }
+/*
+        $cliente = \DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar, i.porcentaje
+                                FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
+                                WHERE c.cliente_id = cl.id AND p.cotizacion_id = c.id AND c.garantia_id = g.id AND p.mora_id = m.id AND p.estado = "ACTIVO DESEMBOLSADO" AND p.tipocredito_interes_id = tci.id AND tci.interes_id = i.id AND (cl.nombre LIKE "%'.$datoCliente.'%" OR cl.apellido LIKE "%'.$datoCliente.'%" OR cl.dni LIKE "%'.$datoCliente.'%")
+                                ORDER BY p.fecfin ASC');
+
+                                */
+
+    
+
+        return response()->json(['resp'=>$resp, 'idPrestamo'=>$idPrestamo]);
+    }
+
+    public function ingresarComision(Request $request)
+    {
+        $idPrestamo = $request->idPrestamo;
+        $comision = $request->comision;
+        $resp = 0;
+
+        $tipocaja = \DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "b"');
+        $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto FROM caja WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'"');
+
+        $nuevoMonto = $maxCaja[0]->monto - $comision;
+
+        $caja = Caja::where('id', '=', $maxCaja[0]->id)->first();
+        $caja->monto = $nuevoMonto;
+        if ($caja->save()) {
+            $resp = 1;
+        }
+
+        return response()->json(['resp'=>$resp]);
+
     }
 
     /**
@@ -1286,7 +1313,7 @@ class CobranzaController extends Controller
         $doc->asunto = $asunto;
         $doc->url = $urlGuardar;
         $doc->fecha = date('Y-m-d');
-        $doc->estado = "NOTIFICACION"
+        $doc->estado = "NOTIFICACION";
         $doc->tipodocumento_id = $tipodocumento_id;
         if ($doc->save()) {
             $documento = \DB::SELECT('SELECT MAX(id) AS id FROM documento WHERE estado = "NOTIFICACION"');
