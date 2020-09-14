@@ -97,6 +97,7 @@ class AtencionclienteController extends Controller
 
     public function guadarCliente(Request $request)
     {
+        $user_id = null;
 
         if ($request->whastapp == null) {
             $whatsapp = $request->telefono;
@@ -105,10 +106,16 @@ class AtencionclienteController extends Controller
         }
         $img=$request->foto;
         $dni = $request->dni;
-        $user_id = Auth::user()->id;
-        $empleado = \DB::SELECT('SELECT e.id AS empleado_id, e.sede_id AS sede_id 
+        if (Auth::user() != null) {
+            $user_id = Auth::user()->id;
+
+            $empleado = \DB::SELECT('SELECT e.id AS empleado_id, e.sede_id AS sede_id 
                                  FROM users u, empleado e
                                  WHERE u.id = e.users_id AND u.id = "'.$user_id.'"');
+        }
+
+        $empleado = \DB::SELECT('SELECT "1" AS empleado_id, "2" AS sede_id ');
+        
         $subido="";
         $urlGuardar="";
 

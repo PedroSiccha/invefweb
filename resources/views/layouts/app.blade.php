@@ -1,3 +1,8 @@
+<?php 
+    use App\proceso; 
+    $pro = new proceso();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -55,96 +60,96 @@
                     <li>
                         <a href="{{ Route('home') }}"><i class="fa fa-th-large"></i> <span class="nav-label">Inicio</span></a>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Atencion al Cliente") }}>
                         <a href="#"><i class="fa fa-id-badge"></i> <span class="nav-label">Atencion al Cliente</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('cliente') }}">Gestión de Clientes</a></li>
-                            <li><a href="{{ Route('cartera') }}">Cartera de Clientes</a></li>
+                            <li {{ $pro->validarPermiso("Gestion de Cliente") }}><a href="{{ Route('cliente') }}">Gestión de Clientes</a></li>
+                            <li {{ $pro->validarPermiso("Cartera de Clientes") }}><a href="{{ Route('cartera') }}">Cartera de Clientes</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Prestamo") }}>
                         <a href="#"><i class="fa fa-handshake-o"></i> <span class="nav-label">Préstamos</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a onclick="evaluacionHome()">Evaluación</a></li>
-                            <li><a onclick="prestamoHome()">Prestamo</a></li>
-                            <li><a href="{{ Route('garantia') }}">Garantías</a></li>
-                            <li><a href="{{ Route('macro') }}">Control de Macro BCP</a></li>
-                            <li><a href="{{ Route('listContrato') }}">Contratos de Préstamos</a></li>
-                            <li><a href="{{ Route('listContrato') }}">Cronogramas de Pago</a></li>
+                            <li {{ $pro->validarPermiso("EvaluacionHome") }}><a onclick="evaluacionHome()">Evaluación</a></li>
+                            <li {{ $pro->validarPermiso("PrestamoHome") }}><a onclick="prestamoHome()">Prestamo</a></li>
+                            <li {{ $pro->validarPermiso("Garantia") }}><a href="{{ Route('garantia') }}">Garantías</a></li>
+                            <li {{ $pro->validarPermiso("Macro") }}><a href="{{ Route('macro') }}">Control de Macro BCP</a></li>
+                            <li {{ $pro->validarPermiso("Lista Contratos") }}><a href="{{ Route('listContrato') }}">Contratos de Préstamos</a></li>
+                            <li {{ $pro->validarPermiso("Cronograma Pago") }}><a href="{{ Route('listContrato') }}">Cronogramas de Pago</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Desembolso") }}>
                         <a href="#"><i class="fa fa-money"></i> <span class="nav-label">Desembolso</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('desembolso') }}">Cola Espera</a></li>
+                            <li {{ $pro->validarPermiso("Desembolso") }}><a href="{{ Route('desembolso') }}">Cola Espera</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Almacen") }}>
                         <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">Almacén</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('almacen') }}">Gestión de Almacenes</a></li>
-                            <li><a href="{{ Route('buscarGarantia') }}">Buscar Garantías</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Almacen") }}><a href="{{ Route('almacen') }}">Gestión de Almacenes</a></li>
+                            <li {{ $pro->validarPermiso("Buscar Garantia") }}><a href="{{ Route('buscarGarantia') }}">Buscar Garantías</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Cobranza") }}>
                         <a href="#"><i class="fa fa-credit-card"></i> <span class="nav-label">Cobranzas</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('pago') }}">Pagos</a></li>
-                            <li><a href="{{ Route('renovar') }}">Renovar</a></li>
-                            <li><a href="{{ Route('notificar') }}">Notificar</a></li>
-                            <li><a href="{{ Route('atraso') }}">Prestamos Atrasados</a></li>
-                            <li><a href="{{ Route('cajaCobranza') }}">Gestion de Caja</a></li>
+                            <li {{ $pro->validarPermiso("Pagos") }}><a href="{{ Route('pago') }}">Pagos</a></li>
+                            <li {{ $pro->validarPermiso("Renovar") }}><a href="{{ Route('renovar') }}">Renovar</a></li>
+                            <li {{ $pro->validarPermiso("Notificar") }}><a href="{{ Route('notificar') }}">Notificar</a></li>
+                            <li {{ $pro->validarPermiso("Prestamo Atrasados") }}><a href="{{ Route('atraso') }}">Prestamos Atrasados</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Caja") }}><a href="{{ Route('cajaCobranza') }}">Gestion de Caja</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Liquidacion") }}>
                         <a href="#"><i class="fa fa-ticket"></i> <span class="nav-label">Liquidación</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('producto') }}">Productos</a></li>
-                            <li><a href="{{ Route('vendido') }}">Vendidos</a></li>
+                            <li {{ $pro->validarPermiso("Productos") }}><a href="{{ Route('producto') }}">Productos</a></li>
+                            <li {{ $pro->validarPermiso("Vendidos") }}><a href="{{ Route('vendido') }}">Vendidos</a></li>
                         </ul>
                     </li>
                     
-                    <li>
+                    <li {{ $pro->validarPermiso("Recursos Humanos") }}>
                         <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Recursos Humanos</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('empleado') }}">Gestion de Empleados</a></li>
-                            <li><a href="{{ Route('pagoPersonal') }}">Pagos de Personal</a></li>
-                            <li><a href="{{ Route('seguridad') }}">Seguridad</a></li>
-                            <li><a href="{{ Route('rendimientoPersonal') }}">Rendimiento de Personal</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Empleados") }}><a href="{{ Route('empleado') }}">Gestion de Empleados</a></li>
+                            <li {{ $pro->validarPermiso("Pagos Personal") }}><a href="{{ Route('pagoPersonal') }}">Pagos de Personal</a></li>
+                            <li {{ $pro->validarPermiso("Seguridad") }}><a href="{{ Route('seguridad') }}">Seguridad</a></li>
+                            <li {{ $pro->validarPermiso("Rendimiento Personal") }}><a href="{{ Route('rendimientoPersonal') }}">Rendimiento de Personal</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Administracion") }}>
                         <a href="#"><i class="fa fa-laptop"></i> <span class="nav-label">Administración</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('reuniones') }}">Gestión de Reuniones</a></li>
-                            <li><a href="{{ Route('sedes') }}">Gestión de Sedes</a></li>
-                            <li><a href="{{ Route('gestionPrestamo') }}">Gestión de Prestamos</a></li>
-                            <li><a href="{{ Route('gestionCapital') }}">Gestión de Capital</a></li>
-                            <li><a href="{{ Route('gastos') }}">Gastos Administrativos</a></li>
-                            <li><a href="{{ Route('configuracion') }}">Configuraciones Generales</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Reuniones") }}><a href="{{ Route('reuniones') }}">Gestión de Reuniones</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Sedes") }}><a href="{{ Route('sedes') }}">Gestión de Sedes</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Prestamo") }}><a href="{{ Route('gestionPrestamo') }}">Gestión de Prestamos</a></li>
+                            <li {{ $pro->validarPermiso("Gestion Capital") }}><a href="{{ Route('gestionCapital') }}">Gestión de Capital</a></li>
+                            <li {{ $pro->validarPermiso("Gastos Administrativos") }}><a href="{{ Route('gastos') }}">Gastos Administrativos</a></li>
+                            <li {{ $pro->validarPermiso("Configuraciones Generales") }}><a href="{{ Route('configuracion') }}">Configuraciones Generales</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Finanzas") }}>
                         <a href="#"><i class="fa fa-line-chart"></i> <span class="nav-label">Finanzas</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('estPrestamo') }}">Estadísticas de Préstamos</a></li>
-                            <li><a href="{{ Route('analisisResult') }}">Análisis de Resultados</a></li>
-                            <li><a href="{{ Route('flujoCaja') }}">Flujo de Caja</a></li>
-                            <li><a href="{{ Route('patrimonio') }}">Control Patrimonial</a></li>
+                            <li {{ $pro->validarPermiso("Estadistica Prestamos") }}><a href="{{ Route('estPrestamo') }}">Estadísticas de Préstamos</a></li>
+                            <li {{ $pro->validarPermiso("Analisis Resultados") }}><a href="{{ Route('analisisResult') }}">Análisis de Resultados</a></li>
+                            <li {{ $pro->validarPermiso("Flujo Caja") }}><a href="{{ Route('flujoCaja') }}">Flujo de Caja</a></li>
+                            <li {{ $pro->validarPermiso("Control Patrimonial") }}><a href="{{ Route('patrimonio') }}">Control Patrimonial</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Marketing") }}>
                         <a href="#"><i class="fa fa-newspaper-o"></i> <span class="nav-label">Marketing</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('clienteMarketing') }}">Clientes Potenciales</a></li>
-                            <li><a href="{{ Route('presupuesto') }}">Presupuesto</a></li>
-                            <li><a href="{{ Route('reportes') }}">Reportes</a></li>
+                            <li {{ $pro->validarPermiso("Clientes Potenciales") }}><a href="{{ Route('clienteMarketing') }}">Clientes Potenciales</a></li>
+                            <li {{ $pro->validarPermiso("Presupuesto") }}><a href="{{ Route('presupuesto') }}">Presupuesto</a></li>
+                            <li {{ $pro->validarPermiso("Reportes") }}><a href="{{ Route('reportes') }}">Reportes</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li {{ $pro->validarPermiso("Pagina Web") }}>
                         <a href="#"><i class="fa fa-html5"></i> <span class="nav-label">Página Web</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ Route('noticia') }}">Noticias</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('noticia') }}">Noticias</a></li>
                         </ul>
                     </li>
                 </ul>

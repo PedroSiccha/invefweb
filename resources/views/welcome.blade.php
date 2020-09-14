@@ -15,10 +15,10 @@
 
 	<!-- Favicons
 	================================================== -->
-	<link rel="icon" href="{{asset('web/img/favicon/favicon-32x32.png')}}" type="image/x-icon" />
-	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{asset('img/favicon/favicon-144x144.png')}}">
-	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{asset('img/favicon/favicon-72x72.png')}}">
-	<link rel="apple-touch-icon-precomposed" href="{{asset('img/favicon/favicon-54x54.png')}}">
+	<link rel="icon" href="{{asset('web/images/invefLogoMini.png')}}" type="image/x-icon" />
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{asset('web/images/invefLogoMini.png')}}">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{asset('web/images/invefLogoMini.png')}}">
+	<link rel="apple-touch-icon-precomposed" href="{{asset('web/images/invefLogoMini.png')}}">
 	
 	<!-- CSS
 	================================================== -->
@@ -70,7 +70,7 @@
 				    </button>
 				    <div class="navbar-brand">
 					    <a href="{{ Route('web') }}">
-					    	<img class="img-responsive" src="{{asset('web/images/logo.png')}}" alt="logo">
+					    	<img class="img-responsive" src="{{asset('web/images/logoExtendido.png')}}" alt="logo">
 					    </a> 
 				    </div>                   
 				</div><!--/ Logo end -->
@@ -80,59 +80,25 @@
                        		<a href="{{ Route('web') }}" class="dropdown-toggle" data-toggle="dropdown">Inicio <i class="fa fa-angle-down"></i></a>
 	                    </li>
 						<li class="dropdown">
-                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Company <i class="fa fa-angle-down"></i></a>
+                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Nosotros <i class="fa fa-angle-down"></i></a>
                        		<div class="dropdown-menu">
 								<ul>
-		                            <li><a href="about.html">About Us</a></li>
-		                            <li><a href="service.html">Services</a></li>
-		                            <li><a href="career.html">Career</a></li>
-		                            <li><a href="testimonial.html">Testimonials</a></li>
-		                            <li><a href="faq.html">Faq</a></li>
+		                            <li><a href="about.html">Sobre Nosotros</a></li>
+		                            <li><a href="service.html">Servicios</a></li>
+		                            <li><a href="faq.html">Preguntas Frecuentes</a></li>
 		                        </ul>
 	                    	</div>
 	                    </li>
 						<li class="dropdown">
-                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <i class="fa fa-angle-down"></i></a>
+                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Liquidaciones <i class="fa fa-angle-down"></i></a>
                        		<div class="dropdown-menu">
 								<ul>
-		                            <li><a href="portfolio-classic.html">Portfolio Classic</a></li>
-		                            <li><a href="portfolio-static.html">Portfolio Static</a></li>
-		                            <li><a href="portfolio-item.html">Portfolio Single</a></li>
+		                            <li><a href="portfolio-classic.html">Equipos</a></li>
 		                        </ul>
 	                    	</div>
 	                    </li>
-	                    <li class="dropdown">
-                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down"></i></a>
-                       		<div class="dropdown-menu">
-								<ul>
-		                           	<li><a href="team.html">Our Team</a></li>
-		                           	<li><a href="about2.html">About Us - 2</a></li>
-		                           	<li><a href="service2.html">Services - 2</a></li>
-		                           	<li><a href="service-single.html">Services Single</a></li>
-		                           	<li><a href="pricing.html">Pricing Table</a></li>
-		                           	<li><a href="404.html">404 Page</a></li>
-		                        </ul>
-	                    	</div>
-	                    </li>
-	                    <li class="dropdown">
-                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <i class="fa fa-angle-down"></i></a>
-                       		<div class="dropdown-menu">
-								<ul>
-		                           	 <li><a href="blog-rightside.html">Blog with Sidebar</a></li>
-	                            	<li><a href="blog-item.html">Blog Single</a></li>
-		                        </ul>
-	                    	</div>
-	                    </li>
-	                    <li class="dropdown">
-                       		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Features <i class="fa fa-angle-down"></i></a>
-                       		<div class="dropdown-menu">
-								<ul>
-		                           	 <li><a href="typography.html">Typography</a></li>
-	                            	<li><a href="elements.html">Elements</a></li>
-		                        </ul>
-	                    	</div>
-	                    </li>
-            			<li><a href="{{ Route('login') }}">Ingresar</a></li>
+						<li><a href="{{ Route('login') }}">Ingresar</a></li>
+						<li><a href="{{ Route('cli') }}">Registrar</a></li>
                     </ul>
 				</nav><!--/ Navigation end -->
 			</div><!--/ Row end -->
@@ -148,50 +114,57 @@
 				<ul class="slides">
 					<li>
 						<div class="overlay2">
-							<img class="" src="images/slider/bg1.jpg" alt="slider">
+							<img class="" src="{{ asset('web/images/slider/principal.jpg') }}" alt="slider">
 						</div>
 						<div class="flex-caption slider-content">
 	                        <div class="col-md-12 text-center">
+								<!--
 	                    		<h2 class="animated2">
 	                        		Inversiones Invef
-	                        	</h2>
+								</h2>
+								
 	                            <h3 class="animated3">
 	                            	We Making Difference To Great Things Possible
-	                            </h3>
-	                            <p class="animated4"><a href="#" class="slider btn btn-primary white">Check Now</a></p>
+								</h3>
+								-->
+	                            <p class="animated4"><a href="#" class="slider btn btn-primary white">INFORMACIÓN</a></p>
 	                        </div>
 	                    </div>
 					</li>
 					<li>
 						<div class="overlay2">
-							<img class="" src="images/slider/bg2.jpg" alt="slider">
+							<img class="" src="{{ asset('web/images/slider/segundo.jpg') }}" alt="slider">
 						</div>
 						<div class="flex-caption slider-content">
 	                        <div class="col-md-12 text-center">
+								<!--
 	                            <h2 class="animated4">
 	                                How Big Can You Dream?
 	                            </h2>
 	                            <h3 class="animated5">
 	                            	We are here to make it happen
-	                            </h3>		
-	                            <p class="animated6"><a href="#" class="slider btn btn-primary white">Buy Now</a></p>	     
+								</h3>		
+								-->
+	                            <p class="animated6"><a href="#" class="slider btn btn-primary white">SOLICITAR</a></p>	     
 	                        </div>
 	                    </div>
 					</li>
 					<li>
 						<div class="overlay2">
-							<img class="" src="images/slider/bg3.jpg" alt="slider">
+							<img class="" src="{{ asset('web/images/slider/tercero.jpg') }}" alt="slider">
 						</div>
 						<div class="flex-caption slider-content">
 	                        <div class="col-md-12 text-center">
+								<!--
 	                            <h2 class="animated7">
 	                                Your Challenge is Our Progress
 	                            </h2>
 	                            <h3 class="animated8">
-	                            	So, You Don't Need to Go Anywhere Today
-	                            </h3>		
+	                            	So, You Dont Need to Go Anywhere Today
+								</h3>		
+								-->
 	                            <div class="">
-	                                <a class="animated4 slider btn btn-primary btn-min-block white" href="#">Get Now</a><a class="animated4 slider btn btn-primary btn-min-block solid" href="#">Live Demo</a>
+	                                <a class="animated4 slider btn btn-primary btn-min-block white" href="#">JOYA</a><a class="animated4 slider btn btn-primary btn-min-block solid" href="#">PRENDARIO</a>
 	                            </div>     
 	                        </div>
 	                    </div>
@@ -211,7 +184,7 @@
 					  		<a class="animated fadeIn" href="#tab_a" data-toggle="tab">
 					  			<span class="tab-icon"><i class="fa fa-info"></i></span>
 					  			<div class="tab-info">
-						  			<h3>Who Are We</h3>
+						  			<h3>Quienes Somos</h3>
 					  			</div>
 					  		</a>
 					  	</li>
@@ -219,7 +192,7 @@
 						  	<a class="animated fadeIn" href="#tab_b" data-toggle="tab">
 						  		<span class="tab-icon"><i class="fa fa-briefcase"></i></span>
 					  			<div class="tab-info">
-						  			<h3>Our Company</h3>
+						  			<h3>Nuestra Empresa</h3>
 					  			</div>
 						  	</a>
 						</li>
@@ -227,7 +200,7 @@
 						  	<a class="animated fadeIn" href="#tab_c" data-toggle="tab">
 						  		<span class="tab-icon"><i class="fa fa-android"></i></span>
 					  			<div class="tab-info">
-						  			<h3>What We Do</h3>
+						  			<h3>Que Hacemos</h3>
 					  			</div>
 						  	</a>
 						</li>
@@ -235,7 +208,7 @@
 						  	<a class="animated fadeIn" href="#tab_d" data-toggle="tab">
 						  		<span class="tab-icon"><i class="fa fa-pagelines"></i></span>
 					  			<div class="tab-info">
-						  			<h3>Modern Design</h3>
+						  			<h3>Amigable</h3>
 					  			</div>
 						  	</a>
 						</li>
@@ -243,7 +216,7 @@
 						  	<a class="animated fadeIn" href="#tab_e" data-toggle="tab">
 						  		<span class="tab-icon"><i class="fa fa-support"></i></span>
 					  			<div class="tab-info">
-						  			<h3>Dedicated Support</h3>
+						  			<h3>Atención al Cliente</h3>
 					  			</div>
 						  	</a>
 						</li>
@@ -283,14 +256,12 @@
     <section id="image-block" class="image-block no-padding">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-6 ts-padding" style="height:650px;background:url(images/image-block-bg.jpg) 50% 50% / cover no-repeat;">
+				<div class="col-md-6 ts-padding" style="height:650px;background:url(web/images/nuestraEmpresa.jpg) 50% 50% / cover no-repeat;">
 				</div>
 				<div class="col-md-6 ts-padding img-block-right">
 					<div class="img-block-head text-center">
-						<h2>Know More About Our Company</h2>
-						<h3>Why Choose Us</h3>
-						<p>Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Proin gravida nibh vel velit auctor Aenean sollicitudin, adipisicing elit sed lorem quis bibendum auctor.
-						</p>
+						<h2>CONOZCA MÁS SOBRE NUESTRA EMPRESA</h2>
+						<h3>POR QUÉ ELEGIRNOS</h3>
 					</div>
 
 					<div class="gap-30"></div>
@@ -298,24 +269,24 @@
 					<div class="image-block-content">
 						<span class="feature-icon pull-left" ><i class="fa fa-bicycle"></i></span>
 						<div class="feature-content">
-							<h3>Tons of Features</h3>
-							<p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut</p>
+							<h3>Prestamos a Domicilio</h3>
+							<p>Tenemos el personal adecuado y capacitado en todas las medidas de seguridad para realizar el prestamo en la comodidad de su hogar</p>
 						</div>
 					</div><!--/ End 1st block -->
 
 					<div class="image-block-content">
 						<span class="feature-icon pull-left" ><i class="fa fa-diamond"></i></span>
 						<div class="feature-content">
-							<h3>PowerPack Theme</h3>
-							<p>Proin gravida nibh vel velit auctor Aenean sollicitudin adipisicing</p>
+							<h3>Prestamos de Joyas y Garantias</h3>
+							<p>Le brindamos prestamos tanto con joyas como con equipos electrodomesticos y electrónicos.</p>
 						</div>
 					</div><!--/ End 1st block -->
 
 					<div class="image-block-content">
 						<span class="feature-icon pull-left" ><i class="fa fa-street-view"></i></span>
 						<div class="feature-content">
-							<h3>Day Night Support</h3>
-							<p>Simply dummy text and typesettings industry has been the industry</p>
+							<h3>Atención al Cliente</h3>
+							<p>Le brindamos una atención y asesoramiento de manera personalizada</p>
 						</div>
 					</div><!--/ End 1st block -->
 
@@ -332,177 +303,38 @@
 				<div class="facts one col-md-3 col-sm-6">
 					<span class="facts-icon"><i class="fa fa-user"></i></span>
 					<div class="facts-num">
-						<span class="counter">1200</span>
+						<span class="counter">230</span>
 					</div>
-					<h3>Clients</h3> 
+					<h3>Clientes</h3> 
 				</div>
 
 				<div class="facts two col-md-3 col-sm-6">
 					<span class="facts-icon"><i class="fa fa-institution"></i></span>
 					<div class="facts-num">
-						<span class="counter">1277</span>
+						<span class="counter">2</span>
 					</div>
-					<h3>Item Sold</h3> 
+					<h3>Sedes</h3> 
 				</div>
 
 				<div class="facts three col-md-3 col-sm-6">
 					<span class="facts-icon"><i class="fa fa-suitcase"></i></span>
 					<div class="facts-num">
-						<span class="counter">869</span>
+						<span class="counter">39</span>
 					</div>
-					<h3>Projects</h3> 
+					<h3>Prestamos</h3> 
 				</div>
 
 				<div class="facts four col-md-3 col-sm-6">
 					<span class="facts-icon"><i class="fa fa-trophy"></i></span>
 					<div class="facts-num">
-						<span class="counter">76</span>
+						<span class="counter">2</span>
 					</div>
-					<h3>Awwards</h3> 
+					<h3>Servicios</h3> 
 				</div>
 
 			</div>
 		</div><!--/ Container end -->
     </section><!--/ Counter end -->
-
-
-    <!-- Portfolio start -->
-	<section id="portfolio" class="portfolio portfolio-box">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12 heading text-center">
-					<span class="icon-pentagon wow bounceIn"><i class="fa fa-suitcase"></i></span>
-					<h2 class="title2">Project Completed
-						<span class="title-desc">A Quality Experience Team with 4 years experience</span>
-					</h2>
-				</div>
-			</div> <!-- Title row end -->
-
-			<!--Isotope filter start -->
-			<div class="row text-center">
-				<div class="isotope-nav" data-isotope-nav="isotope">
-					<ul>
-						<li><a href="#" class="active" data-filter="*">All</a></li>
-						<li><a href="#" data-filter=".web-design">Web Design</a></li>
-						<li><a href="#" data-filter=".development">Development</a></li>
-						<li><a href="#" data-filter=".joomla">Joomla</a></li>
-						<li><a href="#" data-filter=".wordpress">Wordpress</a></li>
-					</ul>
-				</div>
-			</div><!-- Isotope filter end -->
-			
-			<div class="row">
-				<div id="isotope" class="isotope">
-					<div class="col-sm-3 web-design isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio1.jpg" alt="">
-								<figcaption>
-									<h3>Startup Business</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg1.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>			
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 development isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio2.jpg" alt="">
-								<figcaption>
-									<h3>Easy to Lanunch</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg2.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>				
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 joomla isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio3.jpg" alt="">
-								<figcaption>
-									<h3>Your Business</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg3.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>				
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 wordpress isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio4.jpg" alt="">
-								<figcaption>
-									<h3>Prego Match</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg4.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>					
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 joomla isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio5.jpg" alt="">
-								<figcaption>
-									<h3>Fashion Brand</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg5.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>					
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 development isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio6.jpg" alt="">
-								<figcaption>
-									<h3>The Insidage</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg1.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>					
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 development isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio7.jpg" alt="">
-								<figcaption>
-									<h3>Light Carpet</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg2.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>					
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-
-					<div class="col-sm-3 development isotope-item">
-						<div class="grid">
-							<figure class="effect-oscar">
-								<img src="images/portfolio/portfolio8.jpg" alt="">
-								<figcaption>
-									<h3>Amazing Keyboard</h3>
-									<a class="link icon-pentagon" href="portfolio-item.html"><i class="fa fa-link"></i></a>
-									<a class="view icon-pentagon" data-rel="prettyPhoto" href="images/portfolio/portfolio-bg3.jpg"><i class="fa fa-search"></i></a>            
-								</figcaption>					
-							</figure>
-						</div>
-					</div><!-- Isotope item end -->
-				</div><!-- Isotope content end -->
-			</div><!-- Content row end -->
-		</div><!-- Container end -->
-	</section><!-- Portfolio end -->
-
-	
-
 
 
 	<!-- Service box start -->
@@ -513,24 +345,24 @@
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-heart-o"></i></span>
 					<div class="feature-content">
-						<h3>Clean &amp; Modern Design</h3>
-						<p>Bras urna felis accumsan at ultrde cesid posuere masa socis nautoque penat</p>
+						<h3>Confiabilidad</h3>
+						<p>Nuestros servicios cuentan con suma confiabilidad</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-codepen"></i></span>
 					<div class="feature-content">
-						<h3>Useful Shortcodes</h3>
-						<p>High Life narwhal, banh mi PBR single-origin coffee Odd Future actually aliqua</p>
+						<h3>Almacen</h3>
+						<p>Nuestros almacenes cuentan con multiples medidas de seguridad</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-film"></i></span>
 					<div class="feature-content">
-						<h3>Parallax Section</h3>
-						<p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut</p>
+						<h3>Seguridad</h3>
+						<p>Contamos con video-vigilancia en todas nuestras oficinas y almacenes</p>
 					</div>
 				</div><!--/ End first featurebox -->
 			</div><!-- Content row end -->
@@ -541,24 +373,24 @@
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-newspaper-o"></i></span>
 					<div class="feature-content">
-						<h3>Multipurpose Concept</h3>
-						<p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut</p>
+						<h3>Informacíon</h3>
+						<p>Brindamos toda la información que usted necesita</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-desktop"></i></span>
 					<div class="feature-content">
-						<h3>Responsive Layout</h3>
-						<p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut</p>
+						<h3>Electrodomesticos</h3>
+						<p>Trabajamos con amplio rango de garantias aceptadas</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-pagelines"></i></span>
 					<div class="feature-content">
-						<h3>Light wight Performance</h3>
-						<p>High Life narwhal, banh mi PBR single-origin coffee Odd Future actually aliqua</p>
+						<h3>Rapida Atención</h3>
+						<p>Nuestra atención no genera colas debido a nuestro rápido proceso de atención</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
@@ -570,24 +402,24 @@
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-recycle"></i></span>
 					<div class="feature-content">
-						<h3>Free Lifetime Updates</h3>
-						<p>Bras urna felis accumsan at ultrde cesid posuere masa socis nautoque penat</p>
+						<h3>Renovaciones</h3>
+						<p>Brindamos la posibilidad de renovar las fechas de pago</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-diamond"></i></span>
 					<div class="feature-content">
-						<h3>Endless Possibilites</h3>
-						<p>High Life narwhal, banh mi PBR single-origin coffee Odd Future actually aliqua</p>
+						<h3>Joyas</h3>
+						<p>Aceptamos joyas como garantía</p>
 					</div>
 				</div><!--/ End first featurebox -->
 
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
 					<span class="feature-icon pull-left" ><i class="fa fa-whatsapp"></i></span>
 					<div class="feature-content">
-						<h3>24/7 Live Support</h3>
-						<p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut</p>
+						<h3>Atención al cliente</h3>
+						<p>Brindamos toda la información que necesita de manera facil y rápida</p>
 					</div>
 				</div><!--/ End first featurebox -->
 			</div><!-- Content row end -->
@@ -602,11 +434,11 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12 text-center">
-					<h2>Are You Ready to Buy This Template!</h2>
-					<h3>Just Click Button and Use Your Own</h3>
+					<h2>INFORMACIÓN</h2>
+					<h3>Seleccione para ver más información</h3>
 					<p>
-						<a href="#" class="btn btn-primary white">Purchase Now</a>
-						<a href="#" class="btn btn-primary solid">Get In Touch</a>
+						<a href="$" class="btn btn-primary white">Joyas</a>
+						<a href="$" class="btn btn-primary solid">Electro</a>
 					</p>
 				</div>
 			</div>
@@ -621,11 +453,12 @@
 			<div class="row">
 				<div class="col-md-12 heading">
 					<span class="title-icon pull-left"><i class="fa fa-weixin"></i></span>
-					<h2 class="title">Meet with our Team <span class="title-desc">A Quality Experience Team with 4 years experience</span></h2>
+					<h2 class="title">Nuestro Equipo</h2>
 				</div>
 			</div><!-- Title row end -->
 
 			<div class="row text-center">
+				<!--
 				<div class="col-md-3 col-sm-6">
 					<div class="team wow slideInLeft">
 						<div class="img-hexagon">
@@ -645,7 +478,7 @@
 							</div>
 						</div>
 					</div>	
-				</div><!--/ Team 1 end -->
+				</div>
 				<div class="col-md-3 col-sm-6">
 					<div class="team wow slideInLeft">
 						<div class="img-hexagon">
@@ -665,7 +498,7 @@
 							</div>
 						</div>
 					</div>
-				</div><!--/ Team 2 end -->
+				</div>
 				<div class="col-md-3 col-sm-6">
 					<div class="team wow slideInRight">
 						<div class="img-hexagon">
@@ -685,7 +518,7 @@
 							</div>
 						</div>
 					</div>
-				</div><!--/ Team 3 end -->
+				</div>
 				<div class="col-md-3 col-sm-6">
 					<div class="team animate wow slideInRight">
 						<div class="img-hexagon">
@@ -705,13 +538,14 @@
 							</div>
 						</div>
 					</div>
-				</div><!--/ Team 4 end -->
+				</div>
+			-->
 			</div><!--/ Content row end -->
 		</div><!--/ Container end -->
     </section><!--/ Team end -->
 
 
-	<!-- Testimonial start-->
+	<!-- 
 	<section class="testimonial parallax parallax3">
 		<div class="parallax-overlay"></div>
 	  	<div class="container">
@@ -750,10 +584,10 @@
 			            	<h3 class="name">Taline Lucine<span>Sales Manager</span></h3>
 			          	</div>
 			        </div>
-			    </div><!--/ Testimonial carousel end-->
-		    </div><!--/ Row end-->
-	  	</div><!--/  Container end-->
-	</section><!--/ Testimonial end-->
+			    </div>
+		    </div>
+	  	</div>
+	</section>-->
 
 
 	<!-- Newsletter start -->
@@ -762,8 +596,8 @@
 		  	<div class="row">
 				<div class="col-md-12 heading text-center">
 					<span class="icon-pentagon wow bounceIn animated"><i class="fa fa-envelope"></i></span>
-					<h2 class="title2">Subscribe With Us
-						<span class="title-desc">We Love to Work with Passion</span>
+					<h2 class="title2">REGISTRATE
+						<span class="title-desc">Para poder realizar tus tramites en linea</span>
 					</h2>
 				</div>
 			</div>
@@ -771,8 +605,7 @@
 				<div class="col-md-6 col-md-offset-3">
 					<form action="#" method="post" id="newsletter-form" class="newsletter-form wow bounceIn" data-wow-duration=".8s">
 						<div class="form-group">
-							<input type="email" name="email" id="newsletter-form-email" class="form-control form-control-lg" placeholder="Enter your email address" autocomplete="off">
-							<button class="btn btn-primary solid">Subscribe</button>
+							<button class="btn btn-primary solid">Registrar</button>
 						</div>
 					</form>
 				</div>
@@ -786,17 +619,17 @@
 		<div class="container">
 
 			<div class="row">
-
+				<!--
 				<div class="col-md-4 col-sm-12 footer-widget">
 					<h3 class="widget-title">Flickr Photos</h3>
 
 					<div class="img-gallery">
 						<div class="img-container">
-							<a class="thumb-holder" data-rel="prettyPhoto" href="images/gallery/1.jpg">
-								<img src="images/gallery/1.jpg" alt="">
+							<a class="thumb-holder" data-rel="prettyPhoto" href="web/images/gallery/1.jpg">
+								<img src="web/images/gallery/1.jpg" alt="">
 							</a>
 							<a class="thumb-holder" data-rel="prettyPhoto" href="images/gallery/2.jpg">
-								<img src="images/gallery/2.jpg" alt="">
+								<img src="web/images/gallery/2.jpg" alt="">
 							</a>
 							<a class="thumb-holder" data-rel="prettyPhoto" href="images/gallery/3.jpg">
 								<img src="images/gallery/3.jpg" alt="">
@@ -823,45 +656,42 @@
 					</div>
 
 						
-				</div><!--/ end flickr -->
+				</div> -->
 
 				<div class="col-md-4 col-sm-12 footer-widget">
-					<h3 class="widget-title">Quick Links</h3>
+					<h3 class="widget-title">Disponibles</h3>
 
 					<ul class="unstyled arrow">
-						<li><a href="#">About CraftTheme</a></li>
-						<li><a href="#">How We Help</a></li>
-						<li><a href="#">Upcoming Events</a></li>
-						<li><a href="#">Customer Support</a></li>
-						<li><a href="#">Fill a Form</a></li>
-						<li><a href="#">Latest News</a></li>
-						<li><a href="#">Features</a></li>
-						<li><a href="#">Shortcodes</a></li>
-						<li><a href="#">Portfolio</a></li>
-						<li><a href="#">404 Error Page</a></li>
-						<li><a href="#">Coming Soon</a></li>
-						<li><a href="#">Contact</a></li>
+						<li><a href="#">Acerca de Nosotros</a></li>
+						<li><a href="#">Como Ayudamos</a></li>
+						<li><a href="#">Próximos Eventos</a></li>
+						<li><a href="#">Atención al Cliente</a></li>
+						<li><a href="#">Registrate</a></li>
+						<li><a href="#">Ultimas Noticias</a></li>
+						<li><a href="#">Servicios</a></li>
+						<li><a href="#">Liquidaciones</a></li>
+						<li><a href="#">Próximamente</a></li>
+						<li><a href="#">Contáctenos</a></li>
 					</ul>
 	
 				</div><!--/ End Recent Posts-->
 
 
 				<div class="col-md-3 col-sm-12 footer-widget footer-about-us">
-					<h3 class="widget-title">About Craft</h3>
-					<p>We are a awward winning multinational company. We believe in quality and standard worldwide.</p>
-					<p><strong>Address: </strong>1102 Saint Marys, Junction City, KS</p>
+					<h3 class="widget-title">Sobre Nosotroas</h3>
+					<p>Somos una empresa de prestamos por garantías.</p>
+					<p><strong>Dirección: </strong>Jr. Sebastian de Aliste 209 - Independencia - Huaraz</p>
 					<div class="row">
 						<div class="col-md-6">
-							<strong>Email: </strong>
-							<p>info@craftbd.com</p>
+							<strong>Correo: </strong>
+							<p>invef123@gmail.com</p>
 						</div>
 						<div class="col-md-6">
-							<strong>Phone No.</strong>
-							<p>+(785) 238-4131</p>
+							<strong>Teléfono.</strong>
+							<p>+(51) 939214860</p>
 						</div>
 					</div>
 					<br/>
-					<p><a href="#" class="btn btn-primary solid square">Purchase Now <i class="fa fa-long-arrow-right"></i></a></p>
 				</div><!--/ end about us -->
 
 
@@ -879,26 +709,14 @@
 				<div class="col-md-12 text-center">
 					<ul class="footer-social unstyled">
 						<li>
-							<a title="Twitter" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-twitter"></i></span>
-							</a>
 							<a title="Facebook" href="#">
 								<span class="icon-pentagon wow bounceIn"><i class="fa fa-facebook"></i></span>
 							</a>
 							<a title="Google+" href="#">
 								<span class="icon-pentagon wow bounceIn"><i class="fa fa-google-plus"></i></span>
 							</a>
-							<a title="linkedin" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-linkedin"></i></span>
-							</a>
-							<a title="Pinterest" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-pinterest"></i></span>
-							</a>
-							<a title="Skype" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-skype"></i></span>
-							</a>
 							<a title="Dribble" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-dribbble"></i></span>
+								<span class="icon-pentagon wow bounceIn"><i class="fa fa-whatsapp"></i></span>
 							</a>
 						</li>
 					</ul>
@@ -907,7 +725,7 @@
 			<div class="row">
 				<div class="col-md-12 text-center">
 					<div class="copyright-info">
-         			 &copy; Copyright 2019 Themefisher. <span>Designed by <a href="https://themefisher.com">Themefisher.com</a></span>
+         			 <span> <a href="https://inforad.net.pe">inforad.net.pe</a></span>
         			</div>
 				</div>
 			</div><!--/ Row end -->

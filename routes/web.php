@@ -14,6 +14,22 @@
 Route::get('/', function () {
     return view('welcome');
 })->name('web');
+
+Route::get('/cl23', function () {
+    $ocupacion = \DB::SELECT('SELECT * FROM ocupacion');
+    $recomendacion = \DB::SELECT('SELECT * FROM recomendacion');
+    $tipodoc = \DB::SELECT('SELECT * FROM tipodocide');
+    $departamento = \DB::SELECT('SELECT * FROM departamento');
+    $provincia = \DB::SELECT('SELECT * FROM provincia');
+    $distrito = \DB::SELECT('SELECT * FROM distrito');
+    return view('web.registroSorteo', compact('ocupacion', 'recomendacion', 'tipodoc', 'departamento' ,'provincia', 'distrito'));
+})->name('cli');
+
+Route::get('/nosotros', function(){
+    return view('web.nosotros');
+})->name('nosotros');
+
+//Route::get('/cl23', 'novedadesController@cli')->name('cli');
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 

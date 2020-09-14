@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class proceso extends Model
 {
@@ -69,6 +70,22 @@ class proceso extends Model
         }
 
         return $actualizar;
+    }
+
+    public static function validarPermiso($permiso)
+    {
+        $estado = "hidden";
+        $user = Auth::user()->id;
+
+        $verificar = \DB::SELECT('SELECT * 
+                                  FROM users u, userrol ur, rol r, menurol mr, menu m
+                                  WHERE ur.users_id = u.id AND ur.rol_id = r.id AND mr.rol_id = r.id AND mr.menu_id = m.id AND m.nombre = "'.$permiso.'" AND u.id = "'.$user.'"');
+
+        if ($verificar != null) {
+            $estado = "";
+        }
+
+        return $estado;
     }
 
     
