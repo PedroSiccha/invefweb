@@ -18,7 +18,7 @@
                             <td>{{ $pr->nombre }} {{ $pr->apellido }}</td>
                             <td>{{ $pr->dni }}</td>
                             <td>{{ $pr->created_at }}</td>
-                            <td><button type="button" class="btn btn-xs btn-success" onclick="desembolsar('{{ $pr->prestamo_id }}')"><i class="fa fa-paper-plane-o"></i></button></td>
+                            <td><button type="button" class="btn btn-xs btn-success" onclick="tipoDesembolso('{{ $pr->prestamo_id }}')"><i class="fa fa-paper-plane-o"></i></button></td>
                         </tr>    
                     @endforeach    
                 </tbody>

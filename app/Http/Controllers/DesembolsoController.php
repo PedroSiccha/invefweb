@@ -103,7 +103,7 @@ class DesembolsoController extends Controller
                 $mov = new Movimiento();
                 $mov->estado = "ACTIVO";
                 $mov->monto = $prestamo[0]->monto;
-                $mov->concepto = "DESEMBOLSO EN EFECTIVO. CODIGI: ".$request->id;
+                $mov->concepto = "DESEMBOLSO EN EFECTIVO. CODIGO: ".$request->id;
                 $mov->tipo = "EGRESO";
                 $mov->empleado = $empleado_id;
                 $mov->importe = $prestamo[0]->monto;
@@ -135,9 +135,24 @@ class DesembolsoController extends Controller
 
     public function desembolsarDeposito(Request $request)
     {
-        $cuenta = $request->numCuenta;
+        $cuenta = $request->cuenta;
         $banco = $request->banco;
         $descuento = $request->descuento;
+
+        if ($banco == "bn") {
+            $defBanco = "BANCO NACION";
+        }else if ($banco == "i") {
+            $defBanco = "INTERBANK";
+        }else {
+            $defBanco = "BCP";
+        }
+
+        if ($descuento == 0) {
+            $concepto = "DESEMBOLSO POR DEPÓSITO, ".$defBanco." \nCodigo: ".$request->id.". \nSin Descuento.";
+        }else{
+            $concepto = "DESEMBOLSO POR DEPÓSITO, ".$defBanco." \nCodigo: ".$request->id.". \nDescuento: ".$descuento.".";
+        }
+        
 
         $desm = \DB::SELECT('SELECT MAX(id) AS id 
                              FROM desembolso');
@@ -151,7 +166,7 @@ class DesembolsoController extends Controller
         $empleado_id = $empleado[0]->id;
         $tipocaja = \DB::SELECT('SELECT * 
                                  FROM tipocaja 
-                                 WHERE codigo = "b"');
+                                 WHERE codigo = "'.$banco.'"');
                    
         $caja = \DB::SELECT('SELECT MAX(id) AS id 
                              FROM caja 
@@ -161,20 +176,18 @@ class DesembolsoController extends Controller
                                  INNER JOIN cotizacion c ON p.cotizacion_id = c.id
                                  INNER JOIN garantia g ON c.garantia_id = g.id
                                  WHERE p.id = "'.$request->id.'"');
+
         $maxCaja = \DB::SELECT('SELECT MAX(id) AS id, monto 
                                 FROM caja 
-                                WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'"');
+                                WHERE estado = "abierta" AND tipocaja_id = "'.$tipocaja[0]->id.'" AND sede_id = "'.$prestamo[0]->sede_id.'" group by id');
+
         $nuevoMonto = $maxCaja[0]->monto - $prestamo[0]->monto - $descuento;
-        
-        if ($desm[0]->id == null) {
-            $numero = "1";  
-        }else {
-            $numero = $desm[0]->id + 1;
-        }
+    
+
         $des = new Desembolso();
-        $des->numero = $numero;
+        $des->numero = $cuenta;
         $des->estado = "DESEMBOLSADO";
-        $des->monto = $prestamo[0]->monto;
+        $des->monto = $prestamo[0]->monto + $descuento;
         $des->prestamo_id = $request->id;
         $des->empleado_id = $empleado_id;
         $des->sede_id = $prestamo[0]->sede_id;
@@ -188,8 +201,8 @@ class DesembolsoController extends Controller
 
                 $mov = new Movimiento();
                 $mov->estado = "ACTIVO";
-                $mov->monto = $prestamo[0]->monto;
-                $mov->concepto = "DESEMBOLSO POR DEPÓSITO, ".$banco." Codigo: ".$request->id;
+                $mov->monto = $prestamo[0]->monto + $descuento;
+                $mov->concepto = $concepto;
                 $mov->tipo = "EGRESO";
                 $mov->empleado = $empleado_id;
                 $mov->importe = $prestamo[0]->monto;
@@ -229,7 +242,7 @@ class DesembolsoController extends Controller
     {
         $maxDesembolso = \DB::SELECT('SELECT MAX(id) AS id FROM desembolso WHERE estado = "DESEMBOLSADO"');
 
-        $desembolso = \DB::SELECT('SELECT d.estado, d.monto, d.created_at, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia 
+        $desembolso = \DB::SELECT('SELECT d.estado, d.monto, d.numero, d.created_at, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia 
                                    FROM desembolso d, prestamo p, empleado e, cotizacion c, cliente cl, garantia g
                                    WHERE d.prestamo_id = p.id AND d.empleado_id = e.id AND p.cotizacion_id = c.id AND c.cliente_id = cl.id AND c.garantia_id = g.id AND d.id = "'.$maxDesembolso[0]->id.'"');
 

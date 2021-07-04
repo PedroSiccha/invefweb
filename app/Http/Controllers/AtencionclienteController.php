@@ -15,7 +15,7 @@ use Storage;
 class AtencionclienteController extends Controller
 {
     /**
-     * Display a listing of the resource. 
+     * Display a listing of the resource.   
      *
      * @return \Illuminate\Http\Response
      */
@@ -542,8 +542,30 @@ class AtencionclienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function pruebaApi()
+    {   
+        
+        $clientes = \DB::SELECT(' SELECT cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, cl.correo, dr.direccion, cl.fecnac, cl.edad, cl.genero, cl.foto, cl.facebook, cl.ingmax, cl.ingmin, cl.gasmax, cl.gasmin, o.nombre AS ocupacion, r.recomendacion AS recomendacion , cl.whatsapp 
+                                  FROM cliente cl 
+                                  INNER JOIN ocupacion o ON cl.ocupacion_id = o.id 
+                                  INNER JOIN recomendacion r ON cl.recomendacion_id = r.id 
+                                  INNER JOIN direccion dr ON cl.direccion_id = dr.id
+                                  GROUP BY cl.id');
+        
+        return $clientes;
+    }
+    
+    public function pruebaApiId($id)
+    {   
+        
+        $clientes = \DB::SELECT(' SELECT cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, cl.correo, dr.direccion, cl.fecnac, cl.edad, cl.genero, cl.foto, cl.facebook, cl.ingmax, cl.ingmin, cl.gasmax, cl.gasmin, o.nombre AS ocupacion, r.recomendacion AS recomendacion , cl.whatsapp 
+                                  FROM cliente cl 
+                                  INNER JOIN ocupacion o ON cl.ocupacion_id = o.id 
+                                  INNER JOIN recomendacion r ON cl.recomendacion_id = r.id 
+                                  INNER JOIN direccion dr ON cl.direccion_id = dr.id
+                                  WHERE cl.id = "'.$id.'"
+                                  GROUP BY cl.id');
+        
+        return $clientes;
     }
 }

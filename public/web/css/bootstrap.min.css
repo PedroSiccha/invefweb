@@ -4088,6 +4088,7 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 	display:none;
 	overflow:auto;
 	overflow-y:scroll
+	
 }
 .modal.fade .modal-dialog {
 	-webkit-transform:translate(0, -25%);
@@ -4188,7 +4189,7 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 .modal-dialog {
 	right:auto;
 	left:50%;
-	width:600px;
+	width:900px;
 	padding-top:30px;
 	padding-bottom:30px
 }

@@ -335,7 +335,7 @@
              </h1>
     
              <h1 class="textos">
-                <b style="text-decoration: underline;">CLAUSULA SEGUNDA:</b> <b>EL PRESTATARIO</b>, se compromete a devolver el total de dinero mencionado en la primera clausula más los intereses generados por el préstamo, a partir de la fecha del inicio del presente contrato en el plazo de un mes que <b>FINALIZA EL DÍA <?php  echo date("d/m/Y", strtotime($co->fecfin)); ?></b>, ambas partes acuerdan que dicho préstamo generará el interés de <b><?php   $moneda = $co->intpagar; echo "S/. ".number_format($moneda, 2); ?>(<?php echo valorEnLetras( $moneda ); ?> NUEVOS SOLES)</b>. Serán pagados en las agencias BCP, Agentes BCP, Internet (Vía BCP y Banca móvil) Al código: 17948{{ $co->dni }})         	
+                <b style="text-decoration: underline;">CLAUSULA SEGUNDA:</b> <b>EL PRESTATARIO</b>, se compromete a devolver el total de dinero mencionado en la primera clausula más los intereses generados por el préstamo, a partir de la fecha del inicio del presente contrato en el plazo de un mes que <b>FINALIZA EL DÍA <?php  echo date("d/m/Y", strtotime($co->fecfin)); ?></b>, ambas partes acuerdan que dicho préstamo generará el interés de <b><?php  $moneda = $co->intpagar; echo "S/. ".number_format($moneda, 2); ?>(<?php echo valorEnLetras( $moneda ); ?> NUEVOS SOLES)</b>. Serán pagados en las agencias BCP, Agentes BCP, Internet (Vía BCP y Banca móvil) Al código: 17948{{ $co->dni }})         	
              </h1>
     
              <h1 class="textos">

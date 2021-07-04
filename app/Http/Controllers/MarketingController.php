@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Movimiento;
 use App\Caja;
+use App\Formulario;
 
 class MarketingController extends Controller
 {
@@ -33,13 +34,21 @@ class MarketingController extends Controller
             $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
         }
 
-        $clientes = \DB::SELECT('SELECT c.*, p.* FROM cliente c
+        $clientes = \DB::SELECT('SELECT * FROM cliente WHERE id NOT IN (
+                                 SELECT c.id FROM cliente c
                                  INNER JOIN cotizacion co ON c.id = co.cliente_id
                                  INNER JOIN prestamo p ON co.id = p.cotizacion_id
-                                 WHERE p.estado = "PAGADO" OR p.estado = "VENDIDO"
-                                 GROUP BY c.id');
+                                 WHERE p.estado = "ACTIVO" OR p.estado = "RENOVADO" OR p.estado = "ACTIVO DESEMBOLSADO"
+                                 GROUP BY c.id)');
 
-        return view('marketing.cliente', compact('usuario', 'clientes', 'notificacion', 'cantNotificaciones'));
+        $conteo = \DB::SELECT('SELECT COUNT(*) as conteo FROM cliente WHERE id NOT IN (
+                               SELECT c.id FROM cliente c
+                               INNER JOIN cotizacion co ON c.id = co.cliente_id
+                               INNER JOIN prestamo p ON co.id = p.cotizacion_id
+                               WHERE p.estado = "ACTIVO" OR p.estado = "RENOVADO" OR p.estado = "ACTIVO DESEMBOLSADO"
+                               GROUP BY c.id)');
+
+        return view('marketing.cliente', compact('usuario', 'clientes', 'notificacion', 'cantNotificaciones', 'conteo'));
     }
 
     public function liquidacion()
@@ -255,9 +264,20 @@ class MarketingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function guardarFormulario(Request $request)
     {
-        //
+        $nombre = $request->nombre;
+        $apellido = $request->apellido;
+        $celular = $request->celular;
+        $correo = $request->correo;
+
+        $f = new Formulario(); 
+        $f->nombre = $nombre;
+        $f->apellido = $apellido;
+        $f->celular = $celular;
+        $f->correo = $correo;
+        $f->save();       
+
     }
 
     /**

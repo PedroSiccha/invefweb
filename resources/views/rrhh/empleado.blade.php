@@ -11,7 +11,7 @@
                     <span class="text-muted small float-right">Ultima Modificación: <i class="fa fa-clock-o"></i> {{date( "g:i a") }} - {{ date("d/m/Y")}}</span>
                     <h2>Empleados</h2>
                     <p>
-                        Empleados Registrados.
+                        Empleados Registrados.  
                     </p>
                     <div class="input-group">
                         <input type="text" placeholder="Buscar emplados... " class="input form-control" id="clienteBusqueda" onkeyup="buscarCliente()">
@@ -97,7 +97,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>DNI</label> 
-                                                        <input type="text" placeholder="Ingrese DNI" class="form-control" id="dni" name="dni" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="verificarDNI()">
+                                                        <input type="text" placeholder="Ingrese DNI" class="form-control" id="dni" name="dni" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Foto de Perfil</label> 

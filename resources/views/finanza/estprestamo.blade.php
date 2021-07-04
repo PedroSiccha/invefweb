@@ -7,16 +7,16 @@
 <div class="tabs-container">
     <ul class="nav nav-tabs" role="tablist">
         <li><a class="nav-link active" data-toggle="tab" href="#cPrestamo"> Prestamos</a></li>
-        <li><a class="nav-link" data-toggle="tab" href="#cAlmacen"> Almacén</a></li>
-        <li><a class="nav-link" data-toggle="tab" href="#cLiquidacion"> Liquidación</a></li>
-        <li><a class="nav-link" data-toggle="tab" href="#cVendido"> Vendidos</a></li>
-        <li><a class="nav-link" data-toggle="tab" href="#cCliente"> Clientes</a></li>
+        <!-- <li><a class="nav-link" data-toggle="tab" href="#cAlmacen"> Almacén</a></li> -->
+        <!-- <li><a class="nav-link" data-toggle="tab" href="#cLiquidacion"> Liquidación</a></li> --> 
+        <!-- <li><a class="nav-link" data-toggle="tab" href="#cVendido"> Vendidos</a></li> -->
+        <!-- <li><a class="nav-link" data-toggle="tab" href="#cCliente"> Clientes</a></li> -->
         <li><a class="nav-link" data-toggle="tab" href="#cEfectivo"> Efectivo</a></li>
+        <li><a class="nav-link" data-toggle="tab" href="#pActivos"> Prestamos Activos</a></li>
         <li><a class="nav-link" data-toggle="tab" href="#gInteres"> Ganancia de Interes</a></li>
         <li><a class="nav-link" data-toggle="tab" href="#gMora"> Ganancia por Moras</a></li>
         <li><a class="nav-link" data-toggle="tab" href="#gVenta"> Ganancia de Ventas</a></li>
         <li><a class="nav-link" data-toggle="tab" href="#gAdministrativo"> Gastos Administrativos</a></li>
-        <li><a class="nav-link" data-toggle="tab" href="#pActivos"> Prestamos Activos</a></li>
     </ul>
     <div class="tab-content">
         <div role="tabpanel" id="cPrestamo" class="tab-pane active">
@@ -34,7 +34,7 @@
                                 <div class="panel-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <div class="ibox ">
+                                            <div class="ibox "> 
                                                 <div class="ibox-title">
                                                     <h5>Prestamos
                                                         <small>Cantidad de Prestamos Colocados al Día</small>
@@ -880,7 +880,7 @@
                                             <div class="ibox ">
                                                 <div class="ibox-title">
                                                     <h5>Ganancia de Interes
-                                                        <small>Cantidad de Utilidades del Interes por Año</small>
+                                                        <small>Cantidad de Utilidades del Interes por Años</small>
                                                     </h5>
                                                 </div>
                                                 
@@ -1420,7 +1420,153 @@
     $(document).ready(graficoAnual);
 
     function graficoAnual() {
-        $.post( "{{ Route('graficoAnual') }}", { _token:'{{csrf_token()}}'}).done(function(data) {
+        
+        
+        new Chart(document.getElementById("canPrestamoAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [ {{ $registros[2019] }}, {{ $registros[2020] }}, {{ $registros[2021] }}], //Cantidad de Prestamos
+                    label: "Cantidad de Prestamo",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de Prestamo'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("canEfectivoAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [ {{ $registroEfectivo[2019] }}, {{ $registroEfectivo[2020] }}, 86002.27], //Cantidad de Prestamos
+                    label: "Cantidad de Efectivo",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de Efectivo'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("canInteresAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [{{ $registroInteres[2019] }}, {{ $registroInteres[2020] }}, {{ $registroInteres[2021] }}], //Cantidad de Prestamos
+                    label: "Cantidad de Interes",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de Interes'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("canMoraAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [{{ $registroMora[2019] }}, {{ $registroMora[2020] }}, {{ $registroMora[2021] }}], //Cantidad de Prestamos
+                    label: "Cantidad de Mora",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de Mora'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("canVentaAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [{{ $registroVenta[2019] }}, 6512.4, 1353.5], //Cantidad de Prestamos
+                    label: "Cantidad de Venta",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de Venta'
+                }
+            }
+        });
+
+        new Chart(document.getElementById("canAdministrativoAnioChart"), {
+            type: 'bar',
+            data: {
+                labels: [2019, 2020, 2021], //Cargar dias
+                datasets: [{ 
+                    data: [0, 4674.4, 2899], //Cantidad de Prestamos
+                    label: "Gastos Administrativos",
+                    borderColor: "#3e95cd",
+                    backgroundColor: "#3e95cd"
+                }]
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Balance Anual de los Gastos Administrativos'
+                }
+            }
+        });
+        
+        new Chart(document.getElementById("canpActivosAnioChart"), {
+                    type: 'bar',
+                    data: {
+                        labels: [2019, 2020, 2021], //Cargar dias
+                        datasets: [
+                            { 
+                                data: [0, 0, 27], 
+                                label: "Cantidad de Prestamos Activos",
+                                borderColor: "#3e95cd",
+                                cackgroungColor: "#3e95cd",
+                                backgroundColor: "#3e95cd"
+                            },
+                            {
+                                data: [0, 0, 48], 
+                                label: "Cantidad de Renovacion",
+                                borderColor: "#C72200",
+                                cackgroungColor: "#C72200",
+                                backgroundColor: "#C72200"
+                            }
+                        ]
+                    },
+                    
+                    options: {
+                        title: {
+                        display: true,
+                        text: 'Balance Mensual de Administrativo'
+                        }
+                    }
+                });
+
+        /*
             var datos = jQuery.parseJSON(data);
             var totalanios = datos.totalanio;
             var numanio = datos.anio;
@@ -1436,7 +1582,7 @@
             var gastoadmin = datos.gastoAdmin;
             var prestamoActivo = datos.prestamoactivo;
             var renovacionActivo = datos.renovacionactivo;
-            var i=0;
+            
             var anio = [];
             var Prestamos = [];
             var Bienes = [];
@@ -1466,23 +1612,7 @@
                 renActivo.push( renovacionActivo[i] );
             }
 
-            new Chart(document.getElementById("canPrestamoAnioChart"), {
-                    type: 'bar',
-                    data: {
-                        labels: anio, //Cargar dias
-                        datasets: [{ 
-                            data: Prestamos, //Cantidad de Prestamos
-                            label: "Cantidad de Prestamo",
-                            borderColor: "#3e95cd"
-                        }]
-                    },
-                    options: {
-                        title: {
-                        display: true,
-                        text: 'Balance Anual de Prestamo'
-                        }
-                    }
-                });
+            
 
             new Chart(document.getElementById("canBienesAnioChart"), {
                 type: 'bar',
@@ -1556,95 +1686,15 @@
                 }
             });
 
-            new Chart(document.getElementById("canEfectivoAnioChart"), {
-                type: 'bar',
-                data: {
-                    labels: anio, //Cargar dias
-                    datasets: [{ 
-                        data: Efectivo, //Cantidad de Prestamos
-                        label: "Cantidad de Efectivo",
-                        borderColor: "#3e95cd"
-                    }]
-                },
-                options: {
-                    title: {
-                    display: true,
-                    text: 'Balance Anual de Efectivo'
-                    }
-                }
-            });
+            
 
-            new Chart(document.getElementById("canInteresAnioChart"), {
-                type: 'bar',
-                data: {
-                    labels: anio, //Cargar dias
-                    datasets: [{ 
-                        data: Interes, //Cantidad de Prestamos
-                        label: "Cantidad de Interes",
-                        borderColor: "#3e95cd"
-                    }]
-                },
-                options: {
-                    title: {
-                    display: true,
-                    text: 'Balance Anual de Interes'
-                    }
-                }
-            });
+            
 
-            new Chart(document.getElementById("canMoraAnioChart"), {
-                type: 'bar',
-                data: {
-                    labels: anio, //Cargar dias
-                    datasets: [{ 
-                        data: Mora, //Cantidad de Prestamos
-                        label: "Cantidad de Mora",
-                        borderColor: "#3e95cd"
-                    }]
-                },
-                options: {
-                    title: {
-                    display: true,
-                    text: 'Balance Anual de Mora'
-                    }
-                }
-            });
+            
 
-            new Chart(document.getElementById("canVentaAnioChart"), {
-                type: 'bar',
-                data: {
-                    labels: anio, //Cargar dias
-                    datasets: [{ 
-                        data: Venta, //Cantidad de Prestamos
-                        label: "Cantidad de Venta",
-                        borderColor: "#3e95cd"
-                    }]
-                },
-                options: {
-                    title: {
-                    display: true,
-                    text: 'Balance Anual de Venta'
-                    }
-                }
-            });
+            
 
-            new Chart(document.getElementById("canAdministrativoAnioChart"), {
-                type: 'bar',
-                data: {
-                    labels: anio, //Cargar dias
-                    datasets: [{ 
-                        data: Gastos, //Cantidad de Prestamos
-                        label: "Gastos Administrativos",
-                        borderColor: "#3e95cd"
-                    }]
-                },
-                options: {
-                    title: {
-                    display: true,
-                    text: 'Balance Anual de los Gastos Administrativos'
-                    }
-                }
-            });
+            
 
             new Chart(document.getElementById("canpActivosAnioChart"), {
                 type: 'bar',
@@ -1670,8 +1720,7 @@
                     }
                 }
             });
-
-        });
+        */
     }
 
     function mostrarPrestamo() {
@@ -1697,13 +1746,14 @@
                 }
 
                 new Chart(document.getElementById("canPrestamoChart"), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: dias, //Cargar dias
                         datasets: [{ 
                             data: cantPrestamos, //Cantidad de Prestamos
                             label: "Cantidad de Prestamo",
-                            borderColor: "#3e95cd"
+                            borderColor: "#3e95cd",
+                            backgroundColor: "#3e95cd"
                         }]
                     },
                     options: {
@@ -2079,7 +2129,8 @@
                         datasets: [{ 
                             data: cantMoraDia, //Cantidad de Mora
                             label: "Cantidad de Mora",
-                            borderColor: "#3e95cd"
+                            borderColor: "#3e95cd",
+                            backgroundColor: "#3e95cd"
                         }]
                     },
                     options: {
@@ -2164,13 +2215,14 @@
                 }
 
                 new Chart(document.getElementById("canAdministrativoDiaChart"), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: dias, //Cargar dias
                         datasets: [{ 
                             data: cantAdministrativoDia, //Cantidad de Administrativo
                             label: "Cantidad de Administrativo",
-                            borderColor: "#3e95cd"
+                            borderColor: "#3e95cd",
+                            backgroundColor: "#3e95cd"
                         }]
                     },
                     options: {
@@ -2212,19 +2264,23 @@
                 }
 
                 new Chart(document.getElementById("canpActivosDiaChart"), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: dias, //Cargar dias
                         datasets: [
                             { 
                                 data: cantPrestamo, 
                                 label: "Cantidad de Prestamos Activos",
-                                borderColor: "#3e95cd"
+                                borderColor: "#3e95cd",
+                                cackgroungColor: "#3e95cd",
+                                backgroundColor: "#3e95cd"
                             },
                             {
                                 data: cantRenovacion, 
                                 label: "Cantidad de Renovacion",
-                                borderColor: "#C72200"
+                                borderColor: "#C72200",
+                                cackgroungColor: "#C72200",
+                                backgroundColor: "#C72200"
                             }
                         ]
                     },
@@ -2451,7 +2507,7 @@
                     options: {
                         title: {
                         display: true,
-                        text: 'Balance Mensual de Efetivo'
+                        text: 'Balance Mensual de Efectivo'
                         }
                     }
                 });
@@ -2626,19 +2682,21 @@
                 }
 
                 new Chart(document.getElementById("canPactivosMesChart"), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"], //Cargar dias
                         datasets: [
                             { 
                                 data: cantPrestamo, //Cantidad de Prestamos
                                 label: "Cantidad de Prestamos Nuevos",
-                                borderColor: "#3e95cd"
+                                borderColor: "#3e95cd",
+                                backgroundColor: "#3e95cd"
                             },
                             {
                                 data: cantRenovacion, //Cantidad de Prestamos
                                 label: "Cantidad de Renovaciones",
-                                borderColor: "#C72200"
+                                borderColor: "#C72200",
+                                backgroundColor: "#C72200"
                             }
                         ]
                     },

@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Inventario;
-
+    
 class FinanzaController extends Controller
 {
-    /**
+    /** 
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response    
      */
     public function analisisresult()
     {
@@ -32,23 +32,156 @@ class FinanzaController extends Controller
             $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
         }
 
-        $utilidades = \DB::SELECT('SELECT SUM(intpago) AS utilidades 
+        $caja = \DB::SELECT('SELECT MAX(c.id) AS id
+                             FROM caja c, tipocaja tc 
+                             WHERE c.tipocaja_id = tc.id AND tc.codigo = "CG" AND c.empleado = "'.$usuario[0]->id.'"');
+                             
+
+        $utilidades = \DB::SELECT('SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago)) AS utilidades
                                    FROM pago 
-                                   WHERE MONTH(created_at) = MONTH(now())');
+                                   WHERE CONCAT(MONTH(created_at), "-", YEAR(created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW()))');
 
-        $mora = \DB::SELECT('SELECT SUM(mora) AS mora 
-                                    FROM pago 
-                                    WHERE MONTH(created_at) = MONTH(now())');
+        $mora = \DB::SELECT('SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora)) AS mora
+                             FROM pago 
+                             WHERE CONCAT(MONTH(created_at), "-", YEAR(created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW()))');
 
-        $venta = \DB::SELECT('SELECT SUM(importe - monto) AS venta 
+        $venta = \DB::SELECT('SELECT IF(SUM(importe - monto) IS NULL, 0.00, SUM(importe - monto)) AS venta 
                               FROM movimiento 
-                              WHERE codigo = "V" AND MONTH(created_at) = MONTH(now())');
+                              WHERE codigo = "V" AND CONCAT(MONTH(created_at), "-", YEAR(created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW()))');
+                              
 
-        $gastosadministrativos = \DB::SELECT('SELECT SUM(importe) AS gasto 
-                                              FROM movimiento 
-                                              WHERE codigo = "GA" AND MONTH(created_at) = MONTH(NOW())');
+        $gastosadministrativos = \DB::SELECT('SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto)) AS monto FROM movimiento m, caja c, tipocaja tc WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND (m.codigo = "GA") AND m.tipo = "EGRESO" AND m.serie != "cc" AND m.concepto != "impuesto" AND CONCAT(MONTH(m.created_at), "-", YEAR(m.created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW())) AND c.id = "'.$caja[0]->id.'"');
+        
+        $historialCajaGrande = \DB::SELECT('SELECT SUM(monto) AS monto, MONTH(created_at) AS mes
+                                            FROM movimiento 
+                                            WHERE codigo = "GA" AND CONCAT(MONTH(created_at), "-", YEAR(created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW()))
+                                            GROUP BY MONTH(created_at)');
+                                            
+        if($historialCajaGrande==null){
+            $historialCajaGrande = \DB::SELECT('SELECT "0.00" AS monto, MONTH(NOW()) AS mes');
+        }
+                                            
+        //dd($historialCajaGrande);
 
-        return view('finanza.analisisresult', compact('usuario', 'utilidades', 'mora', 'venta', 'gastosadministrativos', 'notificacion', 'cantNotificaciones'));
+        $cajaChica = \DB::SELECT('SELECT SUM(m.monto) AS monto 
+                                  FROM movimiento m, caja c, tipocaja tc
+                                  WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.codigo = "cc" AND (MONTH(NOW()) = MONTH(m.created_at) AND YEAR(NOW()) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND m.codigo = "o"');
+                                  
+        //dd($cajaChica);
+
+        $historial = \DB::SELECT('SELECT SUM(utilidades) AS monto, anio
+                                  FROM(SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago)) AS utilidades, YEAR(created_at) AS anio
+                                       FROM pago 
+                                       GROUP BY YEAR(created_at)
+                                       UNION
+                                       SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora)) AS mora, YEAR(created_at) AS anio
+                                       FROM pago 
+                                       GROUP BY YEAR(created_at)
+                                       UNION
+                                       SELECT IF(SUM(importe - monto) IS NULL, 0.00, SUM(importe - monto)) AS venta, YEAR(created_at) AS anio
+                                       FROM movimiento 
+                                       WHERE codigo = "V"
+                                       GROUP BY YEAR(created_at)
+                                       UNION
+                                       SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))  AS monto, YEAR(m.created_at) AS anio
+                                       FROM movimiento m, caja c, tipocaja tc
+                                       WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND (m.codigo = "GA" OR tc.codigo = "CC") AND m.tipo = "EGRESO" AND m.serie != "cc" AND m.concepto != "impuesto" AND c.id = "'.$caja[0]->id.'"
+                                       GROUP BY YEAR(m.created_at)) t
+                                       GROUP BY anio');
+
+        $historialMes = \DB::SELECT('SELECT SUM(utilidades) AS monto, mes
+                                     FROM(SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago)) AS utilidades, MONTH(created_at) AS mes
+                                          FROM pago 
+                                          WHERE YEAR(created_at) = YEAR(NOW())
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora)) AS mora, MONTH(created_at) AS mes
+                                          FROM pago 
+                                          WHERE YEAR(created_at) = YEAR(NOW())
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(importe - monto) IS NULL, 0.00, SUM(importe - monto)) AS venta, MONTH(created_at) AS mes
+                                          FROM movimiento 
+                                          WHERE YEAR(created_at) = YEAR(NOW())
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))  AS monto, MONTH(m.created_at) AS mes
+                                          FROM movimiento m, caja c, tipocaja tc
+                                          WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND (m.codigo = "GA" OR tc.codigo = "CC") AND m.tipo = "EGRESO" AND m.serie != "cc" AND m.concepto != "impuesto"
+                                          AND YEAR(m.created_at) = YEAR(NOW())
+                                     GROUP BY MONTH(m.created_at)) t
+                                     GROUP BY mes
+                                     ORDER BY mes ASC');
+
+        $historialAnual1 = \DB::SELECT('SELECT SUM(intpago) + SUM(mora) AS utilidades, YEAR(created_at) AS anio
+                                       FROM pago
+                                       GROUP BY YEAR(created_at)');
+
+        $historialAnual2 = \DB::SELECT('SELECT SUM(importe-monto) + SUM(importe) AS utilidades, YEAR(created_at) AS anio
+                                        FROM movimiento
+                                        WHERE codigo = "V" OR codigo = "GA" 
+                                        GROUP BY YEAR(created_at)');
+
+        $historialMes1 = \DB::SELECT('SELECT SUM(intpago) + SUM(mora) AS utilidades, MONTH(created_at) AS mes
+                                      FROM pago
+                                      WHERE YEAR(created_at) = YEAR(NOW())
+                                      GROUP BY MONTH(created_at)');
+
+        $historialMes2 = \DB::SELECT('SELECT SUM(importe-monto) + SUM(importe) AS utilidades, MONTH(created_at) AS mes
+                                      FROM movimiento
+                                      WHERE codigo = "V" OR codigo = "GA" AND YEAR(created_at) = YEAR(NOW())
+                                      GROUP BY MONTH(created_at)');
+
+        $impuesto = \DB::SELECT('SELECT SUM(m.monto) AS monto 
+                                 FROM movimiento m, caja c
+                                 WHERE m.caja_id = c.id AND m.concepto = "IMPUESTO" AND c.id = "'.$caja[0]->id.'" AND CONCAT(MONTH(m.created_at), "-", YEAR(m.created_at)) = CONCAT(MONTH(NOW()), "-", YEAR(NOW()))');
+                                 
+        $impuestoHistorial = \DB::SELECT('SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))  AS monto, YEAR(m.created_at) AS anio
+                                          FROM movimiento m, caja c
+                                          WHERE m.caja_id = c.id AND m.concepto = "IMPUESTO" AND c.id = "'.$caja[0]->id.'"
+                                          GROUP BY YEAR(m.created_at)');
+                                          
+        $historialCajaChica = \DB::SELECT('SELECT SUM(monto) AS monto, MONTH(created_at) AS mes
+                                           FROM movimiento 
+                                           WHERE codigo = "o" AND YEAR(created_at) = YEAR(NOW())
+                                           GROUP BY MONTH(created_at)');
+                                           
+        //dd($historialCajaChica);
+                                          
+
+        return view('finanza.analisisresult', compact('impuesto', 'historialMes1', 'historialMes2', 'historialAnual1', 'historialAnual2', 'usuario', 'utilidades', 'mora', 'venta', 'gastosadministrativos', 'notificacion', 'cantNotificaciones', 'cajaChica', 'historial', 'historialMes', 'impuestoHistorial', 'historialCajaChica', 'historialCajaGrande'));
+    }
+
+    public function analisisResultadoMes(Request $request)
+    {
+        $anio = $request->anio;
+
+        $historialMes = \DB::SELECT('SELECT SUM(utilidades) AS monto, mes
+                                     FROM(SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago)) AS utilidades, MONTH(created_at) AS mes
+                                          FROM pago 
+                                          WHERE YEAR(created_at) = '.$anio.'
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora)) AS mora, MONTH(created_at) AS mes
+                                          FROM pago 
+                                          WHERE YEAR(created_at) = '.$anio.'
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(importe - monto) IS NULL, 0.00, SUM(importe - monto)) AS venta, MONTH(created_at) AS mes
+                                          FROM movimiento 
+                                          WHERE YEAR(created_at) = '.$anio.'
+                                          GROUP BY MONTH(created_at)
+                                          UNION
+                                          SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))  AS monto, MONTH(m.created_at) AS mes
+                                          FROM movimiento m, caja c, tipocaja tc
+                                          WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND (m.codigo = "GA" OR tc.codigo = "CC") AND m.tipo = "EGRESO" AND m.serie != "cc" AND m.concepto != "impuesto"
+                                          AND YEAR(m.created_at) = '.$anio.'
+                                     GROUP BY MONTH(m.created_at)) t
+                                     GROUP BY mes
+                                     ORDER BY mes ASC');
+
+        return response()->json(["view"=>view('finanza.tabAnalisisResultadoMes',compact('historialMes'))->render()]);
+
     }
 
     public function caja()
@@ -195,9 +328,76 @@ class FinanzaController extends Controller
 
         $estado = \DB::SELECT('SELECT estado 
                                FROM prestamo 
-                               GROUP BY estado');                     
+                               GROUP BY estado');             
+        /*Prestmoas*/                       
+        $prestamos = \DB::SELECT('SELECT COUNT(*) AS cant, YEAR(fecinicio) AS anio 
+                                  FROM prestamo 
+                                  GROUP BY YEAR(fecinicio)');
 
-        return view('finanza.estprestamo', compact('usuario', 'anio', 'estado', 'notificacion', 'cantNotificaciones'));
+        $efectivo = \DB::SELECT('SELECT sum(monto) AS monto, YEAR(created_at) AS fec
+                                 FROM desembolso 
+                                 GROUP BY YEAR(created_at)');
+
+        $interes = \DB::SELECT('SELECT SUM(intpago) AS interes, YEAR(created_at) AS created_at
+                                FROM pago
+                                GROUP BY YEAR(created_at)');
+
+        $mora = \DB::SELECT('SELECT SUM(mora) AS mora, YEAR(created_at) AS created_at
+                            FROM pago
+                            GROUP BY YEAR(created_at)');
+
+        $venta = \DB::SELECT('SELECT SUM(importe - monto) AS venta, YEAR(created_at) AS fecVenta
+                              FROM movimiento 
+                              GROUP BY YEAR(created_at)');
+
+        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, YEAR(created_at) AS created_at 
+                                FROM movimiento 
+                                GROUP BY YEAR(created_at)');
+
+        $balancePrestamo = \DB::SELECT('SELECT COUNT(*) as cant, YEAR(created_at) AS created_at 
+                                        FROM prestamo 
+                                        WHERE codigo = "N" AND estado = "ACTIVO DESEMBOLSADO"
+                                        GROUP BY YEAR(created_at)');
+
+        $balanceRenovacion = \DB::SELECT('SELECT COUNT(*) as cant, YEAR(created_at) AS created_at 
+                                          FROM prestamo 
+                                          WHERE codigo = "R" AND estado = "ACTIVO DESEMBOLSADO"
+                                          GROUP BY YEAR(created_at)');
+
+        foreach($prestamos as $pr){
+            $registros[$pr->anio++] = $pr->cant;
+        }
+
+        foreach($efectivo as $e){
+            $registroEfectivo[$e->fec++] = $e->monto;
+        }
+
+        foreach($interes as $i){
+            $registroInteres[$i->created_at++] = $i->interes;
+        }
+
+        foreach($mora as $m){
+            $registroMora[$m->created_at++] = $m->mora;
+        }
+
+        foreach($venta as $v){
+            $registroVenta[$v->fecVenta++] = $v->venta;
+        }
+
+        foreach($gastoAdmin as $ga){
+            $registroGastosAdministrativos[$ga->created_at++] = $ga->gasto;
+        }
+
+        foreach($balancePrestamo as $bp){
+            $registrosBalancePrestamo[$bp->created_at++] = $bp->cant;
+        }
+
+        foreach($balanceRenovacion as $br){
+            $registrosBalanceRenovacion[$br->created_at++] = $br->cant;
+  
+        }
+
+        return view('finanza.estprestamo', compact('usuario', 'anio', 'estado', 'notificacion', 'cantNotificaciones', 'registros', 'registroEfectivo', 'registroInteres', 'registroMora', 'registroVenta', 'registroGastosAdministrativos', 'registrosBalancePrestamo', 'registrosBalanceRenovacion'));
     }
 
     public function gastos()
@@ -220,17 +420,174 @@ class FinanzaController extends Controller
         }
 
         $cajaChica = \DB::SELECT('SELECT m.* 
-                                  FROM movimiento m, caja c
-                                  WHERE m.caja_id = c.id AND m.codigo <> "GA" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'"');
+                                  FROM movimiento m, caja c, tipocaja tc
+                                  WHERE m.caja_id = c.id AND tc.id = c.tipocaja_id AND tc.codigo = "cc" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'" AND m.tipo = "EGRESO" AND m.codigo = "o"');
 
-        $cajaGrande = \DB::SELECT('SELECT m.*, d.url AS documento 
-                                   FROM movimiento m, movimiento_documento md, documento d, caja c 
-                                   WHERE m.caja_id = c.id AND md.movimiento_id = m.id AND md.documento_id = d.id AND m.codigo = "GA" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'"');
+        //dd($cajaChica);
 
-        return view('finanza.gastos', compact('usuario', 'cajaChica', 'cajaGrande', 'notificacion', 'cantNotificaciones'));
+        $cajaGrande = \DB::SELECT('SELECT m.* 
+                                   FROM movimiento m, caja c, tipocaja tc
+                                   WHERE m.caja_id = c.id AND tc.id = c.tipocaja_id AND tc.codigo = "cg" AND MONTH(NOW()) = MONTH(m.created_at) AND c.sede_id = "'.$usuario[0]->sede.'" AND m.tipo = "EGRESO" AND m.codigo <> "GA"');
+
+        $historialCajaGrande = \DB::SELECT('SELECT SUM(monto) AS monto, MONTH(created_at) AS mes
+                                            FROM movimiento 
+                                            WHERE codigo = "GA" AND YEAR(created_at) = YEAR(NOW())
+                                            GROUP BY MONTH(created_at)');
+
+        $historialCajaChica = \DB::SELECT('SELECT SUM(monto) AS monto, MONTH(created_at) AS mes
+                                           FROM movimiento 
+                                           WHERE codigo = "o" AND YEAR(created_at) = YEAR(NOW())
+                                           GROUP BY MONTH(created_at)');
+                                           
+        //dd($historialCajaChica);
+
+        for($m=1; $m<=12; $m++){
+            $montoCaja[$m]=0;
+            $montoCajaGrande[$m]=0;      
+        }
+
+        foreach ($historialCajaChica as $hcc) {
+            $messel = intval($hcc->mes);
+            $montoCaja[$messel++] = $hcc->monto;
+        }
+        
+        
+
+        foreach ($historialCajaGrande as $hcg) {
+            $messel = intval($hcg->mes);
+            $montoCajaGrande[$messel++] = $hcg->monto;
+        }
+
+        return view('finanza.gastos', compact('usuario', 'cajaChica', 'cajaGrande', 'notificacion', 'cantNotificaciones', 'historialCajaChica', 'montoCaja', 'montoCajaGrande'));
     }
 
-    public function patrimonio()
+    public function verHisrialGastosDia(Request $request)
+    {
+        $mes = $request->mes;
+        $user = Auth::user();
+        $usuario = \DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
+                                FROM empleado e, users u 
+                                WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
+
+        $cajaChica = \DB::SELECT('SELECT m.* 
+                                  FROM movimiento m, caja c, tipocaja tc
+                                  WHERE m.caja_id = c.id AND tc.id = c.tipocaja_id AND tc.codigo = "cc" AND CONCAT(YEAR(m.created_at), "-", MONTH(m.created_at))  = CONCAT(YEAR(NOW()), "-", '.$mes.') AND c.sede_id = "'.$usuario[0]->sede.'" AND m.tipo = "EGRESO" AND m.codigo = "o"');
+
+        return response()->json(["view"=>view('finanza.tabHistorialGastosCC',compact('cajaChica'))->render()]);
+
+    }
+
+    public function verHistorialGastosCGDia(Request $request)
+    {
+        $mes = $request->mes;
+        $user = Auth::user();
+        $usuario = \DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
+                                FROM empleado e, users u 
+                                WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
+
+$cajaGrande = \DB::SELECT('SELECT m.*, d.url AS documento 
+                           FROM movimiento m, movimiento_documento md, documento d 
+                           WHERE md.movimiento_id = m.id AND md.documento_id = d.id AND codigo = "GA" AND CONCAT(YEAR(NOW()), "-", '.$mes.') = CONCAT(YEAR(m.created_at), "-", MONTH(m.created_at))');
+
+        return response()->json(["view"=>view('finanza.tabHistorialGastosCG',compact('cajaGrande'))->render()]);
+    }
+
+    public function historialCajaGrande(Request $request)
+    {
+        $anio = $request->anio;
+
+        $primer_dia=1;
+
+        $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
+        $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
+
+        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, DATE(created_at) AS created_at 
+                              FROM movimiento 
+                              WHERE codigo = "GA" AND (created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'")
+                              GROUP BY MONTH(created_at)');
+
+        $pt = count($gastoAdmin);
+
+        for($m=1; $m<=12; $m++){
+            $registros[$m]=0;
+            $gastosAdministrativos[$m]=0;      
+        }
+
+        foreach($gastoAdmin as $ga){
+            $messel = intval(date("m",strtotime($ga->created_at) ) );
+            $registros[$messel]++;
+            $gastosAdministrativos[$messel++] = $ga->gasto;
+  
+        }
+
+        $data = array("registrosmes"=>$registros, "administrativo" => $gastosAdministrativos);
+
+        return json_encode($data);
+    }
+
+    public function editarInventario(Request $request){
+
+        $id = $request->id;
+        $unidad = $request->unidad;
+        $nombre = $request->nombre;
+        $marca = $request->marca;
+        $valor = $request->valor;
+        
+        $in = Inventario::where('id', '=', $id)->first(); 
+        $in->unidad = $unidad;
+        $in->nombre = $nombre;
+        $in->valor = $valor;
+        $in->marca = $marca;
+        if ($in->save()) {
+            $resp = "1";
+
+            $equipo = \DB::SELECT('SELECT * FROM inventario 
+                                    WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
+            
+            $totalInventario = \DB::SELECT('SELECT ROUND(SUM(unidad*valor),2) AS total 
+                                            FROM inventario 
+                                            WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
+
+            if ($totalInventario == null) {
+                $totalInventario = \DB::SELECT('SELECT "0.00" AS total');
+            }
+        }
+
+        return response()->json(["view"=>view('finanza.tabMueble',compact('equipo', 'totalInventario'))->render(), "viewTi"=>view('finanza.activosMueble',compact('totalInventario'))->render(), 'resp'=>$resp]);
+
+    }
+
+    public function eliminarInventario(Request $request)
+    {
+        $id = $request->id;
+        $unidad = $request->unidad;
+        $valor = $request->valor;
+        $resp = "0";
+
+        //$note = Note::find($id);
+        
+        //$note->delete();
+        
+        $in = Inventario::find($id); 
+        if ($in->delete()) {
+            $resp = "1";
+
+            $equipo = \DB::SELECT('SELECT * FROM inventario 
+                                    WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
+            
+            $totalInventario = \DB::SELECT('SELECT ROUND(SUM(unidad*valor),2) AS total 
+                                            FROM inventario 
+                                            WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
+
+            if ($totalInventario == null) {
+                $totalInventario = \DB::SELECT('SELECT "0.00" AS total');
+            }
+        }
+
+        return response()->json(["view"=>view('finanza.tabMueble',compact('equipo', 'totalInventario'))->render(), "viewTi"=>view('finanza.activosMueble',compact('totalInventario'))->render(), 'resp'=>$resp]);
+    }
+
+    public function patrimonio()    
     {
         $user = Auth::user();
         $usuario = \DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
@@ -285,16 +642,28 @@ class FinanzaController extends Controller
             $cajaGrande = \DB::SELECT('SELECT "0.00" AS monto');
         }
 
-        $cajaBanco = \DB::SELECT('SELECT monto 
-                                  FROM caja 
-                                  WHERE tipocaja_id = "'.$tipocaja[2]->id.'"');
+        $cajaBancoBN = \DB::SELECT('SELECT monto 
+                                    FROM caja 
+                                    WHERE tipocaja_id = "'.$tipocaja[2]->id.'"'); 
 
-        if ($cajaBanco == null) {
+        $cajaBancoBcp = \DB::SELECT('SELECT monto 
+                                     FROM caja 
+                                     WHERE tipocaja_id = "'.$tipocaja[3]->id.'"'); 
+
+        $cajaBancoI = \DB::SELECT('SELECT monto 
+                                     FROM caja 
+                                     WHERE tipocaja_id = "'.$tipocaja[4]->id.'"'); 
+
+        $cajaB = $cajaBancoBN[0]->monto + $cajaBancoBcp[0]->monto + $cajaBancoI[0]->monto;
+
+        $cajaBanco = \DB::SELECT('SELECT '.$cajaB.' AS monto');
+
+        if ($cajaBanco == 0) {
             $cajaBanco = \DB::SELECT('SELECT "0.00" AS monto');
         }
 
         $equipo = \DB::SELECT('SELECT * FROM inventario 
-                               WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
+                            WHERE tipoinventario_id = "1" AND estado = "ACTIVO"');
 
         $software = \DB::SELECT('SELECT * FROM inventario 
                                  WHERE tipoinventario_id = "2" AND marca = "SOFTWARE"');
@@ -377,7 +746,153 @@ class FinanzaController extends Controller
             $impuesto = \DB::SELECT('SELECT "0.00" AS monto');
         }
 
-        return view('finanza.patrimonio', compact('usuario', 'prestamoColocado', 'liquidacion', 'cajaChica', 'equipo', 'software', 'tipoinventario', 'totalInventario', 'cajaGrande', 'cajaBanco', 'pagoPersonal', 'pagoAlquiler', 'pagoInternet', 'utilesEscritorio', 'publicidad', 'tarjetaBCP', 'luz', 'impuesto', 'notificacion', 'cantNotificaciones'));
+        $anio = \DB::SELECT('SELECT YEAR(updated_at) AS anio 
+                             FROM caja 
+                             GROUP BY YEAR(updated_at)');
+
+        //Historial Patrimonio
+        $historialPat = \DB::SELECT('SELECT SUM(monto) AS monto, anio
+                                     FROM (SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, YEAR(fecha) AS anio
+                                           FROM caja 
+                                           WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1")
+                                                OR tipocaja_id = "2"
+                                                OR tipocaja_id = "3"
+                                                OR tipocaja_id = "4"
+                                                OR tipocaja_id = "5"
+                                           GROUP BY YEAR(fecha)
+                                           UNION                                
+                                           SELECT IF(SUM(unidad*valor) IS NULL, 0.00, SUM(unidad*valor))  AS monto, YEAR(updated_at) AS anio 
+                                           FROM inventario 
+                                           GROUP BY YEAR(updated_at)
+                                           UNION
+                                           SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, YEAR(updated_at) AS anio
+                                           FROM prestamo
+                                           WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" GROUP BY YEAR(updated_at)
+                                     ) f
+                                     GROUP BY anio
+                                     ORDER BY anio ASC');
+                                     
+        $inventario = \DB::SELECT('SELECT SUM(unidad*valor) AS monto, YEAR(updated_at) AS anio FROM inventario GROUP BY YEAR(updated_at)');
+                                     
+         for ($i=0; $i < count($inventario) ; $i++) { 
+            $monto[$i] = 0;
+            $caja[$i]->monto = 0; 
+            $inventario[$i]->monto = 0;
+            $prestamo[$i]->monto = 0;
+            $mostrarAnios[$i] = 0;
+            $caja[$i]->anio = 0;
+        }
+
+        $caja = \DB::SELECT('SELECT SUM(monto) AS monto, YEAR(fecha) AS anio
+                             FROM caja 
+                             WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1")
+                                OR tipocaja_id = "2"
+                                OR tipocaja_id = "3"
+                                OR tipocaja_id = "4"
+                                OR tipocaja_id = "5"
+                                GROUP BY YEAR(fecha)');
+
+        $inventario = \DB::SELECT('SELECT SUM(unidad*valor) AS monto, YEAR(updated_at) AS anio FROM inventario GROUP BY YEAR(updated_at)');
+
+        $prestamo = \DB::SELECT('SELECT SUM(monto) AS monto, YEAR(updated_at) AS anio
+                                 FROM prestamo
+                                 WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" GROUP BY YEAR(updated_at)');
+                                 
+         
+
+        for ($i=0; $i < count($inventario) ; $i++) { 
+
+            $monto[$i] = $caja[$i]->monto + $inventario[$i]->monto + $prestamo[$i]->monto;
+            $mostrarAnios[$i] = $caja[$i]->anio;
+        }
+/*
+        for ($j=0; $j < 12; $j++) { 
+            $montoMes[$j] = 0;
+        }
+        */
+
+            $histMes = \DB::SELECT('SELECT SUM(monto) AS monto, mes
+                                    FROM (
+                                    SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, MONTH(fecha) AS mes
+                                    FROM caja 
+                                    WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1")
+                                        OR tipocaja_id = "2"
+                                        OR tipocaja_id = "3"
+                                        OR tipocaja_id = "4"
+                                        OR tipocaja_id = "5"
+                                    AND YEAR(fecha) = YEAR(NOW())
+                                    GROUP BY MONTH(fecha)
+                                    UNION                                
+                                    SELECT IF(SUM(unidad*valor) IS NULL, 0.00, SUM(unidad*valor))  AS monto, MONTH(updated_at) AS mes 
+                                    FROM inventario 
+                                    WHERE YEAR(updated_at) = YEAR(NOW())
+                                    GROUP BY MONTH(updated_at)
+                                    UNION
+                                    SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, MONTH(updated_at) AS mes
+                                    FROM prestamo
+                                    WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" AND YEAR(updated_at) = YEAR(NOW())
+                                    GROUP BY MONTH(updated_at)
+                                    ) f
+                                    GROUP BY mes
+                                    ORDER BY mes ASC');
+                                    
+            //dd($histMes);
+
+            for ($m=1; $m <= 12; $m++) { 
+                $nomMes[$m] = 0;
+                $montoMes[$m] = 0;
+            }
+
+            foreach($histMes as $hm){
+                $messel = intval($hm->mes);
+                $montoMes[$messel++] = $hm->monto;
+      
+            }
+
+        return view('finanza.patrimonio', compact('usuario', 'prestamoColocado', 'liquidacion', 'cajaChica', 'equipo', 'software', 'tipoinventario', 'totalInventario', 'cajaGrande', 'cajaBanco', 'pagoPersonal', 'pagoAlquiler', 'pagoInternet', 'utilesEscritorio', 'publicidad', 'tarjetaBCP', 'luz', 'impuesto', 'notificacion', 'cantNotificaciones', 'anio', 'monto', 'mostrarAnios', 'histMes', 'historialPat', 'montoMes'));
+    } 
+
+    public function verHistorialPat(Request $request){
+        $anio = $request->anio;
+
+        $histMes = \DB::SELECT('SELECT SUM(monto) AS monto, mes
+                                    FROM (
+                                    SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, MONTH(fecha) AS mes
+                                    FROM caja 
+                                    WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1")
+                                        OR tipocaja_id = "2"
+                                        OR tipocaja_id = "3"
+                                        OR tipocaja_id = "4"
+                                        OR tipocaja_id = "5"
+                                    AND YEAR(fecha) = '.$anio.'
+                                    GROUP BY MONTH(fecha)
+                                    UNION                                
+                                    SELECT IF(SUM(unidad*valor) IS NULL, 0.00, SUM(unidad*valor))  AS monto, MONTH(updated_at) AS mes 
+                                    FROM inventario 
+                                    WHERE YEAR(updated_at) = '.$anio.'
+                                    GROUP BY MONTH(updated_at)
+                                    UNION
+                                    SELECT IF(SUM(monto) IS NULL, 0.00, SUM(monto)) AS monto, MONTH(updated_at) AS mes
+                                    FROM prestamo
+                                    WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" AND YEAR(updated_at) = '.$anio.'
+                                    GROUP BY MONTH(updated_at)
+                                    ) f
+                                    GROUP BY mes
+                                    ORDER BY mes ASC');
+
+            for ($m=1; $m <= 12; $m++) { 
+                $nomMes[$m] = 0;
+                $montoMes[$m] = 0;
+            }
+
+            foreach($histMes as $hm){
+                $messel = intval($hm->mes);
+                $montoMes[$messel++] = $hm->monto;
+      
+            }
+
+            return response()->json(["view"=>view('finanza.tbHistPat', compact('histMes', 'montoMes'))->render()]);
+
     }
 
     public function getUltimoDiaMes($elAnio,$elMes) {
@@ -416,6 +931,111 @@ class FinanzaController extends Controller
 
         //return response()->json([$data]);
         return json_encode($data);
+    }
+
+    public function graficoPatrimonio(Request $request)
+    {
+        $anio = $request->anio;
+
+        $fecha_inicial = date("Y-m-d H:i:s", strtotime($anio."-01-01") );
+        $fecha_final = date("Y-m-d H:i:s", strtotime($anio."-12-31") );
+
+        $caja = \DB::SELECT('SELECT SUM(monto) AS monto, YEAR(updated_at) AS anio
+                             FROM caja 
+                             WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1") AND tipocaja_id = "1" 
+                                OR tipocaja_id = "2"
+                                OR tipocaja_id = "3"
+                                OR tipocaja_id = "4"
+                                OR tipocaja_id = "5"
+                                GROUP BY YEAR(updated_at)');
+
+        $inventario = \DB::SELECT('SELECT SUM(unidad*valor) AS monto, YEAR(updated_at) AS anio FROM inventario GROUP BY YEAR(updated_at)');
+
+        $prestamo = \DB::SELECT('SELECT SUM(monto) AS monto, YEAR(updated_at) AS anio
+                                 FROM prestamo
+                                 WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" GROUP BY YEAR(updated_at)');
+
+        
+
+        for ($i=0; $i < count($inventario) ; $i++) { 
+            $monto[$i] = $caja[$i]->monto + $inventario[$i]->monto + $prestamo[$i]->monto;
+            $anios[$i] = $caja[$i]->anio;
+        }
+
+        /*
+        $prestamos = \DB::SELECT('SELECT (SUM(monto) + 
+                                         (SELECT SUM(monto) 
+                                          FROM caja 
+                                          WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1") AND tipocaja_id = "1" 
+                                                OR tipocaja_id = "2"
+                                                OR tipocaja_id = "3"
+                                                OR tipocaja_id = "4"
+                                                OR tipocaja_id = "5" AND updated_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'") + 
+                                          (SELECT SUM(unidad*valor) AS monto 
+                                           FROM inventario 
+                                           WHERE updated_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'")) AS monto
+                                    FROM prestamo
+                                    WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" AND updated_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"');
+        */
+/*
+        for($m=1; $m<=12; $m++){
+            $registros[$m] = 0; 
+            $totalPatrimonio[$m] = 0;     
+        }
+        */
+        /*
+        foreach($prestamos as $pts){
+            $totalPatrimonio[] = $pts->monto;    
+        }
+        */
+
+        //$data = array("patrimonioMora"=>$totalPatrimonio);
+
+        return response()->json(["view"=>view('finanza.tbAnual', compact('monto', 'anios'))->render()]);
+    }
+
+    public function tabMesPatrimonio(Request $request)
+    {
+        /*
+        $anio = $request->anio;
+
+        $fecha_inicial = date("Y-m-d H:i:s", strtotime($anio."-01-01") );
+        $fecha_final = date("Y-m-d H:i:s", strtotime($anio."-12-31") );
+
+        $caja = \DB::SELECT('SELECT SUM(monto) AS monto
+                             FROM caja 
+                             WHERE id = (SELECT MAX(id) FROM caja WHERE tipocaja_id = "1")
+                                   OR tipocaja_id = "2"
+                                   OR tipocaja_id = "3"
+                                   OR tipocaja_id = "4"
+                                   OR tipocaja_id = "5"
+                                   OR DATE(fecha) BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"');
+
+
+        $inventario = \DB::SELECT('SELECT SUM(unidad*valor) AS monto
+                                   FROM inventario 
+                                   WHERE DATE(updated_at) BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"');
+
+        $prestamo = \DB::SELECT('SELECT SUM(monto) AS monto
+                                 FROM prestamo
+                                 WHERE estado = "ACTIVO DESEMBOLSADO" OR estado = "LIQUIDACION" AND DATE(updated_at) BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"');
+
+        for ($i=0; $i < 12 ; $i++) { 
+            $registro[$i] = 0;
+            $montoFinal[$i] = 0;
+            $caja[$i] = \DB::SELECT('SELECT 0 AS monto');// + $inventario[$i]->monto + $prestamo[$i]->monto;
+            
+        }
+        
+        for ($i=0; $i < 12; $i++) { 
+            $registro[$i]++;
+            $montoFinal[$i++] = $caja[$i]->monto;
+        }
+        
+        dd($montoFinal);
+        */
+
+        return response()->json(["view"=>view('finanza.tbAnual')->render()]);
     }
 
     public function graficoLineaBienesDia(Request $request)
@@ -553,10 +1173,10 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$primer_dia) );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$ultimo_dia) );
 
-        $efectivo = \DB::SELECT('SELECT sum(monto) AS monto, fecinicio 
-                                 FROM prestamo 
-                                 WHERE fecinicio BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'" 
-                                 GROUP BY fecinicio');
+        $efectivo = \DB::SELECT('SELECT SUM(monto) AS monto, DATE(created_at) AS fecinicio
+                                 FROM desembolso
+                                 WHERE DATE(created_at) BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'" 
+                                 GROUP BY DATE(created_at)');
 
         $pt = count($efectivo);
 
@@ -661,7 +1281,7 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$primer_dia) );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$ultimo_dia) );
 
-        $venta = \DB::SELECT('SELECT SUM(importe - interesPagar - moraPagar - monto) AS venta, date(created_at) AS fecVenta
+        $venta = \DB::SELECT('SELECT SUM(importe - monto) AS venta, date(created_at) AS fecVenta
                              FROM movimiento 
                              WHERE codigo = "V" AND created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"
                              GROUP BY DATE(created_at)');
@@ -697,7 +1317,7 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$primer_dia) );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$ultimo_dia) );
 
-        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, DATE(created_at) AS created_at 
+        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, MONTH(created_at) AS created_at 
                               FROM movimiento 
                               WHERE codigo = "GA" AND (created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'")
                               GROUP BY MONTH(created_at)');
@@ -710,7 +1330,7 @@ class FinanzaController extends Controller
         }
 
         foreach($gastoAdmin as $ga){
-            $diasel = intval(date("d",strtotime($ga->created_at) ) );
+            $diasel = intval($ga->created_at);
             $registros[$diasel]++;
             $gastoAdministrativo[$diasel++] = $ga->gasto;
   
@@ -762,6 +1382,8 @@ class FinanzaController extends Controller
             //$gastoAdministrativo[$diasel++] = $ga->gasto;
   
         }
+
+        //dd($registrosPrestamo);
 
         $data = array("totaldias"=>$ultimo_dia, "registrosPrestamo"=>$registrosPrestamo, "registrosRenovacion" => $registrosRenovacion);
 
@@ -902,10 +1524,10 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
 
-        $efectivo = \DB::SELECT('SELECT sum(monto) AS monto, fecinicio 
+        $efectivo = \DB::SELECT('SELECT sum(monto) AS monto, MONTH(created_at) AS fec
                                  FROM prestamo 
-                                 WHERE fecinicio BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'" 
-                                 GROUP BY MONTH(fecinicio)');
+                                 WHERE DATE(created_at) BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'" 
+                                 GROUP BY MONTH(created_at)');
 
         $pt = count($efectivo);
 
@@ -915,7 +1537,7 @@ class FinanzaController extends Controller
         }
 
         foreach($efectivo as $ef){
-            $messel = intval(date("m",strtotime($ef->fecinicio) ) );
+            $messel = intval($ef->fec);
             $registros[$messel]++;
             $monto[$messel++] = $ef->monto;
   
@@ -934,7 +1556,7 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
 
-        $interes = \DB::SELECT('SELECT SUM(intpago) AS interes, DATE(created_at) AS created_at
+        $interes = \DB::SELECT('SELECT SUM(intpago) AS interes, MONTH(created_at) AS created_at
                                 FROM pago
                                 WHERE created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"
                                 GROUP BY MONTH(created_at)');
@@ -947,7 +1569,7 @@ class FinanzaController extends Controller
         }
 
         foreach($interes as $it){
-            $messel = intval(date("m",strtotime($it->created_at) ) );
+            $messel = intval(date($it->created_at) );
             $registros[$messel]++;
             $totalInteres[$messel++] = $it->interes;
   
@@ -964,7 +1586,7 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
 
-        $mora = \DB::SELECT('SELECT SUM(mora) AS mora, DATE(created_at) AS created_at
+        $mora = \DB::SELECT('SELECT SUM(mora) AS mora, MONTH(created_at) AS created_at
                                 FROM pago
                                 WHERE created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"
                                 GROUP BY MONTH(created_at)');
@@ -977,7 +1599,7 @@ class FinanzaController extends Controller
         }
 
         foreach($mora as $mo){
-            $messel = intval(date("m",strtotime($mo->created_at) ) );
+            $messel = intval($mo->created_at);
             $registros[$messel]++;
             $totalMoras[$messel++] = $mo->mora;
   
@@ -997,7 +1619,7 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
 
-        $venta = \DB::SELECT('SELECT SUM(importe - interesPagar - moraPagar - monto) AS venta, date(created_at) AS fecVenta
+        $venta = \DB::SELECT('SELECT SUM(importe - monto) AS venta, MONTH(created_at) AS fecVenta
                              FROM movimiento 
                              WHERE codigo = "V" AND created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'"
                              GROUP BY MONTH(created_at)');
@@ -1010,7 +1632,7 @@ class FinanzaController extends Controller
         }
 
         foreach($venta as $ve){
-            $messel = intval(date("m",strtotime($ve->fecVenta) ) );
+            $messel = intval($ve->fecVenta);
             $registros[$messel]++;
             $gananciaVenta[$messel++] = $ve->venta;
   
@@ -1030,10 +1652,12 @@ class FinanzaController extends Controller
         $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-01-01") );
         $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-12-31") );
 
-        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, DATE(created_at) AS created_at 
+        $gastoAdmin = \DB::SELECT('SELECT SUM(monto) AS gasto, MONTH(created_at) AS created_at 
                               FROM movimiento 
-                              WHERE codigo = "GA" AND (created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'")
+                              WHERE (codigo = "GA" OR codigo ="o") AND (created_at BETWEEN "'.$fecha_inicial.'" AND "'.$fecha_final.'")
                               GROUP BY MONTH(created_at)');
+                                  
+        //dd($gastoAdmin);
 
         $pt = count($gastoAdmin);
 
@@ -1043,7 +1667,7 @@ class FinanzaController extends Controller
         }
 
         foreach($gastoAdmin as $ga){
-            $messel = intval(date("m",strtotime($ga->created_at) ) );
+            $messel = intval($ga->created_at);
             $registros[$messel]++;
             $gastosAdministrativos[$messel++] = $ga->gasto;
   

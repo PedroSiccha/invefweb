@@ -13,7 +13,14 @@
                 <td>{{ $e->unidad }}</td>
                 <td>{{ $e->nombre }} {{ $e->marca }}</td>
                 <td>{{ $e->valor }}</td>
-                <td>@mdo</td>
+                <td>
+                    <button type="button" class="btn btn-warning" onclick="editarInventario('{{ $e->id }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="bajaInventario('{{ $e->id }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}')">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
             </tr>
         @endforeach
         <tr>

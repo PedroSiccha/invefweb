@@ -7,7 +7,7 @@
     Control de Caja
 @endsection
 @section('contenido')
-<div class="row" id="genCaja">
+<div class="row" id="genCaja">  
         <div class="col-lg-3" onclick="modalCaja('', '', '')" <?php if ($ver=="1") { echo ""; }else { echo "hidden"; } ?>>
             <div class="widget style1 navy-bg">
                 <div class="row">
@@ -52,27 +52,27 @@
             </div>
         </div>
 
-        <div class="col-lg-3">
+        <div class="col-lg-4" onclick="verBancos('{{ $banco[0]->monto }}', '{{ $bcp[0]->monto }}', '{{ $interbank[0]->monto }}')">
             <div class="widget style1 lazur-bg">
                 <div class="row">
                     <div class="col-4">
                         <i class="fa fa-money fa-5x"></i>
                     </div>
                     <div class="col-8 text-right">
-                        <span> Banco </span>
-                        <h2 class="font-bold">S/. {{ $banco[0]->monto }}</h2>
+                        <span> Balance de Bancos</span>
+                        <h2 class="font-bold">S/. {{ $banco[0]->monto + $bcp[0]->monto + $interbank[0]->monto }}</h2>
                         <input type="text" class="form-control text-success" id="montoFin" value=" " hidden>
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
         <div class="tabs-container">
             <ul class="nav nav-tabs" role="tablist">
                 <li><a class="nav-link active" data-toggle="tab" href="#bActual"> Balance Actual</a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#bHistorial">Historial de Balance</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#bHistorialActual"> Historial de Balance</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#regDeposito">Registrar Depósito</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#consMovimientos">Consultar Movimientos de Pago</a></li>
             </ul>
@@ -97,6 +97,143 @@
                                     </div>
                                 </div>
                                 <div class="ibox-content" id="divTipoPrestamo">
+                                    <table class="footable table table-stripped toggle-arrow-tiny">
+                                        <thead>
+                                        <tr>
+                                            <th>Concepto</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha de Transcaccion</th>
+                                            <th>Monto</th>
+                                            <th>Usuario</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach ($egreso as $eg)
+                                            <tr>
+                                                <td>{{ $eg->concepto }}</td>
+                                                <td>{{ $eg->nombreCl }} {{ $eg->apellidoCl }}</td>
+                                                <td>{{ $pro->cambiaf_a_espanol($eg->created_at) }}</td>
+                                                <td>{{ $eg->monto }}</td>
+                                                <td>{{ $eg->nombreEm }} {{ $eg->apellidoEm }}</td>
+                                            </tr>    
+                                        @endforeach
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    TOTAL
+                                                </td>
+                                                <td>
+                                                    {{ $cantEgreso[0]->monto }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <ul class="pagination float-right"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="ibox ">
+                                <div class="ibox-title">
+                                    <h5>Caja Entrada</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content" id="divTipoPrestamo">
+                                    <table class="footable table table-stripped toggle-arrow-tiny">
+                                        <thead>
+                                            <tr>
+                                                <th>Concepto</th>
+                                                <th>Cliente</th>
+                                                <th>Fecha de Transcaccion</th>
+                                                <th>Monto</th>
+                                                <th>Usuario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach ($ingreso as $ing)
+                                            <tr>
+                                                <td>{{ $ing->concepto }}</td>
+                                                <td>{{ $ing->nombreCl }} {{ $ing->apellidoCl }}</td>
+                                                <td>{{ $pro->cambiaf_a_espanol($ing->created_at) }}</td>
+                                                <td>{{ $ing->importe }}</td>
+                                                <td>{{ $ing->nombreEm }} {{ $ing->apellidoEm }}</td>
+                                            </tr>    
+                                        @endforeach
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    TOTAL
+                                                </td>
+                                                <td>
+                                                    {{ $cantIngreso[0]->monto }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <ul class="pagination float-right"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div role="tabpanel" id="bHistorialActual" class="tab-pane">
+                    <div class="panel-body row">
+
+                        <div class="form-group col-md-12" id="data_3">
+                            <label class="font-normal">Seleccionar una fecha</label>
+                            <div class="input-group date">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i></span>
+                                    <input id="fecHistorial" type="text" class="form-control" value="" onchange="obtenerFecha()">
+                            </div>
+                        </div>
+                        <div class="row col-lg-12" id="listaHitorial">
+                        <div class="col-lg-6">
+                            <div class="ibox ">
+                                <div class="ibox-title">
+                                    <h5>Caja Salida</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content" id="divListaHistorial">
                                     <table class="footable table table-stripped toggle-arrow-tiny">
                                         <thead>
                                         <tr>
@@ -201,68 +338,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
-
-                <div role="tabpanel" id="bHistorial" class="tab-pane">
-                    <div class="panel-body">
-                        <div class="col-lg-12">
-                            <div class="ibox ">
-                                <div class="ibox-title">
-                                    <h5>Balance Diario de Caja</h5>
-                                    <div class="ibox-tools">
-                                        <a class="collapse-link">
-                                            <i class="fa fa-chevron-up"></i>
-                                        </a>
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                            <i class="fa fa-wrench"></i>
-                                        </a>
-                                        <a class="close-link">
-                                            <i class="fa fa-times"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="form-inline">
-                                    <div class="form-group col-lg-4">
-                                        <label class="">Fecha de Inicio</label>
-                                        <input type="date" id="hBFecInicio" class="form-control" onchange="buscarFechaDia()">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="">Fecha de Fin</label>
-                                        <input type="date" id="hBFecFin" class="form-control" onchange="buscarFechaDia()">
-                                    </div>
-                                </div>
-                                <div class="ibox-content" id="divCajaDia">
-                                    <table class="footable table table-stripped toggle-arrow-tiny">
-                                        <thead>
-                                            <tr>
-                                                <th data-toggle="true">Código</th>
-                                                <th>Fecha</th>
-                                                <th>Hora de Apertura</th>
-                                                <th>Hora de Cierre</th>
-                                                <th>Balance del Día</th>
-                                                <th>Monto Final</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                                <tr>
-                                                   SELECCIONAR FECHAS
-                                                </tr>    
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <td colspan="5">
-                                                <ul class="pagination float-right"></ul>
-                                            </td>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -588,10 +664,33 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Serie del Depósito</strong>
+                            <strong>Elegir Banco</strong>
                         </td>
                         <td>
-                            <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="depSerie" placeholder="S/. 0.00"></div>
+                            <div class="col-sm-10" style='float: right; width: 150px;'>
+                                <select class="form-control m-b" name="pBanco" id="pBanco">
+                                    <option>
+                                        Seleccione un banco
+                                    </option>
+                                    <option value="bn">
+                                        BANCO DE LA NACIÓN
+                                    </option>
+                                    <option value="bcp">
+                                        BCP
+                                    </option>
+                                    <option value="i">
+                                        INTERBANK
+                                    </option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Código del Depósito</strong>
+                        </td>
+                        <td>
+                            <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="depSerie" placeholder="1111111"></div>
                         </td>
                     </tr>
                     <tr>
@@ -706,7 +805,30 @@
                     </tr>
                     <tr>
                         <td>
-                            <strong>Serie del Depósito</strong>
+                            <strong>Elegir Banco</strong>
+                        </td>
+                        <td>
+                            <div class="col-sm-10" style='float: right; width: 150px;'>
+                                <select class="form-control m-b" name="rBanco" id="rBanco">
+                                    <option>
+                                        Seleccione un banco
+                                    </option>
+                                    <option value="bn">
+                                        BANCO DE LA NACIÓN
+                                    </option>
+                                    <option value="bcp">
+                                        BCP
+                                    </option>
+                                    <option value="i">
+                                        INTERBANK
+                                    </option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Código del Depósito</strong>
                         </td>
                         <td>
                             <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="serRenovar"></div>
@@ -851,6 +973,11 @@
                             <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="imputId" placeholder="S/. 0.00"></div>
                         </td>
                     </tr>
+                    <tr hidden>
+                        <td>
+                            <div class="col-sm-10" style='float: right; width: 150px;'><input style="font-size: large;" type="text" class="form-control text-success" id="imputBanco" placeholder="S/. 0.00"></div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -864,11 +991,90 @@
 </div>
 <!-- Fin Detalle -->
 
+<!-- Ver Bancos -->
+<div class="modal inmodal fade" id="verBancos" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Ver Bancos <span id = "detId">Codigo</span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table m-b-xs">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <a title="Banco de la Nación" data-gallery=""><img src="{{ asset('img/Bancos/logo-bancodelanacion.png') }}" width="20%"></a>
+                        </td>
+                        <td>
+                            <span id="montoBn">BN</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a title="Banco de la Nación" data-gallery=""><img src="{{ asset('img/Bancos/logo-bcp.png') }}" width="20%"></a>
+                        </td>
+                        <td>
+                            <span id="montoBCP">BCP</span>
+                        </td>
+    
+                    </tr>
+                    <tr>
+                        <td>
+                            <a title="Banco de la Nación" data-gallery=""><img src="{{ asset('img/Bancos/logo-interbank.png') }}" width="20%"></a>
+                        </td>
+                        <td>
+                            <span id="montoInterbanck">I</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-success dim" data-dismiss="modal"> ACEPTAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Ver Bancos -->
+
 
 
 @endsection
 @section('script')
-    <script> 
+
+
+<link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
+
+
+   <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script>
+        
+        function verBancos(bn, bcp, interbank){
+            $('#verBancos').modal('show');
+            document.getElementById("montoBn").innerHTML="<p style='text-align:right;'>S/. " +bn+"</p>";
+            document.getElementById("montoBCP").innerHTML="<p style='text-align:right;'>S/. " +bcp+"</p>";
+            document.getElementById("montoInterbanck").innerHTML="<p style='text-align:right;'>S/. " +interbank+"</p>";
+        }
+
+        function obtenerFecha(){
+
+            var fecha = $('#fecHistorial').val();
+
+            //var varDate = $("#dateStart").val(); 
+
+            var DateinISO = $.datepicker.parseDate('mm/dd/yy', fecha); 
+
+            var dateFormato = $.datepicker.formatDate( "yy-mm-dd", new Date( DateinISO ) );
+
+            $.post('{{ route("consultarHistorial") }}', { fecha: dateFormato, _token: '{{ csrf_token() }}'}).done(function(data){
+                $("#listaHitorial").empty();
+                $("#listaHitorial").html(data.view);
+            });
+
+        }
+
         function modalCaja(montoFin, fechaInicio, fechaFin){
             $('#caja').modal('show');
             document.getElementById("montoCierre").innerHTML="<span> S/. " +montoFin+"</span>";
@@ -1032,7 +1238,6 @@
         }
 
         function depositarPago() {
-             //alert("Depositar");
             var idPrestamo = $("#idPrestamoP").val();
             var dia = $("#diaPago").val();
             var mora = $("#pagoMora").val();
@@ -1040,8 +1245,9 @@
             var interes = $("#pagoInteres").val();
             var serie = $("#depSerie").val();
             var monto = $("#pagoMonto").val();
+            var banco = $("#pBanco").val();
             
-            $.post( "{{ Route('depositarPrestamo') }}", {idPrestamo: idPrestamo, dia: dia, mora: mora, pago: pago, interes: interes, serie: serie, monto: monto, _token:'{{csrf_token()}}'}).done(function(data) {
+            $.post( "{{ Route('depositarPrestamo') }}", {idPrestamo: idPrestamo, dia: dia, mora: mora, pago: pago, interes: interes, serie: serie, monto: monto, banco: banco, _token:'{{csrf_token()}}'}).done(function(data) {
                        // $("#tabCliente").empty();
                         //$("#tabCliente").html(data.view);
                         if( data.resp == 0){
@@ -1051,6 +1257,7 @@
                             swal("Correcto", "El pago se realizó correctamente", "success");
                             //window.open('{{ Route('printTicket') }}', '_blank');
                             $("#imputId").val(data.idPrestamo);
+                            $("#imputBanco").val(data.banco);
                             $('#comision').modal('show');
 
                         }else if(data.resp == 2){
@@ -1064,8 +1271,9 @@
         function ingresarComision() {
             var idPrestamo = $("#imputId").val();
             var comision = $("#imputComision").val();
+            var banco = $("#imputBanco").val();
 
-            $.post( "{{ Route('ingresarComision') }}", {idPrestamo: idPrestamo, comision: comision, _token:'{{csrf_token()}}'}).done(function(data) {
+            $.post( "{{ Route('ingresarComision') }}", {idPrestamo: idPrestamo, comision: comision, banco: banco, _token:'{{csrf_token()}}'}).done(function(data) {
                 // $("#tabCliente").empty();
                  //$("#tabCliente").html(data.view);
                  if( data.resp == 0){
@@ -1075,6 +1283,7 @@
                      swal("Correcto", "Gracias por registrar el deposito", "success");
                      //window.open('{{ Route('printTicket') }}', '_blank');
                      $('#comision').modal('hide');
+                     window.open('{{ Route('printTicket') }}', '_blank');
 
                  }else if(data.resp == 2){
                      swal("Error", "Monto incorrecto", "error");
@@ -1085,7 +1294,6 @@
 
 
         function cancelarRenovar() {
-
             var idPrestamo = $("#idPrestamoR").val();
             var dia = $("#diaReno").val();
             var mora = $("#renMora").val();
@@ -1093,16 +1301,24 @@
             var interes = $("#renInteres").val();
             var serie = $("#serRenovar").val();
             var monto = $("#renMonto").val();
+            var banco = $("#rBanco").val();
             var calc = parseFloat(interes) + parseFloat(mora);
             if (pago >= calc ) {
 
-                $.post( "{{ Route('renovarDepositoPrestamo') }}", {idPrestamo: idPrestamo, pago: pago, dia: dia, interes: interes, mora: mora, serie: serie, monto: monto, _token:'{{csrf_token()}}'}).done(function(data) {
-                        if (data.aux == 0) {
-                            alert(data.respuesta);
-                        }else{
-                            $("#tabCliente").empty();
-                            $("#tabCliente").html(data.view);
-                            window.open('{{ Route('printTicket') }}', '_blank');
+                $.post( "{{ Route('renovarDepositoPrestamo') }}", {idPrestamo: idPrestamo, pago: pago, dia: dia, interes: interes, mora: mora, serie: serie, monto: monto, banco: banco, _token:'{{csrf_token()}}'}).done(function(data) {
+                    
+                        if( data.resp == 0){
+                            swal("Error", "Hubo un problema al registrar su pago", "error");
+                        }else if(data.resp == 1){
+
+                            swal("Correcto", "El pago se realizó correctamente", "success");
+                            
+                            $("#imputId").val(data.idPrestamo);
+                            $("#imputBanco").val(data.banco);
+                            $('#comision').modal('show');
+
+                        }else if(data.resp == 2){
+                            swal("Error", "Monto incorrecto", "error");
                         }
                         
                     });
@@ -1126,6 +1342,19 @@
                         
                     });
         }
+        
+        //Prueba
+        $(document).ready(function(){
+
+            $('#data_3 .input-group.date').datepicker({
+                startView: 2,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        });
+        //Fin Prueba
 
     </script>
 @endsection

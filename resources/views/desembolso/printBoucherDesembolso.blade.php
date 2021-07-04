@@ -99,9 +99,9 @@
                     </tr>
                 </tbody>
             </table>
-            <h1>{{ $desembolso[0]->estado }}</h1>
+            <h1>{{ $desembolso[0]->estado }} a la cuenta {{ $desembolso[0]->numero }}</h1>
             <p class="centrado">¡GRACIAS POR SU CONFINZA!
                 <br>invef.tk</p>
-        </div>
+        </div> 
 </body>
 </html>

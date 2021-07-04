@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	
 	<!-- Basic Page Needs
 	================================================== -->
 	<meta charset="utf-8">
@@ -45,10 +45,38 @@
 	<!-- Style Swicther -->
 	<link id="style-switch" href="{{asset('web/css/presets/preset1.css')}}" media="screen" rel="stylesheet" type="text/css">
 
+	<link href="{{asset('font-awesome/css/font-awesome.css')}}" rel="stylesheet">
+
 	<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
       <script src="js/html5shiv.js"></script>
-      <script src="js/respond.min.js"></script>
+	  <script src="js/respond.min.js"></script>
+	  
+
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta charset="utf-8">
+      <meta name="keywords" content="REGISTRATE PARA GANAR, Gana un bono de descuento y participa en el gran sorteo navideño.">
+      <meta name="description" content="">
+      <meta name="page_type" content="np-template-header-footer-from-plugin">
+	  <link rel="stylesheet" href=" {{ asset('web/tools/nicepage.css') }}  " media="screen">
+      <link rel="stylesheet" href="{{ asset('web/tools/Página-1.css') }}" media="screen">
+      <script class="u-script" type="text/javascript" src="{{ asset('web/tools/jquery.js') }}" defer=""></script>
+      <script class="u-script" type="text/javascript" src="{{ asset('web/tools/nicepage.js') }}" defer=""></script>
+      <meta name="generator" content="Nicepage 2.29.5, nicepage.com">
+	  <link id="u-theme-google-font" rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i') }}">
+	  <script type="application/ld+json">
+		{
+			"@context": "{{ asset('web/tools/http://schema.org') }}",
+			"@type": "Organization",
+			"name": "",
+			"url": "{{ asset('web/tools/index.html') }}"
+		}
+	  </script>
+	  <meta property="og:title" content="Página 1">
+	  <meta property="og:type" content="website">
+	  <meta name="theme-color" content="#478ac9">
+	  <link rel="canonical" href="{{ asset('web/tools/index.html') }}">
+	  <meta property="og:url" content="{{ asset('web/tools/index.html') }}">
     <![endif]-->
 
 </head>
@@ -83,9 +111,9 @@
                        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Nosotros <i class="fa fa-angle-down"></i></a>
                        		<div class="dropdown-menu">
 								<ul>
-		                            <li><a href="about.html">Sobre Nosotros</a></li>
-		                            <li><a href="service.html">Servicios</a></li>
-		                            <li><a href="faq.html">Preguntas Frecuentes</a></li>
+		                            <li><a href="{{ Route('nosotros') }}">Sobre Nosotros</a></li>
+		                            <li><a href="{{ Route('servicios') }}">Servicios</a></li>
+		                            <li><a href="{{ Route('preguntas') }}">Preguntas Frecuentes</a></li>
 		                        </ul>
 	                    	</div>
 	                    </li>
@@ -93,7 +121,7 @@
                        		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Liquidaciones <i class="fa fa-angle-down"></i></a>
                        		<div class="dropdown-menu">
 								<ul>
-		                            <li><a href="portfolio-classic.html">Equipos</a></li>
+		                            <li><a href="{{ Route('equipos') }}">Equipos</a></li>
 		                        </ul>
 	                    	</div>
 	                    </li>
@@ -112,63 +140,15 @@
 
 			<div class="flexSlideshow flexslider">
 				<ul class="slides">
+					@foreach ($banner as $b)
 					<li>
 						<div class="overlay2">
-							<img class="" src="{{ asset('web/images/slider/principal.jpg') }}" alt="slider">
+							<img class="" src="{{ $b->imagen }}" alt="slider">
 						</div>
-						<div class="flex-caption slider-content">
-	                        <div class="col-md-12 text-center">
-								<!--
-	                    		<h2 class="animated2">
-	                        		Inversiones Invef
-								</h2>
-								
-	                            <h3 class="animated3">
-	                            	We Making Difference To Great Things Possible
-								</h3>
-								-->
-	                            <p class="animated4"><a href="#" class="slider btn btn-primary white">INFORMACIÓN</a></p>
-	                        </div>
-	                    </div>
+						
 					</li>
-					<li>
-						<div class="overlay2">
-							<img class="" src="{{ asset('web/images/slider/segundo.jpg') }}" alt="slider">
-						</div>
-						<div class="flex-caption slider-content">
-	                        <div class="col-md-12 text-center">
-								<!--
-	                            <h2 class="animated4">
-	                                How Big Can You Dream?
-	                            </h2>
-	                            <h3 class="animated5">
-	                            	We are here to make it happen
-								</h3>		
-								-->
-	                            <p class="animated6"><a href="#" class="slider btn btn-primary white">SOLICITAR</a></p>	     
-	                        </div>
-	                    </div>
-					</li>
-					<li>
-						<div class="overlay2">
-							<img class="" src="{{ asset('web/images/slider/tercero.jpg') }}" alt="slider">
-						</div>
-						<div class="flex-caption slider-content">
-	                        <div class="col-md-12 text-center">
-								<!--
-	                            <h2 class="animated7">
-	                                Your Challenge is Our Progress
-	                            </h2>
-	                            <h3 class="animated8">
-	                            	So, You Dont Need to Go Anywhere Today
-								</h3>		
-								-->
-	                            <div class="">
-	                                <a class="animated4 slider btn btn-primary btn-min-block white" href="#">JOYA</a><a class="animated4 slider btn btn-primary btn-min-block solid" href="#">PRENDARIO</a>
-	                            </div>     
-	                        </div>
-	                    </div>
-					</li>
+					@endforeach
+					
 				</ul>
 			</div>
 		</div><!--/ Main slider end -->    	
@@ -180,73 +160,26 @@
 			<div class="row">
 				<div class="landing-tab clearfix">
 					<ul class="nav nav-tabs nav-stacked col-md-3 col-sm-5">
-					  	<li class="active">
-					  		<a class="animated fadeIn" href="#tab_a" data-toggle="tab">
-					  			<span class="tab-icon"><i class="fa fa-info"></i></span>
-					  			<div class="tab-info">
-						  			<h3>Quienes Somos</h3>
-					  			</div>
-					  		</a>
-					  	</li>
-					  	<li>
-						  	<a class="animated fadeIn" href="#tab_b" data-toggle="tab">
-						  		<span class="tab-icon"><i class="fa fa-briefcase"></i></span>
-					  			<div class="tab-info">
-						  			<h3>Nuestra Empresa</h3>
-					  			</div>
-						  	</a>
-						</li>
-					 	<li>
-						  	<a class="animated fadeIn" href="#tab_c" data-toggle="tab">
-						  		<span class="tab-icon"><i class="fa fa-android"></i></span>
-					  			<div class="tab-info">
-						  			<h3>Que Hacemos</h3>
-					  			</div>
-						  	</a>
-						</li>
-						<li>
-						  	<a class="animated fadeIn" href="#tab_d" data-toggle="tab">
-						  		<span class="tab-icon"><i class="fa fa-pagelines"></i></span>
-					  			<div class="tab-info">
-						  			<h3>Amigable</h3>
-					  			</div>
-						  	</a>
-						</li>
-						<li>
-						  	<a class="animated fadeIn" href="#tab_e" data-toggle="tab">
-						  		<span class="tab-icon"><i class="fa fa-support"></i></span>
-					  			<div class="tab-info">
-						  			<h3>Atención al Cliente</h3>
-					  			</div>
-						  	</a>
-						</li>
+						@foreach ($resumen as $r)
+						<li onclick="mostrarResumen('{{ $r->id }}')">
+							<a class="animated fadeIn" href="#tab_{{ $r->id }}" data-toggle="tab">
+								<span class="tab-icon"><i class="{{ $r->icono }}"></i></span>
+								<div class="tab-info">
+									<h3>{{ $r->titulo }}</h3>
+								</div>
+							</a>
+						</li>	
+						@endforeach
+					  	
 					</ul>
-					<div class="tab-content col-md-9 col-sm-7">
+					<div class="tab-content col-md-9 col-sm-7" id="mostrarDetalleResumen">
+						<!--
 				        <div class="tab-pane active animated fadeInRight" id="tab_a">
 				        	<i class="fa fa-trophy big"></i>
 				            <h3>We Are Awwared Winning Company</h3> 
 				            <p>Over the year we have lots of experience in our field. In sit amet massa sapien. Vestibulum diam turpis, gravida in lobortis id, ornare a eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sagittis nulla non elit dignissim suscipit. Duis lorem nulla, eleifend.</p>
-				        </div>
-				        <div class="tab-pane animated fadeInLeft" id="tab_b">
-				        	<i class="fa fa-briefcase big"></i>
-				            <h3>We Have Worldwide Business</h3> 
-							<p>Helvetica cold-pressed lomo messenger bag ugh. Vinyl jean shorts Austin pork belly PBR retro, Etsy VHS kitsch actually messenger bag pug. Pbrb semiotics try-hard, Schlitz occupy dreamcatcher master cleanse Marfa Vice tofu. </p>							 
-				        </div>
-				        <div class="tab-pane animated fadeIn" id="tab_c">
-				            <i class="fa fa-android big"></i>
-				            <h3>We Build Readymade Applications</h3> 
-				            <p>Over the year we have lots of experience in our field. In sit amet massa sapien. Vestibulum diam turpis, gravida in lobortis id, ornare a eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sagittis nulla non elit dignissim suscipit. Duis lorem nulla, eleifend.</p>
-				        </div>
-				        <div class="tab-pane animated fadeIn" id="tab_d">
-				            <i class="fa fa-pagelines big"></i>
-				            <h3>Clean and Modern Design</h3> 
-				            <p>Over the year we have lots of experience in our field. In sit amet massa sapien. Vestibulum diam turpis, gravida in lobortis id, ornare a eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sagittis nulla non elit dignissim suscipit. Duis lorem nulla, eleifend.</p>
-				        </div>
-				        <div class="tab-pane animated fadeIn" id="tab_e">
-				            <i class="fa fa-support big"></i>
-				            <h3>24/7 Dedicated Support</h3> 
-				            <p>Occupy selfies Tonx, +1 Truffaut beard organic normcore tilde flannel artisan squid cray single-origin coffee. Master cleanse vinyl Austin kogi, semiotics skateboard fap wayfarers health goth. Helvetica cray church-key hashtag Carles. Four dollar toast meggings seitan, Tonx pork belly VHS Bushwick. Chambray banh mi cornhole. Locavore messenger bag seitan.</p>
-				        </div>
+						</div>
+						-->
 					</div><!-- tab content -->
 	    		</div><!-- Overview tab end -->
 			</div><!--/ Content row end -->
@@ -265,31 +198,16 @@
 					</div>
 
 					<div class="gap-30"></div>
-
+					@foreach ($porQueElegirnos as $pqe)
 					<div class="image-block-content">
-						<span class="feature-icon pull-left" ><i class="fa fa-bicycle"></i></span>
+						<span class="feature-icon pull-left" ><i class="{{ $pqe->icono }}"></i></span>
 						<div class="feature-content">
-							<h3>Prestamos a Domicilio</h3>
-							<p>Tenemos el personal adecuado y capacitado en todas las medidas de seguridad para realizar el prestamo en la comodidad de su hogar</p>
+							<h3>{{ $pqe->titulo }}</h3>
+							<p>{{ $pqe->descripcion }}</p>
 						</div>
-					</div><!--/ End 1st block -->
-
-					<div class="image-block-content">
-						<span class="feature-icon pull-left" ><i class="fa fa-diamond"></i></span>
-						<div class="feature-content">
-							<h3>Prestamos de Joyas y Garantias</h3>
-							<p>Le brindamos prestamos tanto con joyas como con equipos electrodomesticos y electrónicos.</p>
-						</div>
-					</div><!--/ End 1st block -->
-
-					<div class="image-block-content">
-						<span class="feature-icon pull-left" ><i class="fa fa-street-view"></i></span>
-						<div class="feature-content">
-							<h3>Atención al Cliente</h3>
-							<p>Le brindamos una atención y asesoramiento de manera personalizada</p>
-						</div>
-					</div><!--/ End 1st block -->
-
+					</div>	
+					@endforeach
+					<!--/ End 1st block -->
 
 				</div>
 			</div>
@@ -341,88 +259,18 @@
 	<section id="feature" class="feature">
 		<div class="container">
 
+			
 			<div class="row">
+				@foreach ($caracteristicas as $c)
 				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-heart-o"></i></span>
+					<span class="feature-icon pull-left" ><i class="{{ $c->icono }}"></i></span>
 					<div class="feature-content">
-						<h3>Confiabilidad</h3>
-						<p>Nuestros servicios cuentan con suma confiabilidad</p>
+						<h3>{{ $c->titulo }}</h3>
+						<p>{{ $c->descripcion }}</p>
 					</div>
 				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-codepen"></i></span>
-					<div class="feature-content">
-						<h3>Almacen</h3>
-						<p>Nuestros almacenes cuentan con multiples medidas de seguridad</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-film"></i></span>
-					<div class="feature-content">
-						<h3>Seguridad</h3>
-						<p>Contamos con video-vigilancia en todas nuestras oficinas y almacenes</p>
-					</div>
-				</div><!--/ End first featurebox -->
-			</div><!-- Content row end -->
-
-			<div class="gap-40"></div>
-
-			<div class="row">
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-newspaper-o"></i></span>
-					<div class="feature-content">
-						<h3>Informacíon</h3>
-						<p>Brindamos toda la información que usted necesita</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-desktop"></i></span>
-					<div class="feature-content">
-						<h3>Electrodomesticos</h3>
-						<p>Trabajamos con amplio rango de garantias aceptadas</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-pagelines"></i></span>
-					<div class="feature-content">
-						<h3>Rapida Atención</h3>
-						<p>Nuestra atención no genera colas debido a nuestro rápido proceso de atención</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-			</div><!-- Content row end -->
-
-			<div class="gap-40"></div>
-
-			<div class="row">
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-recycle"></i></span>
-					<div class="feature-content">
-						<h3>Renovaciones</h3>
-						<p>Brindamos la posibilidad de renovar las fechas de pago</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-diamond"></i></span>
-					<div class="feature-content">
-						<h3>Joyas</h3>
-						<p>Aceptamos joyas como garantía</p>
-					</div>
-				</div><!--/ End first featurebox -->
-
-				<div class="feature-box col-sm-4 wow fadeInDown" data-wow-delay=".5s">
-					<span class="feature-icon pull-left" ><i class="fa fa-whatsapp"></i></span>
-					<div class="feature-content">
-						<h3>Atención al cliente</h3>
-						<p>Brindamos toda la información que necesita de manera facil y rápida</p>
-					</div>
-				</div><!--/ End first featurebox -->
-			</div><!-- Content row end -->
+				@endforeach
+			</div><!-- Content row end --> 
 
 		</div><!--/ Container end -->
 	</section><!--/ Service box end -->
@@ -437,8 +285,8 @@
 					<h2>INFORMACIÓN</h2>
 					<h3>Seleccione para ver más información</h3>
 					<p>
-						<a href="$" class="btn btn-primary white">Joyas</a>
-						<a href="$" class="btn btn-primary solid">Electro</a>
+						<a href="{{ Route('servicios') }}" class="btn btn-primary white">Joyas</a>
+						<a href="{{ Route('servicios') }}" class="btn btn-primary solid">Electro</a>
 					</p>
 				</div>
 			</div>
@@ -602,10 +450,10 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+				<div class="col-md-12 col-md-offset-3">
 					<form action="#" method="post" id="newsletter-form" class="newsletter-form wow bounceIn" data-wow-duration=".8s">
 						<div class="form-group">
-							<button class="btn btn-primary solid">Registrar</button>
+							<a class="btn btn-primary solid" href="{{ Route('cli') }}">Registrar</a>
 						</div>
 					</form>
 				</div>
@@ -709,14 +557,17 @@
 				<div class="col-md-12 text-center">
 					<ul class="footer-social unstyled">
 						<li>
-							<a title="Facebook" href="#">
+							<a title="Facebook" href="https://www.facebook.com/invef.invef/" target="_blank">
 								<span class="icon-pentagon wow bounceIn"><i class="fa fa-facebook"></i></span>
 							</a>
-							<a title="Google+" href="#">
-								<span class="icon-pentagon wow bounceIn"><i class="fa fa-google-plus"></i></span>
+							<a title="Instagram" href="https://www.instagram.com/invefsac/?hl=es-la" target="_blank">
+								<span class="icon-pentagon wow bounceIn"><i class="fa fa-instagram"></i></span>
 							</a>
-							<a title="Dribble" href="#">
+							<a title="Dribble" href="https://api.whatsapp.com/send?phone=51939214860" target="_blank">
 								<span class="icon-pentagon wow bounceIn"><i class="fa fa-whatsapp"></i></span>
+							</a>
+							<a title="Youtube" href="https://youtube.com/channel/UCOP0OJG3jKevrji6OPKfL9g" target="_blank">
+								<span class="icon-pentagon wow bounceIn"><i class="fa fa-youtube-play"></i></span>
 							</a>
 						</li>
 					</ul>
@@ -734,6 +585,45 @@
 			</div>
 		</div><!--/ Container end -->
 	</section><!--/ Footer end -->
+
+	<div class="modal inmodal fade" id="mPublicidad" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="background-color: #003961">
+				<div class="modal-body" style="background: url({{ asset('web/tools/images/fondoNavidad.png') }}) no-repeat; background-position: 100% 100%; background-size: 100%;">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-6">
+								<div class="form-group" style="text-align: center;">
+									<button type="button" style="border-radius: 50px; background-color: #003961; border: #003961 1px solid; color: #ffffff; padding: 10px;"></button>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<form id="fformulario" name="fformulario" method="post" action="guardarFormulario" class="formFormulario" enctype="multipart/form-data">
+								<h3 style="text-align: center; color: #F2F4F4">Registrate para ganar</h3>
+								<h6 style="text-align: center; color: #F2F4F4">Gana un bono de descuento y participa en el gran sorteo navideño</h6>
+								<div class="form-group">
+									<input type="text" name="_token" id="_token" hidden value="{{ csrf_token() }}">
+									<input name="nombre" required id="nombre" type="text" placeholder="Nombres y Apellidos" class="form-control" style=" border-radius: 50px; background-color: #F2F4F4; opacity: 90%; box-shadow: 2px 2px 5px #999;">
+								</div>
+								<div class="form-group">
+									<input name="correo" required id="celular" type="email" placeholder="Correo" class="form-control" style=" border-radius: 50px; background-color: #F2F4F4; opacity: 90%; box-shadow: 2px 2px 5px #999;">
+								</div>
+								<div class="form-group">
+									<input name="celular" required id="correo" type="tel" placeholder="Número de Celular" class="form-control" style=" border-radius: 50px; background-color: #F2F4F4; opacity: 90%; box-shadow: 2px 2px 5px #999;">
+								</div>
+								<div class="form-group" style="text-align: center;">
+									<button type="submit" style="border-radius: 50px; background-color: #003961; border: #003961 1px solid; color: #ffffff; padding: 10px;">GUARDAR</button>
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 	<!-- Javascript Files
 	================================================== -->
@@ -767,6 +657,48 @@
 	<script type="text/javascript" src="{{asset('web/js/waypoints.min.js')}}"></script>
 	<!-- Template custom -->
 	<script type="text/javascript" src="{{asset('web/js/custom.js')}}"></script>
+	<script src="{{asset('web/js/snow.js')}}"></script>
+	<script src="{{asset('web/js/particles.min.js')}}"></script>
+
+	<script>
+
+		//$(document).ready(cargarVentanaFlotante);
+
+		function cargarVentanaFlotante(){
+			$('#mPublicidad').modal('show');
+		}
+
+		$(document).on("submit",".formFormulario",function(e){
+        
+			e.preventDefault();
+			var formu = $(this);
+			var nombreform = $(this).attr("id");
+			
+			if (nombreform == "fformulario") {
+				var miurl = "{{ Route('guardarFormulario') }}";
+			}
+			var formData = new FormData($("#"+nombreform+"")[0]);
+			
+			$.ajax({ url: miurl, type: 'POST', data: formData, cache: false, contentType: false, processData: false,
+					beforeSend: function(){
+					},
+					success: function(data){
+						$('#mPublicidad').modal('hide');
+						toastr.success('Ya se encuentra participando');
+					},
+					error: function(data) {
+					}
+			});
+		});
+
+		function mostrarResumen(id){
+			$.post( "{{ Route('mostrarResumen') }}", {id: id, _token:'{{csrf_token()}}'}).done(function(data) {
+                $("#mostrarDetalleResumen").empty();
+                $("#mostrarDetalleResumen").html(data.view);
+            });
+		}
+
+	</script>
 	</div><!-- Body inner end -->
 </body>
 </html>

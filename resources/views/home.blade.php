@@ -99,7 +99,7 @@
             });
         };
 
-
+/*
         setTimeout(function() {
                 toastr.options = {
                     closeButton: true,
@@ -110,6 +110,7 @@
                 toastr.success('Admin', 'Bienvendio a Invef');
 
             }, 1300);
+            */
 
         function crearCaja(){
             var monto = $("#montoCaja").val();

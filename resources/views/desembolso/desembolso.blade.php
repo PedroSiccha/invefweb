@@ -84,11 +84,9 @@
                             <td>
                                 <select class="form-control m-b" name="account" id="banco">
                                     <option>Seleccionar Banco</option>
-                                    <option id="BCP">BCP</option>
-                                    <option id="BN">Banco de la Nación</option>
-                                    <option id="INTERBANK">Interbank</option>
-                                    <option id="YAPE">YAPE</option>
-                                    <option id="OTROS">OTROS</option>
+                                    <option value = "bcp">BCP</option>
+                                    <option value = "bn">Banco de la Nación</option>
+                                    <option value = "i">Interbank</option>
                                 </select>
                             </td>
                         </tr>
@@ -156,16 +154,6 @@
                     $('#deposito').modal('show');
                     document.getElementById("verIdPrestamo").innerHTML="<input hidden style='font-size: large;' type='text' class='form-control text-success' id='idPrestamo' value='" +id+"'>";
 
-
-                        /*
-                    swal("Ingrese el número de cuenta:", {
-                        content: "input",
-                    })
-                    .then((value) => {
-                        
-                        
-                    });
-                    */
                     break;
                 
                     case "efectivo":

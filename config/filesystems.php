@@ -83,6 +83,46 @@ return [
             'root' => public_path('img/notifiPrestamo'),
             'visibility'=> 'public',
         ],
+        'banner' => [
+            'driver' => 'local',
+            'root' => public_path('img/banner'),
+            'visibility'=> 'public',
+        ],
+        'resumenEmpresa' => [
+            'driver' => 'local',
+            'root' => public_path('img/resumenEmpresa'),
+            'visibility'=> 'public',
+        ],
+        'bannerNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerNosotros'),
+            'visibility'=> 'public',
+        ],
+        'detalleNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/detalleNosotros'),
+            'visibility'=> 'public',
+        ],
+        'imgNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/imgNosotros'),
+            'visibility'=> 'public',
+        ],
+        'bannerServicio' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerServicio'),
+            'visibility'=> 'public',
+        ],
+        'imgServicio' => [
+            'driver' => 'local',
+            'root' => public_path('img/imgServicio'),
+            'visibility'=> 'public',
+        ],
+        'bannerPregunta' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerPregunta'),
+            'visibility'=> 'public',
+        ],
 
     ],
 

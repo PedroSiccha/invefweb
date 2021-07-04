@@ -4493,15 +4493,18 @@ video {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   outline: 0 none;
   position: relative;
+  
 }
 .modal-dialog {
   z-index: 2200;
+  
 }
 .modal-body {
   padding: 20px 30px 30px 30px;
 }
 .inmodal .modal-body {
   background: #f8fafb;
+  
 }
 .inmodal .modal-header {
   padding: 30px 15px;
@@ -9553,3 +9556,4 @@ body.md-skin {
     margin: 0;
   }
 }
+

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('pagina')
     Realizar Pagos
-@endsection 
+@endsection     
 @section('contenido')
  
 <?php 
@@ -10,7 +10,7 @@
 ?>
 
 <div class="wrapper wrapper-content  animated fadeInRight">
-    <div class="row">
+    <div class="row">   
         <div class="col-sm-12">
             <div class="ibox">
                 <div class="ibox-content">
@@ -53,7 +53,7 @@
                                             @foreach ($prestamo as $pr)
 
                                                     <?php
-
+ 
                                                         $inicio = $pr->fecinicio;
                                                         $fechaActual = date("d-m-Y");
                                                         $dias = (strtotime($inicio)-strtotime($fechaActual))/86400;
@@ -68,18 +68,18 @@
 
                                                 <tr>
                                                     <td>{{ $pr->prestamo_id }}</td>
-                                                    <td><a href="{{ Route('perfilCliente', [$pr->cliente_id]) }}">{{ $pr->nombre }} {{ $pr->apellido }}</a></td>
-                                                    <td>{{ cambiaf_a_espanol($pr->fecfin) }}</td>
+                                                    <td><a href="{{ Route('perfilCliente', [$pr->cliente_id]) }}">{{ $pr->nombre }} {{ $pr->apellido }}</a></td> 
+                                                    <td>{{ $pr->fecfin }}</td>
                                                     <td>{{$dias}} días</td>
                                                     <td>S/. {{ $pr->monto }}</td>
                                                     <td>{{ $pr->porcentaje }} %</td>
                                                     <td>S/. {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }}</td>
-                                                    <td>S/. {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }}</td>
-                                                    <td>S/. {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }}</td>
+                                                    <td>S/. {{ $pro->calcularMora($pr->fecfin, $pr->morapagar) }} </td>
+                                                    <td>S/. {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] + $pro->calcularMora($pr->fecfin, $pr->morapagar) }}</td>
                                                     <td class="client-status">
-                                                        <button type="button" class="btn btn-success btn-xs" onclick="Pagar(' {{ $pr->prestamo_id }} ', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }} ', '{{ $dias }}' , ' {{ $diaFin }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')" data-toggle="tooltip" data-placement="top" title="PAGAR PRESTAMO"><i class="fa fa-money"></i></button>
-                                                        <button type="button" class="btn btn-warning btn-xs" onclick="Renovar(' {{ $pr->prestamo_id }} ', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }} ', '{{ $dias }}' , ' {{ $diaFin }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')" data-toggle="tooltip" data-placement="top" title="RENOVAR PRESTAMO"><i class="fa fa-history"></i></button>
-                                                        <button type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN DEL PRESTAMO" onclick="Detalle(' {{ $pr->prestamo_id }} ', '{{ $pr->nombre }} {{ $pr->apellido }}', '{{ $pr->dni }}', '{{ $pr->garantia }}', '{{ cambiaf_a_espanol($pr->fecinicio) }}', '{{ cambiaf_a_espanol($pr->fecfin) }}', '{{ $dias }}', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[1] }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')"><i class="fa fa-desktop"></i></button>
+                                                        <button type="button" class="btn btn-success btn-xs" onclick="Pagar(' {{ $pr->prestamo_id }} ', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] + $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', '{{ $dias }}' , ' {{ $diaFin }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')" data-toggle="tooltip" data-placement="top" title="PAGAR PRESTAMO"><i class="fa fa-money"></i></button>
+                                                        <button type="button" class="btn btn-warning btn-xs" onclick="Renovar(' {{ $pr->prestamo_id }} ', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] + $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', '{{ $dias }}' , ' {{ $diaFin }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')" data-toggle="tooltip" data-placement="top" title="RENOVAR PRESTAMO"><i class="fa fa-history"></i></button>
+                                                        <button type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN DEL PRESTAMO" onclick="Detalle(' {{ $pr->prestamo_id }} ', '{{ $pr->nombre }} {{ $pr->apellido }}', '{{ $pr->dni }}', '{{ $pr->garantia }}', '$pr->fecinicio', '$pr->fecfin', '{{ $dias }}', ' {{ $pr->monto }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[0] }} ', ' {{ $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', ' {{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[2] + $pro->calcularMora($pr->fecfin, $pr->morapagar) }} ', '{{ $pro->interesActual($dias, $pr->monto, $pr->porcentaje, $pr->morapagar)[3] }}')"><i class="fa fa-desktop"></i></button>
                                                     </td>
                                                 </tr>        
                                             @endforeach
@@ -442,11 +442,18 @@
                     $.post( "{{ Route('pagoPrestamo') }}", {idPrestamo: idPrestamo, importe: importe, importeMonto: importeMonto, dia: dia, mora: mora, interes: interes, monto: monto, _token:'{{csrf_token()}}'}).done(function(data) {
                         $("#tabCliente").empty();
                         $("#tabCliente").html(data.view);
-                        window.open('{{ Route('printTicket') }}', '_blank');
+
+                        if(data.res == 1){
+                            window.open('{{ Route('printTicket') }}', '_blank');
+                            swal("CORRECTO", "El pago de S/." +importe+", se realizó correctamente", "success");
+                        }else{
+                            swal("ERROR", "Hubo un problema al realizar el pago. \nCódigo de Error: " + data.conError);
+                        }
+
                     });
-                    swal("Correcto", "El pago de S/." +importe+", se realizó correctamente", "success");
                 });
         }
+        
         function cancelarRenovar() {
 
             var importe = $("#impoRenovar").val();
@@ -488,9 +495,9 @@
     </script>
 @endsection
 <?php
-function cambiaf_a_espanol($fecha){
-    preg_match( '/([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})/', $fecha, $mifecha);
-    $lafecha=$mifecha[3]."/".$mifecha[2]."/".$mifecha[1];
-    return $lafecha;
-}
+    function cambiaf($fecha){
+        preg_match( '/([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})/', $fecha, $mifecha);
+        $lafecha=$mifecha[3]."/".$mifecha[2]."/".$mifecha[1];
+        return $lafecha;
+    }
 ?>

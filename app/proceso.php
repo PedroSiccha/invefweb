@@ -29,7 +29,7 @@ class proceso extends Model
             $interesActual = $monto*($porcentaje/100);
             $moraPagar = ($dias-30)*$mora;
             $verMora = "";
-        }elseif ($dias >= 45 && $dias <= 62) {
+        }elseif ($dias >= 45 && $dias <= 61) {
             $interesActual = $monto*($porcentaje/100);
             $moraPagar = (15)*$mora;
             $verMora = "";
@@ -39,7 +39,7 @@ class proceso extends Model
             $verMora = "";
         }
 
-        $totalActual = $monto + $moraPagar + $interesActual;
+        $totalActual = $monto + $interesActual;
 
         $inter = $nombre_format_francais = number_format($interesActual, 2, ',', ' ');
         $tot = $nombre_format_francais = number_format($totalActual, 2, ',', ' ');
@@ -48,6 +48,27 @@ class proceso extends Model
 
         return [$interesActual, $moraPagar, $totalActual, $verMora, $dias, $monto];
     	
+    }
+
+    public static function calcularMora($fecFin, $montoMora){
+        
+        $moraPagar = 0; 
+        $verMora = "hidden";
+
+        $fechaActual = date("d-m-Y");
+        $dias = (strtotime($fechaActual)-strtotime($fecFin))/86400;
+        $dias = $dias;
+
+        if ($dias <= 0) {
+            $moraPagar = 0;
+        }else if ($dias > 0 && $dias < 15) {
+            $moraPagar = $dias*$montoMora;
+        }else{
+            $moraPagar = 15*$montoMora;
+        }
+
+        return $moraPagar;
+
     }
 
     function cambiaf_a_espanol($fecha){

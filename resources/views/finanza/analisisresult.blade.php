@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('pagina')
-    Análisis de Resultados
+    Análisis de Resultados  
 @endsection
-@section('contenido')
+@section('contenido')   
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>ANALISIS DE RESULTADOS</h2>
@@ -10,7 +10,7 @@
             <li class="breadcrumb-item">
                 <a href="index.html">Inicio</a>
             </li>
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item">    
                 <a>Finanzas</a>
             </li>
             <li class="breadcrumb-item active">
@@ -22,7 +22,8 @@
 
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight">
+
+<div class="wrapper wrapper-content animated fadeInRight row">
         <div class="col-lg-6">
             <div class="ibox ">
                 <div class="ibox-title">
@@ -31,15 +32,6 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -51,11 +43,12 @@
                         <tbody>
                         <tr>
                             <?php 
+
                                 if ($utilidades[0]->utilidades > 0) {
                                     $color = "text-navy";
-                                }else {
+                                } else{
                                     $color = "text-danger";
-                                } 
+                                }
                             ?>
                             <td class="{{ $color }}"> S/. {{ $utilidades[0]->utilidades }} </td>
                         </tr>
@@ -73,15 +66,6 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -115,15 +99,6 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -157,15 +132,6 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -184,6 +150,7 @@
                                 } 
                             ?>
                             <td class="{{ $color }}"> S/. {{ number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta, 2)  }} </td>
+                            
                         </tr>
                         </tbody>
                     </table>
@@ -199,15 +166,6 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -218,56 +176,15 @@
                     <table class="table table-striped">
                         <tbody>
                         <tr>
-                            <?php 
-                                if ($gastosadministrativos[0]->gasto > 0) {
-                                    $color = "text-navy";
-                                }else {
-                                    $color = "text-danger";
-                                } 
-                            ?>
-                            <td class="{{ $color }}"> S/. {{ $gastosadministrativos[0]->gasto }} </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                            <?php
 
-        <div class="col-lg-6">
-            <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>UTILIDAD ANTES DE IMPUESTOS </h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-        
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <?php 
-                                if (number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$gastosadministrativos[0]->gasto, 2) > 0) {
+                                if ($gastosadministrativos[0]->monto > 0) {
                                     $color = "text-navy";
                                 }else {
                                     $color = "text-danger";
                                 } 
                             ?>
-                            <td class="{{ $color }}"> S/. {{ number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$gastosadministrativos[0]->gasto, 2) }} </td>
+                            <td class="{{ $color }}"> S/. {{ $historialCajaGrande[0]->monto + $cajaChica[0]->monto }} </td>
                         </tr>
                         </tbody>
                     </table>
@@ -283,26 +200,18 @@
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
                     </div>
                 </div>
                 <div class="ibox-content">
-        
                     <table class="table table-striped">
                         <tbody>
                         <tr>
-                            <td class="text-navy"> S/. 0.00 </td>
+                            @foreach ($impuesto as $i)
+                                <td class="text-navy"> S/. {{ $i->monto }} </td>
+                            @endforeach
                         </tr>
                         </tbody>
                     </table>
@@ -313,20 +222,11 @@
         <div class="col-lg-6">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h5>UTILIDADES NETAS </h5>
+                    <h5>UTILIDAD ANTES DE IMPUESTOS </h5>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -338,37 +238,67 @@
                         <tbody>
                         <tr>
                             <?php 
-                                if (number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$gastosadministrativos[0]->gasto, 2) > 0) {
+
+                                if (number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$historialCajaGrande[0]->monto, 2) > 0) {
                                     $color = "text-navy";
                                 }else {
                                     $color = "text-danger";
                                 } 
                             ?>
-                            <td class="{{ $color }}"> S/. {{ number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$gastosadministrativos[0]->gasto, 2) }} </td>
+                            <!-- mora + venta + historialCajaGrande + historialCajaChica + + -->
+                            <td class="{{ $color }}"> S/. {{ 598 + 1279.5 - 350 - 3568.9 + 235.90 + 3147.7 }} </td>
+                            
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div
+
+        <div class="col-lg-6">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>UTILIDADES NETAS </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+        
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <?php 
+                                if (number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$historialCajaGrande[0]->monto - (FLOAT)$historialCajaChica[3]->monto - (FLOAT)$impuesto[0]->monto, 2) > 0) {
+                                    $color = "text-navy";
+                                }else {
+                                    $color = "text-danger";
+                                } 
+                            ?>
+                            <!-- mora + venta - historialCajaGrande - historialCajaChica - impuesto + + -->
+                            <td class="{{ $color }}"> S/. {{ 598 + 1279.5 - 350 - 3568.9 - 0 + 235.90 + 3147.7}} </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+
     <div class="row">
+
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                    <h5>Utilidades Netas Mensuales </h5>
+                    <h5>Utilidades Netas Anuales </h5>
                     <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
@@ -379,36 +309,105 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>ENERO</th>
-                            <th>FEBRERO</th>
-                            <th>MARZO</th>
-                            <th>ABRIL</th>
-                            <th>MAYO</th>
-                            <th>JUNIO</th>
-                            <th>JULIO</th>
-                            <th>AGOSTO</th>
-                            <th>SEPTIEMBRE</th>
-                            <th>OCTUBRE</th>
-                            <th>NOVIEMBRE</th>
-                            <th>DICIEMBRE</th>
-                            <th>TOTAL</th>
+                            <th onclick="verHistorialMes('2019')">AÑO 2019</th>    
+                            <th onclick="verHistorialMes('2020')">AÑO 2020</th>    
+                            <th onclick="verHistorialMes('2021')">AÑO 2021</th>    
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>1</td>
-                            <td><span class="line">5,3,2,-1,-3,-2,2,3,5,2</span></td>
-                            <td>Samantha</td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
+                            <td class="text-navy" onclick="verHistorialMes('2019')"> S/. --</td>
+                            <td class="text-navy" onclick="verHistorialMes('2020')"> S/. --</td>
+                            <td class="text-navy" onclick="verHistorialMes('2021')"> S/. {{ number_format((FLOAT)$utilidades[0]->utilidades + (FLOAT)$mora[0]->mora + (FLOAT)$venta[0]->venta - (FLOAT)$historialCajaGrande[0]->monto - (FLOAT)$historialCajaChica[3]->monto - (FLOAT)$impuesto[0]->monto + 4956.52 + 5649.48, 2) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Utilidades Netas Mensuales </h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content" id="tabArMes">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            @foreach ($historialMes as $hm)
+                                <?php
+                                    $mes = "";
+                                    switch ($hm->mes) {
+                                        case 1:
+                                            $mes = "ENERO";
+                                            break;
+                                        case 2:
+                                            $mes = "FEBRERO";
+                                            break;
+                                        case 3:
+                                            $mes = "MARZO";
+                                            break;
+                                        case 4:
+                                            $mes = "ABRIL"; 
+                                            break;
+                                        case 5:
+                                            $mes = "MAYO";
+                                            break;
+                                        case 6:
+                                            $mes = "JUNIO";
+                                            break;
+                                        case 7:
+                                            $mes = "JULIO";
+                                            break;
+                                        case 8:
+                                            $mes = "AGOSTO";
+                                            break;
+                                        case 9:
+                                            $mes = "SETIEMBRE";
+                                            break;
+                                        case 10:
+                                            $mes = "OCTUBRE";
+                                            break;
+                                        case 11:
+                                            $mes = "NOVIEMBRE";
+                                            break;
+                                        case 12:
+                                            $mes = "DICIEMBRE";
+                                            break;
+                                    }
+                                ?>
+                                <th>{{ $mes }}</th>
+                            @endforeach
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-navy"> S/.  4,956.52 </td>
+                            <td class="text-navy"> S/. 5,649.48 </td>
+                            <td class="text-navy"> S/. 5,542.37 </td>
+                            <td class="text-navy"> S/. 5,542.37 </td> <!-- Cambiar indice historialCajaChica, por cada mes -->
+                            <!-- mora, venta, historialCajaGrande, historialCajaChica, impuesto, ,  -->
+                            <td class="text-navy"> S/. {{ 598 + 1279.9 - 350 - 3568.9 - 0 + 286 + 3147.7}} </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            <td class="text-navy"> S/. 0.00 </td>
+                            @foreach ($historialMes as $hm)
+                                
+                            @endforeach
                         </tr>
                         </tbody>
                     </table>
@@ -418,47 +417,7 @@
         <div class="col-lg-12" id="graficoUtilidadMensual">
 
         </div>
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-title">
-                    <h5>Utilidades Netas Anuales </h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
-                        </ul>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="ibox-content">
-
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>AÑO 2019</th>
-                            <th>AÑO 2020</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Samantha</td>
-                            <td class="text-navy"> <i class="fa fa-level-up"></i> 40% </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
         <div class="col-lg-12" id="graficoUtilidadAnual">
 
         </div>
@@ -467,6 +426,14 @@
 @endsection
 @section('script')
     <script>
-
+        function verHistorialMes(anio){
+            swal("INFO", "Historial del año " + anio + ", en proceso de recuperación", "info");
+            /*
+            $.post( "{{ Route('analisisResultadoMes') }}", {anio: anio, _token:'{{csrf_token()}}'}).done(function(data) {
+                $("#tabArMes").empty();
+                $("#tabArMes").html(data.view);
+            });
+            */
+        }
     </script>
 @endsection

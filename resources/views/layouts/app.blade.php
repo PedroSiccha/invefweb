@@ -149,7 +149,13 @@
                     <li {{ $pro->validarPermiso("Pagina Web") }}>
                         <a href="#"><i class="fa fa-html5"></i> <span class="nav-label">Página Web</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('noticia') }}">Noticias</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('noticia') }}">Pagina Inicio</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configNosotros') }}">Nosotros</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configServicios') }}">Servicios</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configPregFrecuentes') }}">Preguntas Frecuentes</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configProductos') }}">Productos</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configAreas') }}">Equipos de Trabajo</a></li>
+                            <li {{ $pro->validarPermiso("Noticias") }}><a href="{{ Route('configPromociones') }}">Promociones y Sorteos</a></li>
                         </ul>
                     </li>
                 </ul>

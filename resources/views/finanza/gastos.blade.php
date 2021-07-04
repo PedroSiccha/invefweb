@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('pagina')
-    Gastos Administrativos
+    Gastos Administrativos  
 @endsection
-@section('contenido')
+@section('contenido')       
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Gastos Administrativos</h2>
@@ -27,20 +27,11 @@
     <div class="col-lg-12">
         <div class="ibox ">
             <div class="ibox-title">
-                <h5>All form elements <small>With custom checbox and radion elements.</small></h5>
+                <h5>Historial de gastos</h5>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
                     </a>
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-wrench"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#" class="dropdown-item">Config option 1</a>
-                        </li>
-                        <li><a href="#" class="dropdown-item">Config option 2</a>
-                        </li>
-                    </ul>
                     <a class="close-link">
                         <i class="fa fa-times"></i>
                     </a>
@@ -93,8 +84,94 @@
                                             <button class="btn btn-primary btn-sm" onclick="guardarGasto()">Registrar</button>
                                         </div>
                                     </div>
-                                </div>
+                                    
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-title">
+                                                <h5>Historial ANUAL de Gastos en Caja Chica </h5>
+                                                <div class="ibox-tools">
+                                                    <a class="collapse-link">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </a>
+                                                    <a class="close-link">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ibox-content">
+                            
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>2021</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="text-navy"> S/. {{ $montoCaja[1] + $montoCaja[2] + $montoCaja[3] + $montoCaja[4] + $montoCaja[5] + $montoCaja[6] + $montoCaja[7] + $montoCaja[8] + $montoCaja[9] + $montoCaja[10] + $montoCaja[11] + $montoCaja[12] }} </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-title">
+                                                <h5>Historial de Gastos en Caja Chica </h5>
+                                                <div class="ibox-tools">
+                                                    <a class="collapse-link">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </a>
+                                                    <a class="close-link">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ibox-content">
+                            
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th onclick="verHistorialDia('1')">ENERO</th>
+                                                            <th onclick="verHistorialDia('2')">FEBRERO</th>
+                                                            <th onclick="verHistorialDia('3')">MARZO</th>
+                                                            <th onclick="verHistorialDia('4')">ABRIL</th>
+                                                            <th onclick="verHistorialDia('5')">MAYO</th>
+                                                            <th onclick="verHistorialDia('6')">JUNIO</th>
+                                                            <th onclick="verHistorialDia('7')">JULIO</th>
+                                                            <th onclick="verHistorialDia('8')">AGOSTO</th>
+                                                            <th onclick="verHistorialDia('9')">SEPTIEMBRE</th>
+                                                            <th onclick="verHistorialDia('10')">OCTUBRE</th>
+                                                            <th onclick="verHistorialDia('11')">NOVIEMBRE</th>
+                                                            <th onclick="verHistorialDia('12')">DICIEMBRE</th>
+                                                            <th>TOTAL</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="text-navy" onclick="verHistorialDia('1')">{{ $montoCaja[1] }}</td>
+                                                        <td class="text-navy" onclick="verHistorialDia('2')">{{ $montoCaja[2] }}</td>
+                                                        <td class="text-navy" onclick="verHistorialDia('3')">{{ $montoCaja[3] }}</td>
+                                                        <td class="text-navy" onclick="verHistorialDia('4')">  {{ $montoCaja[4] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('5')">  {{ $montoCaja[5] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('6')">  {{ $montoCaja[6] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('7')">  {{ $montoCaja[7] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('8')">  {{ $montoCaja[8] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('9')">  {{ $montoCaja[9] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('10')">  {{ $montoCaja[10] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('11')">  {{ $montoCaja[11] }} </td>
+                                                        <td class="text-navy" onclick="verHistorialDia('12')">  {{ $montoCaja[12] }} </td>
+                                                        <td class="text-navy">  {{ $montoCaja[1] + $montoCaja[2] + $montoCaja[3] + $montoCaja[4] + $montoCaja[5] + $montoCaja[6] + $montoCaja[7] + $montoCaja[8] + $montoCaja[9] + $montoCaja[10] + $montoCaja[11] + $montoCaja[12] }} </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                                 <div class="ibox-content" id="gastosCc">
 
                                     <table class="table table-striped">
@@ -185,6 +262,92 @@
                                     </div>
                                     </form>
                                 </div>
+                                
+                                <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-title">
+                                                <h5>Historial ANUAL de Gastos en Caja Grande </h5>
+                                                <div class="ibox-tools">
+                                                    <a class="collapse-link">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </a>
+                                                    <a class="close-link">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ibox-content">
+                            
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>2021</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="text-navy">S/.  {{ $montoCajaGrande[1] + $montoCajaGrande[2] + $montoCajaGrande[3] + $montoCajaGrande[4] + $montoCajaGrande[5] + $montoCajaGrande[6] + $montoCajaGrande[7] + $montoCajaGrande[8] + $montoCajaGrande[9] + $montoCajaGrande[10] + $montoCajaGrande[11] + $montoCajaGrande[12] }} </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="col-lg-12">
+                                    <div class="ibox ">
+                                        <div class="ibox-title">
+                                            <h5>Historial de Gastos en Caja Grande </h5>
+                                            <div class="ibox-tools">
+                                                <a class="collapse-link">
+                                                    <i class="fa fa-chevron-up"></i>
+                                                </a>
+                                                <a class="close-link">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="ibox-content">
+                        
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th onclick="verHistorialCGDia('1')">ENERO</th>
+                                                        <th onclick="verHistorialCGDia('2')">FEBRERO</th>
+                                                        <th onclick="verHistorialCGDia('3')">MARZO</th>
+                                                        <th onclick="verHistorialCGDia('4')">ABRIL</th>
+                                                        <th onclick="verHistorialCGDia('5')">MAYO</th>
+                                                        <th onclick="verHistorialCGDia('6')">JUNIO</th>
+                                                        <th onclick="verHistorialCGDia('7')">JULIO</th>
+                                                        <th onclick="verHistorialCGDia('8')">AGOSTO</th>
+                                                        <th onclick="verHistorialCGDia('9')">SEPTIEMBRE</th>
+                                                        <th onclick="verHistorialCGDia('10')">OCTUBRE</th>
+                                                        <th onclick="verHistorialCGDia('11')">NOVIEMBRE</th>
+                                                        <th onclick="verHistorialCGDia('12')">DICIEMBRE</th> 
+                                                        <th>TOTAL</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('1')">{{ $montoCajaGrande[1] }}</td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('2')">{{ $montoCajaGrande[2] }}</td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('3')">{{ $montoCajaGrande[3] }}</td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('4')">  {{ $montoCajaGrande[4] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('5')">  {{ $montoCajaGrande[5] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('6')">  {{ $montoCajaGrande[6] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('7')">  {{ $montoCajaGrande[7] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('8')">  {{ $montoCajaGrande[8] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('9')">  {{ $montoCajaGrande[9] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('10')">  {{ $montoCajaGrande[10] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('11')">  {{ $montoCajaGrande[11] }} </td>
+                                                    <td class="text-navy" onclick="verHistorialCGDia('12')">  {{ $montoCajaGrande[12] }} </td>
+                                                    <td class="text-navy">  {{ $montoCajaGrande[1] + $montoCajaGrande[2] + $montoCajaGrande[3] + $montoCajaGrande[4] + $montoCajaGrande[5] + $montoCajaGrande[6] + $montoCajaGrande[7] + $montoCajaGrande[8] + $montoCajaGrande[9] + $montoCajaGrande[10] + $montoCajaGrande[11] + $montoCajaGrande[12] }} </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="ibox-content" id="pagosCg">
 
@@ -217,15 +380,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div id="blueimp-gallery" class="blueimp-gallery">
-                                    <div class="slides"></div>
-                                    <h3 class="title"></h3>
-                                    <a class="prev">‹</a>
-                                    <a class="next">›</a>
-                                    <a class="close">×</a>
-                                    <a class="play-pause"></a>
-                                    <ol class="indicator"></ol>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -248,6 +402,20 @@
             });
 
         });
+        
+        function verHistorialCGDia(mes){
+            $.post( "{{ Route('verHistorialGastosCGDia') }}", {mes: mes, _token:'{{csrf_token()}}'}).done(function(data) {
+                $("#pagosCg").empty();
+                $("#pagosCg").html(data.view);
+            });
+        }
+
+        function verHistorialDia(mes){
+            $.post( "{{ Route('verHisrialGastosDia') }}", {mes: mes, _token:'{{csrf_token()}}'}).done(function(data) {
+                $("#gastosCc").empty();
+                $("#gastosCc").html(data.view);
+            });
+        }
 
         function guardarGasto() {
             var serie = $("#serComprobante").val();

@@ -12,8 +12,74 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    
+    $banner = \DB::SELECT('SELECT * FROM banner WHERE estado = "ACTIVO"');
+
+    $resumen = \DB::SELECT('SELECT * FROM resumen WHERE estado = "ACTIVO"');
+
+    $porQueElegirnos = \DB::SELECT('SELECT * FROM resumenempresa WHERE estado = "ACTIVO"');
+
+    $caracteristicas = \DB::SELECT('SELECT * FROM caracteristicas WHERE estado = "ACTIVO"');
+
+    return view('welcome', compact('banner', 'resumen', 'porQueElegirnos', 'caracteristicas'));
+    
 })->name('web');
+
+Route::post('/guardarFormulario', 'MarketingController@guardarFormulario')->name('guardarFormulario');
+
+Route::get('/sobre-nosotros', function () {
+
+    $banner = \DB::SELECT('SELECT * FROM banernosotros WHERE estado = "ACTIVO"');
+
+    $nosotros = \DB::SELECT('SELECT * FROM nosotros WHERE estado = "ACTIVO"');
+
+    return view('web.nosotros', compact('banner', 'nosotros'));
+    
+})->name('nosotros');
+
+Route::get('/servicios', function () {
+    
+    $banner = \DB::SELECT('SELECT * FROM bannerservicios WHERE estado = "ACTIVO"');
+
+    $servicios = \DB::SELECT('SELECT * FROM servicios WHERE estado = "ACTIVO"');
+
+    return view('web.servicio', compact('banner', 'servicios'));
+    
+})->name('servicios');
+
+Route::get('/preguntas-frecuentes', function () {
+    
+    $banner = \DB::SELECT('SELECT * FROM bannerpreguntafrecuenta WHERE estado = "ACTIVO"');
+
+    $pregunta = \DB::SELECT('SELECT * FROM preguntafrecuente WHERE estado = "ACTIVO"');
+
+    return view('web.preguntafrecuente', compact('banner', 'pregunta'));
+    
+})->name('preguntas');
+
+Route::get('/equipos', function () {
+    
+    $banner = \DB::SELECT('SELECT * FROM banner WHERE estado = "ACTIVO"');
+
+    $resumen = \DB::SELECT('SELECT * FROM resumen WHERE estado = "ACTIVO"');
+
+    $porQueElegirnos = \DB::SELECT('SELECT * FROM resumenempresa WHERE estado = "ACTIVO"');
+
+    return view('web.liquidacion', compact('banner', 'resumen', 'porQueElegirnos'));
+    
+})->name('equipos');
+
+Route::get('/detalleProducto', function () {
+    
+    $banner = \DB::SELECT('SELECT * FROM banner WHERE estado = "ACTIVO"');
+
+    $resumen = \DB::SELECT('SELECT * FROM resumen WHERE estado = "ACTIVO"');
+
+    $porQueElegirnos = \DB::SELECT('SELECT * FROM resumenempresa WHERE estado = "ACTIVO"');
+
+    return view('web.detalleProducto', compact('banner', 'resumen', 'porQueElegirnos'));
+    
+})->name('detalleProducto');
 
 Route::get('/cl23', function () {
     $ocupacion = \DB::SELECT('SELECT * FROM ocupacion');
@@ -25,9 +91,13 @@ Route::get('/cl23', function () {
     return view('web.registroSorteo', compact('ocupacion', 'recomendacion', 'tipodoc', 'departamento' ,'provincia', 'distrito'));
 })->name('cli');
 
+Route::post('/mostrarResumen', 'WebController@mostrarResumen')->name('mostrarResumen');
+
+/*
 Route::get('/nosotros', function(){
     return view('web.nosotros');
 })->name('nosotros');
+*/
 
 //Route::get('/cl23', 'novedadesController@cli')->name('cli');
 Auth::routes();
@@ -132,6 +202,7 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/guardarNotificar', 'CobranzaController@guardarNotificar')->name('guardarNotificar');
     Route::post('/consultarMovimiento', 'CobranzaController@consultarMovimiento')->name('consultarMovimiento');
     Route::post('/ingresarComision', 'CobranzaController@ingresarComision')->name('ingresarComision');
+    Route::post('/consultarHistorial', 'CobranzaController@consultarHistorial')->name('consultarHistorial');
 
     /* Módulo de Liquidación */
     Route::get('/producto', 'LiquidacionController@producto')->name('producto');
@@ -211,6 +282,10 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/gastos', 'FinanzaController@gastos')->name('gastos');
     Route::get('/patrimonio', 'FinanzaController@patrimonio')->name('patrimonio');
     Route::post('/registrarInventario', 'FinanzaController@registrarInventario')->name('registrarInventario');
+    Route::post('/editarInventario', 'FinanzaController@editarInventario')->name('editarInventario');
+    Route::post('/eliminarInventario', 'FinanzaController@eliminarInventario')->name('eliminarInventario');
+    Route::post('/graficoPatrimonio', 'FinanzaController@graficoPatrimonio')->name('graficoPatrimonio');
+    Route::post('/tabMesPatrimonio', 'FinanzaController@tabMesPatrimonio')->name('tabMesPatrimonio');
     /* Rutas de las Graficas de Finanzas */
     Route::post('/graficoLineaPrestamo', 'FinanzaController@graficoLineaPrestamo')->name('graficoLineaPrestamo');
     Route::post('/graficoLineaPrestamoEstado', 'FinanzaController@graficoLineaPrestamoEstado')->name('graficoLineaPrestamoEstado');
@@ -238,6 +313,10 @@ Route::get('/home', 'HomeController@index')->name('home');
     Route::post('/graficoLineaFlujoCaja', 'FinanzaController@graficoLineaFlujoCaja')->name('graficoLineaFlujoCaja');
     Route::post('/graficoLineaFlujoCajaMes', 'FinanzaController@graficoLineaFlujoCajaMes')->name('graficoLineaFlujoCajaMes');
     Route::post('/graficoFlujoCajaAnual', 'FinanzaController@graficoFlujoCajaAnual')->name('graficoFlujoCajaAnual');
+    Route::post('/analisisResultadoMes', 'FinanzaController@analisisResultadoMes')->name('analisisResultadoMes');
+    Route:: post('/verHistorialPat', 'FinanzaController@verHistorialPat')->name('verHistorialPat');
+    Route::post('/verHisrialGastosDia', 'FinanzaController@verHisrialGastosDia')->name('verHisrialGastosDia');
+    Route::post('/verHistorialGastosCGDia', 'FinanzaController@verHistorialGastosCGDia')->name('verHistorialGastosCGDia');
 
     Route::post('/graficoAnual', 'FinanzaController@graficoAnual')->name('graficoAnual');
     /*Fin Rutas Graficas */
@@ -252,10 +331,78 @@ Route::get('/home', 'HomeController@index')->name('home');
 
     /*Pagina Web */
     Route::get('/noticia', 'WebController@noticia')->name('noticia');
+    Route::post('/guardarBanner', 'WebController@guardarBanner')->name('guardarBanner');
+    Route::post('/editarBanner', 'WebController@editarBanner')->name('editarBanner');
+    Route::post('/eliminarBanner', 'WebController@eliminarBanner')->name('eliminarBanner');
+    Route::post('/cambiarEstadoBanner', 'WebController@cambiarEstadoBanner')->name('cambiarEstadoBanner');
+    Route::post('/guardarResumenEmpresa', 'WebController@guardarResumenEmpresa')->name('guardarResumenEmpresa');
+    Route::post('/editarResumenEmpresa', 'WebController@editarResumenEmpresa')->name('editarResumenEmpresa');
+    Route::post('/eliminarResumen', 'WebController@eliminarResumen')->name('eliminarResumen');
+    Route::post('/cambiarEstadoResumenEmpresa', 'WebController@cambiarEstadoResumenEmpresa')->name('cambiarEstadoResumenEmpresa');
+    Route::post('/guardarPorQueElegirnos', 'WebController@guardarPorQueElegirnos')->name('guardarPorQueElegirnos');
+    Route::post('/editarPorQueElegirnos', 'WebController@editarPorQueElegirnos')->name('editarPorQueElegirnos');
+    Route::post('/eliminarPorQueElegirnos', 'WebController@eliminarPorQueElegirnos')->name('eliminarPorQueElegirnos');
+    Route::post('/cambiarEstadoPorQueElegirnos', 'WebController@cambiarEstadoPorQueElegirnos')->name('cambiarEstadoPorQueElegirnos');
+    Route::post('/guardarCaracteristica', 'WebController@guardarCaracteristica')->name('guardarCaracteristica');
+    Route::post('/cambiarEstadoCaracteristica', 'WebController@cambiarEstadoCaracteristica')->name('cambiarEstadoCaracteristica');
+    Route::get('/configNosotros', 'WebController@configNosotros')->name('configNosotros');
+    Route::post('/guardarBannerNostros', 'WebController@guardarBannerNostros')->name('guardarBannerNostros');
+    Route::post('/guardarResumenNosotros', 'WebController@guardarResumenNosotros')->name('guardarResumenNosotros');
+    Route::post('/guardarDetalleNosotros', 'WebController@guardarDetalleNosotros')->name('guardarDetalleNosotros');
+
+    Route::get('/configServicios', 'WebController@configServicios')->name('configServicios');
+    Route::post('/guardarBannerServicio', 'WebController@guardarBannerServicio')->name('guardarBannerServicio');
+    Route::post('/cambiarEstadoBannerServicio', 'WebController@cambiarEstadoBannerServicio')->name('cambiarEstadoBannerServicio');
+    Route::post('/editarBannerServicio', 'WebController@editarBannerServicio')->name('editarBannerServicio');
+    Route::post('/eliminarBannerServicio', 'WebController@eliminarBannerServicio')->name('eliminarBannerServicio');
+    Route::post('/guardarServicio', 'WebController@guardarServicio')->name('guardarServicio');
+    Route::post('/cambiarEstadoServicio', 'WebController@cambiarEstadoServicio')->name('cambiarEstadoServicio');
+    Route::post('/editarServicio', 'WebController@editarServicio')->name('editarServicio');
+    Route::post('/eliminarServicio', 'WebController@eliminarServicio')->name('eliminarServicio');
+    Route::post('/editarCaracteristica', 'WebController@editarCaracteristica')->name('editarCaracteristica');
+    Route::post('/eliminarCaracteristica', 'WebController@eliminarCaracteristica')->name('eliminarCaracteristica');
+    
+    //Route::get('/detalleServicio', 'WebController@cambiarEstadoBanner/?')->name('detalleServicio');
+    Route::get('/detalleServicio/{id}', function ($id) {
+        $user = Auth::user();
+        $usuario = \DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
+                                FROM empleado e, users u 
+                                WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
+
+        $notificacion = \DB::SELECT('SELECT * FROM  notificacion WHERE estado = "PENDIENTE" AND sede = "'.$usuario[0]->sede.'"');
+
+        if ($notificacion == null) {
+            $notificacion = \DB::SELECT('SELECT "" AS icono, "" AS asunto, "00:00:00" AS tiempo');
+        }
+
+        $cantNotificaciones = \DB::SELECT('SELECT COUNT(*) AS cant FROM notificacion WHERE estado = "PENDIENTE" AND sede = "'.$usuario[0]->sede.'"');
+
+        if($cantNotificaciones == null){
+            $cantNotificaciones = \DB::SELECT('SELECT "0" AS cant');
+        }
+
+        $banner = \DB::SELECT('SELECT * FROM bannerservicios WHERE id = "'.$id.'"');
+
+        $requisitos = \DB::SELECT('SELECT * FROM requisitos_servicios WHERE servicios_id = "'.$id.'"');
+
+
+        return view('web.detalleServicio', compact('usuario', 'notificacion', 'cantNotificaciones', 'banner', 'requisito'));
+    });
+
+    Route::get('/configPregFrecuentes', 'WebController@configPregFrecuentes')->name('configPregFrecuentes');
+    Route::post('/guardarBannerPregunta', 'WebController@guardarBannerPregunta')->name('guardarBannerPregunta');
+    Route::post('/guardarPreguntaFrecuente', 'WebController@guardarPreguntaFrecuente')->name('guardarPreguntaFrecuente');
+
+    Route::get('/configProductos', 'WebController@configProductos')->name('configProductos');
+
+    Route::get('/configAreas', 'WebController@configAreas')->name('configAreas');
+
+    Route::get('/configPromociones', 'WebController@configPromociones')->name('configPromociones');
+
 
     /* Módulo de Empleado */
     Route::get('/correo', 'EmpleadoController@correo')->name('correo');
-    Route::get('/manual', 'EmpleadoController@manual')->name('manual');
+    Route::get('/manual', 'EmpleadoController@manual')->name('manual'); 
     Route::get('/perfilEmpleado', 'EmpleadoController@perfil')->name('perfilEmpleado');
     
 //});

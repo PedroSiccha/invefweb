@@ -565,7 +565,6 @@ class PrestamoController extends Controller
 
         $result = "";
 
-        if ($cliente[0]->evaluacion >= 30) {
             $prestamo = new Prestamo();
             $prestamo->codigo = "n";
             $prestamo->monto = $request->monto;
@@ -610,9 +609,6 @@ class PrestamoController extends Controller
                     }
                 }
             }
-        }else {
-            $result = "2";
-        }
         $notificacion = \DB::SELECT('SELECT * FROM  notificacion WHERE estado = "PENDIENTE" AND sede = "'.$empleado[0]->sede_id.'"');
 
         if ($notificacion == null) {

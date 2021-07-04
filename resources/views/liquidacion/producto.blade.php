@@ -233,18 +233,27 @@
             var importe = $("#impoPagar").val();
             var idPrestamo = $("#idPrestamos").val();
             var total = $("#montoTotal").val();
-            //alert(total);
-            
 
-            $.post( "{{ Route('venderGarantia') }}", {importe: importe, idPrestamo: idPrestamo, total: total, _token:'{{csrf_token()}}'}).done(function(data) {
-                        if (data.aux == 0) {
-                            alert(data.respuesta);
-                        }else{
-                            $("#tabLiquidacion").empty();
-                            $("#tabLiquidacion").html(data.view);
-                        }
-                        
-                    });
+            if(parseFloat(total) <= parseFloat(importe)){
+
+                $.post( "{{ Route('venderGarantia') }}", {importe: importe, idPrestamo: idPrestamo, total: total, _token:'{{csrf_token()}}'}).done(function(data) {
+                    if (data.aux == 0) {
+                        alert(data.aux);
+                    }else{
+                        swal("CORRECTO", "La venta se realizó correctamente", "success");
+                        $("#tabLiquidacion").empty();
+                        $("#tabLiquidacion").html(data.view);
+                    }
+                    
+                });
+
+            }else{
+
+                swal("Error", "Por favor cancele el pago con el mínimo del monto de prestamo. \n¡GRACIAS!", "error");
+
+            }
+
+            
         }   
     </script>
 @endsection

@@ -1,3 +1,7 @@
+<?php 
+    use App\proceso; 
+    $pro = new proceso();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,7 +54,7 @@
         .ticket {
             width: 330px;
             max-width: 330px;
-            background-image: url("{{asset('../img/image005.png')}}");
+            //background-image: url("{{asset('../img/image005.png')}}");
             background-size: 100%;
         }
 
@@ -75,59 +79,81 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="cantidad"><b>CLIENTE:</b></td>
+                        <td class="cantidad"><h1><b>CLIENTE:</b></h1></td>
                         
                         <td class="precio">{{ $pago[0]->cliente }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>DNI:</b></td>
+                        <td class="cantidad"><h1><b>DNI:</b></h1></td>
                         
                         <td class="precio">{{ $pago[0]->dni }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>COD. PRESTAMO:</b></td>
+                        <td class="cantidad"><h1><b>COD. PRESTAMO:</b></h1></td>
                         
                         <td class="precio">{{ $pago[0]->prestamo_id }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>GARANTIA:</b></td>
+                        <td class="cantidad"><h1><b>GARANTIA:</b></h1></td>
                         
                         <td class="precio">{{ $pago[0]->garantia }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>ALMACEN:</b></td>
+                        <td class="cantidad"><h1><b>ALMACEN:</b></h1></td>
                         
                         <td class="precio">{{ $pago[0]->almacen }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>MONTO:</b></td>
+                        <td class="cantidad"><h1><b>MONTO:</b></h1></td>
                         
                         <td class="precio">S/. {{ $pago[0]->montoPrestamo }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>INTERES</b></td>
+                        <td class="cantidad"><h1><b>INTERES</b></h1></td>
                         
                         <td class="precio">S/. {{ $pago[0]->interes }}</td>
-                    </tr>
+                    </tr> 
                     <tr>
-                        <td class="cantidad"><b>MORA</b></td>
+                        <td class="cantidad"><h1><b>MORA</b></h1></td>
                         
                         <td class="precio">S/. {{ $pago[0]->mora }}</td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>TOTAL:</b></td>
+                        <td class="cantidad"><h1><b>TOTAL:</b></h1></td>
                         
-                        <td class="precio">S/. {{ $pago[0]->total }}</td>
+                        <td class="precio"><h2>S/. {{ $pago[0]->total }}</h2></td>
                     </tr>
                     <tr>
-                        <td class="cantidad"><b>SU PAGO:</b></td>
+                        <td class="cantidad"><h1><b>SU PAGO:</b></h1></td>
                         
                         <td class="precio">S/. {{ $pago[0]->importe }}</td>
                     </tr>
                     <tr>
                         <b>
-                            <td class="cantidad">DEUDA PENDIENTE:</td>
-                            <td class="precio">S/. 0.00</td>
+                            <td class="cantidad"><h1>DEUDA PENDIENTE:</h1></td>
+                            <td class="precio">S/. {{ $pago[0]->restante }}</td>
+                        </b>
+                    </tr>
+                    <?php
+
+                        $verFecha = "visibility:hidden;";
+
+                        if($pago[0]->restante> 0){
+                            $verFecha = "";
+                        }else{
+                            $verFecha = "visibility:hidden;";
+                        }
+
+                        $fecInicio = $pago[0]->fecinicio;
+
+                        $nuevaFecha = date("d-m-Y",strtotime($fecInicio."+ 1 month"));
+
+                    ?>
+                    <tr style="{{ $verFecha }}">
+                        <b>
+                            <td class="cantidad">Fecha próximo pago: </td>
+                            <td class="cantidad">{{ $nuevaFecha }} </td>
+                            
                         </b>
                     </tr>
                 </tbody>

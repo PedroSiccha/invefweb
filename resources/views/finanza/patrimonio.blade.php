@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('pagina')
-    Control Patrimonial
+    Control Patrimonial     
 @endsection
 @section('contenido')
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>Control Patrimonial</h2>
+        <h2>Control Patrimonial</h2>        
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('home') }}">Inicio</a>
@@ -18,7 +18,7 @@
             </li>
         </ol>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-2">  
         
     </div>
 </div>
@@ -26,15 +26,25 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-title">
+
+                <div class="ibox-title" data-toggle="collapse" data-parent="#accordion" href="#tabMueble">
                     <h5>Inventario de Equipos y Muebles</h5>
+                    <div class="ibox-tools">
+                        
+                    </div>
                     <div class="ibox-tools">
                         <button type="button" class="btn btn-outline btn-success" onclick="nuevoInventario()">
                             <i class="fa fa-plus"></i>
                         </button>
-                    </div>
+                        <a class="collapse-link" data-toggle="tooltip" data-placement="top" title="Minimizar Ventana">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link" data-toggle="tooltip" data-placement="top" title="Cerrar Ventana">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>  
                 </div>
-                <div class="ibox-content" id="tabMueble">
+                <div class="ibox-content panel-collapse collapse in" id="tabMueble">
 
                     <table class="table">
                         <thead>
@@ -52,11 +62,11 @@
                                     <td>{{ $e->nombre }} {{ $e->marca }}</td>
                                     <td>{{ $e->valor }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-warning" onclick="editarInventario('{{ $e->idinventario }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
+                                        <button type="button" class="btn btn-warning" onclick="editarInventario('{{ $e->id }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-danger" onclick="bajaInventario('{{ $e->idinventario }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->marca }}', '{{ $e->valor }}')">
-                                            <i class="fa fa-minus"></i>
+                                        <button type="button" class="btn btn-danger" onclick="bajaInventario('{{ $e->id }}', '{{ $e->unidad }}', '{{ $e->nombre }}', '{{ $e->valor }}')">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -150,7 +160,7 @@
                         <tr>
                             <td>5</td>
                             <td>Efectivo</td>
-                            <td>Bancos BCP</td>
+                            <td>Bancos</td>
                             <td>S/. {{ $cajaBanco[0]->monto }} </td>
                         </tr>
                         <tr>
@@ -286,7 +296,7 @@
                             <?php
                                 $activosTotales = $prestamoColocado[0]->monto + $liquidacion[0]->monto + $cajaChica[0]->monto + $totalInventario[0]->total + $software[0]->valor + $cajaGrande[0]->monto + $cajaBanco[0]->monto;
                                 $deudasTotales = $pagoPersonal[0]->monto + $pagoAlquiler[0]->monto + $pagoInternet[0]->monto + $utilesEscritorio[0]->monto + $publicidad[0]->monto + $tarjetaBCP[0]->monto + $luz[0]->monto + $impuesto[0]->monto;
-                                $patrimonioNeto = $activosTotales - $deudasTotales;
+                                $patrimonioNeto = $activosTotales;
                             ?>
                             <tr>
                                 <td>ACTIVOS TOTALES</td>
@@ -325,6 +335,84 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5><small>HISTORIAL</small>
+                        ANUAL
+                    </h5>
+                </div>
+                
+                <div class="ibox-content">
+                    <!-- Cantidad de Prestamos por día -->
+                    <div id="tabHistAnio">
+                        <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>AÑOS</th>
+                                <th>2020</th>
+                                <th>2021</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                <th>CIERRE ANUAL</th>
+                                    <th>{{ $historialPat[0]->monto }}</th>
+                                    <th>S/. {{ $patrimonioNeto }}</th>
+                                </tr>      
+                            </tbody>
+                          </table>
+                    </div>
+                    <!-- Fin Cantidad de Prestamos por día -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5><small>HISTORIAL</small>
+                        MENSUAL
+                    </h5>
+                </div>
+                
+                <div class="ibox-content" id="tabHistPat">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ENE</th>
+                            <th>FEB</th>
+                            <th>MAR</th>
+                            <th>ABR</th>
+                            <th>MAY</th>
+                            <th>JUN</th>
+                            <th>JUL</th>
+                            <th>AGO</th>
+                            <th>SET</th>
+                            <th>OCT</th>
+                            <th>NOV</th>
+                            <th>DIC</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-navy">S/. {{ $montoMes[1] + $montoMes[2] + $montoMes[3] + $montoMes[4] + $montoMes[5] + $montoMes[6] + $montoMes[7] + 46482.75 }}</td>
+                            <td class="text-navy">S/. {{ $montoMes[1] + $montoMes[2] + $montoMes[3] + $montoMes[4] + $montoMes[5] + $montoMes[6] + $montoMes[7] + $montoMes[8] + 46482.75 + 30000}}</td>
+                            <td class="text-navy">S/. 140007.11 </td>
+                            <td class="text-navy">S/. 141939.46</td>
+                            <td class="text-navy">S/. {{ $patrimonioNeto }}</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                            <td class="text-navy">S/. 0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     </div>
 </div>
 
@@ -511,6 +599,38 @@
 
         }
 
+        function verHistorial(){
+            var anio = $('#anioPrestamo').val();
+
+            if (anio == 0) {
+                toastr.error("Primero Seleccione el AÑO para continuar");
+            }else{
+                $.post( "{{ Route('graficoPatrimonio') }}", {anio: anio, _token:'{{csrf_token()}}'}).done(function(data) {
+
+                    $("#tabHistAnio").empty();
+                    $("#tabHistAnio").html(data.view);
+
+                });
+            }
+        }
+
+        function mostrarMesPatrimonio(){
+            var anio = $('#anioPatrimonio').val();
+    
+            if (anio == 0) {
+                toastr.error("Primero Seleccione el AÑO para continuar");
+            }else{
+    
+                $.post( "{{ Route('tabMesPatrimonio') }}", {anio: anio, _token:'{{csrf_token()}}'}).done(function(data) {
+
+                    $("#tabMesPatrimonio").empty();
+                    $("#tabMesPatrimonio").html(data.view);
+    
+                });
+                
+            }
+        }
+
 
         function nuevoInventario() {
             $('#nuevoInventario').modal('show');
@@ -527,13 +647,57 @@
             $('#valorE').val(valor);
         }
 
-        function bajaInventario(id, unidad, nombre, marca, valor){
-            $('#elimInventario').modal('show');
-            $('#idEl').val(id);
-            $('#unidadEl').val(unidad);
-            $('#nombreEl').val(nombre);
-            $('#marcaEl').val(marca);
-            $('#valorEl').val(valor);
+        function editarPatrimonio(){
+            var id = $('#idE').val();
+            var unidad = $('#unidadE').val();
+            var nombre = $('#nombreE').val();
+            var marca = $('#marcaE').val();
+            var valor = $('#valorE').val();
+
+            $.post( "{{ Route('editarInventario') }}", {id: id, unidad: unidad, nombre: nombre, marca: marca, valor: valor, _token:'{{csrf_token()}}'}).done(function(data) {
+                if (data.resp == 1 ) {
+                    $('#editInventario').modal('hide');
+                    swal(nombre, "Fué actualizado correctamente", "success");
+                    $("#tabMueble").empty();
+                    $("#tabMueble").html(data.view);
+                    $("#activosMueble").empty();
+                    $("#activosMueble").html(data.viewTi);
+                }else{
+                    swal(nombre, "Hubo un error, no se pudo actualizar", "error");
+                }
+            });
+
+        }
+
+        function bajaInventario(id, unidad, nombre, valor){
+
+            swal({
+                title: "¿Seguro que deseas eliminar "+nombre+"?",
+                text: "No podrás deshacer este paso...",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonColor: "#5EAF5E",
+                cancelButtonText: "CANCELAR",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "¡ELIMINAR!",
+                closeOnConfirm: false },
+                
+                function(){
+                    
+                    $.post( "{{ Route('eliminarInventario') }}", {id: id, unidad: unidad, nombre: nombre, valor: valor, _token:'{{csrf_token()}}'}).done(function(data) {
+                        if (data.resp == 1 ) {
+                            
+                            swal(nombre, "Se eliminó correctamente.", "success");
+                            $("#tabMueble").empty();
+                            $("#tabMueble").html(data.view);
+                            $("#activosMueble").empty();
+                            $("#activosMueble").html(data.viewTi);
+                        }else{
+                            swal(nombre, "Hubo un error, no se pudo eliminar", "error");
+                        }
+                    });
+
+                });
         }
 
         function guardarPatrimonio() {
@@ -545,18 +709,26 @@
             var valor = $("#valorP").val();
             
             $.post( "{{ Route('registrarInventario') }}", {tipoinventario_id: tipoinventario_id, nombre: nombre, marca: marca, unidad: unidad, valor: valor, _token:'{{csrf_token()}}'}).done(function(data) {
-                $('#nuevoInventario').modal('hide');
                 if (data.resp == 1 ) {
-                    toastr.success('Actualizacion de Inventario', 'CORRECTO');
+                    $('#nuevoInventario').modal('hide');
+                    swal(nombre, "Fué agregado correctamente", "success");
                     $("#tabMueble").empty();
                     $("#tabMueble").html(data.view);
                     $("#activosMueble").empty();
                     $("#activosMueble").html(data.viewTi);
                 }else{
-                    toastr.error('No se pudo Actualizar el Inventario', 'ERROR');
+                    swal(nombre, "Hubo un error, no se pudo agregar al patrimonio", "error");
                 }
             });
             
         }
+
+        function verHistorialPat(anio){
+            $.post( "{{ Route('verHistorialPat') }}", {anio: anio, _token:'{{csrf_token()}}'}).done(function(data) {
+                    $("#tabHistPat").empty();
+                    $("#tabHistPat").html(data.view);
+            });
+        }
+
     </script>
 @endsection

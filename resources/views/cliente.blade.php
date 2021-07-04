@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>INVEF | PERFIL DEL CLIENTE</title>
+    <title>INVEF | PERFIL DEL CLIENTE</title>   
 
     <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('font-awesome/css/font-awesome.css')}}" rel="stylesheet">
@@ -79,11 +79,6 @@
                                 <a class="dropdown-item float-left" href="profile.html">
                                     <img alt="image" class="rounded-circle" src="img/a7.jpg">
                                 </a>
-                                <div class="media-body">
-                                    <small class="float-right">46h ago</small>
-                                    <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                    <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                </div>
                             </div>
                         </li>
                         <li class="dropdown-divider"></li>

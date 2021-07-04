@@ -35,7 +35,7 @@
         <div class="col-lg-6">
         <div class="ibox ">
             <div class="ibox-title">
-                <h5>Datos del Cliente</h5>
+                <h5>{{ $cliente[0]->nombre }} {{ $cliente[0]->apellido }} </h5>
                 <div class="ibox-tools">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -52,13 +52,9 @@
                 @foreach($cliente as $cli)
                 <input type="text" id="cliente_id" value="{{ $cli->id }}" hidden="true">
                 <address>
-                    <strong>{{ $cli->nombre }} {{ $cli->apellido }}</strong><br>
                     {{ $cli->dni }}<br>
                     {{ $cli->direccion }}<br>
                 </address>
-                <div class="progress progress-mini">
-                    <div <?php $eva = $cli->evaluacion; $evaluacion = $eva*10; ?> style="width: {{ $evaluacion }}%;" class="progress-bar"></div>
-                </div>
                 @endforeach
                 <address>
                     @foreach ($almacen as $al)
@@ -103,23 +99,11 @@
                             <input type="text" id="nomGarantia" value="{{ $cot->producto }}" hidden="true">
                             <div class="row">
                             <div class="col-lg-4">
-                                <div class="widget style1 lazur-bg">
-                                    <div class="row vertical-align">
-                                        <div class="col-2">
-                                            <h2 class="font-bold">S/ </h2>
-                                        </div>
-                                        <div class="col-9 text-right">
-                                            <h2 class="font-bold">{{ $cot->valorreal }}</h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
                                 <div class="ibox">
                                     <div class="ibox-content">
                                         <h5 class="m-b-md">Valor Máximo</h5>
                                         <h2 class="text-navy">
-                                            <i class="fa fa-play fa-rotate-270"></i> S/. {{ $cot->presmax }}.00
+                                            <i class="fa fa-play fa-rotate-270"></i> S/. {{ $cot->presmax }}
                                         </h2>
                                     </div>
                                 </div>
@@ -129,7 +113,7 @@
                                     <div class="ibox-content">
                                         <h5 class="m-b-md">Valor Mínimo</h5>
                                         <h2 class="text-danger">
-                                            <i class="fa fa-play fa-rotate-90"></i> S/. {{ $cot->presmin }}.00
+                                            <i class="fa fa-play fa-rotate-90"></i> S/. {{ $cot->presmin }}
                                         </h2>
                                     </div>
                                 </div>
