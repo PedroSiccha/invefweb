@@ -1,0 +1,1 @@
+<span class="float-right text-muted" id="cantLiquidacion"><p>{{$cantLiquidacion}} Productos</p></span>

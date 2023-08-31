@@ -32,8 +32,7 @@ class AtencionClienteController extends Controller
                                   INNER JOIN ocupacion o ON cl.ocupacion_id = o.id 
                                   INNER JOIN recomendacion r ON cl.recomendacion_id = r.id 
                                   INNER JOIN direccion dr ON cl.direccion_id = dr.id
-                                  WHERE cl.sede_id = "'.$idSucursal.'"
-                                  GROUP BY cl.id');
+                                  WHERE cl.sede_id = "'.$idSucursal.'"');
 
         $cantClientes = count($clientes);
 
@@ -301,10 +300,12 @@ class AtencionClienteController extends Controller
                                 FROM empleado e, users u 
                                 WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
 
-        $cliente = DB::SELECT('SELECT c.id as cliente_id, c.nombre, c.apellido, c.dni, c.correo, dr.direccion, c.fecnac, c.edad, c.genero, c.foto, c.facebook, c.ingmax, c.ingmin, c.gasmax, c.gasmin, c.created_at, o.nombre AS ocupacion, r.recomendacion AS recomendacion, c.evaluacion AS evaluacion, c.telefono, c.whatsapp, c.referencia 
-                                FROM cliente c, ocupacion o, recomendacion r, direccion dr
-                                WHERE c.ocupacion_id = o.id AND c.recomendacion_id = r.id AND c.direccion_id = dr.id AND c.id = "'.$id.'" GROUP BY c.id');
-        
+        $cliente = Cliente::select('cliente.id as cliente_id', 'cliente.nombre', 'cliente.apellido', 'cliente.dni', 'cliente.correo', 'direccion.direccion', 'cliente.fecnac', 'cliente.edad', 'cliente.genero', 'cliente.foto', 'cliente.facebook', 'cliente.ingmax', 'cliente.ingmin', 'cliente.gasmax', 'cliente.gasmin', 'cliente.created_at', 'ocupacion.nombre AS ocupacion', 'recomendacion.recomendacion AS recomendacion', 'cliente.evaluacion AS evaluacion', 'cliente.telefono', 'cliente.whatsapp', 'cliente.referencia')
+                            ->join('ocupacion', 'cliente.ocupacion_id', '=', 'ocupacion.id')
+                            ->join('recomendacion', 'cliente.recomendacion_id', '=', 'recomendacion.id')
+                            ->join('direccion', 'cliente.direccion_id', '=', 'direccion.id')
+                            ->where('cliente.id', $id)
+                            ->first();
 
         $cantPrestamo = DB::SELECT('SELECT COUNT(p.id) AS catPrestamo 
                                      FROM prestamo p, cotizacion c 
