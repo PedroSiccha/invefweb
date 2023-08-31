@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Desembolso extends Model
 {
+    use HasFactory;
     protected $table = 'desembolso';
     protected $fillable = ['id', 'numero', 'estado', 'monto', 'prestamo_id', 'empleado_id'];
 

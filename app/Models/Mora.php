@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mora extends Model
 {
+    use HasFactory;
     protected $table = 'mora';
     protected $fillable = ['id', 'mora', 'max', 'min', 'estado'];
 }

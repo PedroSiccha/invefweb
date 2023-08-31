@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prestamo extends Model
 {
+    use HasFactory;
     protected $table = 'prestamo';
     protected $fillable = ['id', 'codigo', 'monto', 'fecinicio', 'fecfin', 'total', 'macro', 'intpagar', 'estado', 'tipocredito_interes_id', 'cotizacion_id', 'mora_id', 'empleado_id', 'sede_id', 'color_estado', 'fecagendar', 'orden'];
 

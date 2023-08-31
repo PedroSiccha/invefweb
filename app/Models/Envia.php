@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Envia extends Model
 {
+    use HasFactory;
     protected $table = 'envia';
     protected $fillable = ['id', 'empleado_id'];
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoCreditoRequisito extends Model
 {
+    use HasFactory;
     protected $table = 'tipocredito_requisito';
     protected $fillable = ['id', 'tipocredito_id', 'requisitos_id'];
 

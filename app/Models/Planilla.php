@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Planilla extends Model
 {
+    use HasFactory;
     protected $table = 'planilla';
     protected $fillable = ['id', 'fecinicio', 'fecfin', 'monto'];
 }

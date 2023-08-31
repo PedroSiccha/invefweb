@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoGarantia extends Model
 {
+    use HasFactory;
     protected $table = 'tipogarantia';
     protected $fillable = ['id', 'nombre', 'precMax', 'precMin', 'detalle', 'pureza'];
 }

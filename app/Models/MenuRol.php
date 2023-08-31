@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MenuRol extends Model
 {
+    use HasFactory;
     protected $table = 'menurol';
     protected $fillable = ['id', 'menu_id', 'rol_id'];
 

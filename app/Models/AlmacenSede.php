@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AlmacenSede extends Model
 {
+    use HasFactory;
     protected $table = 'almacen_sede';
     protected $fillable = ['id', 'detalle', 'sede_id', 'almacen_id'];
 

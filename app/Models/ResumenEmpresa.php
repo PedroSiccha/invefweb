@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResumenEmpresa extends Model
 {
+    use HasFactory;
     protected $table = 'resumenempresa';
     protected $fillable = ['id', 'titulo', 'descripcion', 'icono', 'estado', 'fecinicio', 'fecfin'];
 }

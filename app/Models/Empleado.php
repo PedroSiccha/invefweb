@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Empleado extends Model
 {
+    use HasFactory;
     protected $table = 'empleado';
     protected $fillable = ['id', 'nombre', 'apellido', 'dni', 'fecnac', 'edad', 'telefono', 'referencia', 'whatsapp', 'tipodocide_id', 'estado', 'direccion_id', 'genero', 'turno_id', 'planilla_id', 'valoracion', 'users_id', 'foto'];
 

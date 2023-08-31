@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PermissionUser extends Model
 {
+    use HasFactory;
     protected $table = 'permission_user';
     protected $fillable = ['id', 'users_id', 'permissions_id'];
 

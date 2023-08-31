@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Interes extends Model
 {
+    use HasFactory;
     protected $table = 'interes';
     protected $fillable = ['id', 'porcentaje', 'dias'];
 }

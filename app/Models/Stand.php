@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stand extends Model
 {
+    use HasFactory;
     protected $table = 'stand';
     protected $fillable = ['id', 'nombre', 'detalle', 'almacen_id', 'estado'];
 

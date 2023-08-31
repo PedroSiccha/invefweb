@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PrestamoDocumento extends Model
 {
+    use HasFactory;
     protected $table = 'prestamo_documento';
     protected $fillable = ['id', 'asunto', 'detalle', 'estado', 'prestamo_id', 'documento_id'];
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reuniones extends Model
 {
+    use HasFactory;
     protected $table = 'reuniones';
     protected $fillable = ['id', 'nombre', 'motivo', 'detalle', 'estado', 'fecha', 'inicio', 'fin', 'asistentes_id', 'encargado_id'];
 

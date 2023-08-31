@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocGarantia extends Model
 {
+    use HasFactory;
     protected $table = 'docgarantia';
     protected $fillable = ['id', 'nombre', 'ruta', 'garantia_id'];
 

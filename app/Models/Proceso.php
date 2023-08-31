@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class proceso extends Model
+class Proceso extends Model
 {
     public static function interesActual($dias, $monto, $porcentaje, $mora){
         $interesActual = 0;

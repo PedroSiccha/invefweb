@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recibe extends Model
 {
+    use HasFactory;
     protected $table = 'recibe';
     protected $fillable = ['id', 'empleado_id'];
 

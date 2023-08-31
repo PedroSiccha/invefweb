@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recomendacion extends Model
 {
+    use HasFactory;
     protected $table = 'recomendacion';
     protected $fillable = ['id', 'recomendacion', 'detalle'];
 }

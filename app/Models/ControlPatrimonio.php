@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ControlPatrimonio extends Model
 {
+    use HasFactory;
     protected $table = 'control_patrimonial';
     protected $fillable = ['id', 'mes', 'numbermes', 'anio', 'monto', 'user_id', 'feccierre', 'horacierre', 'sede_id'];
 }

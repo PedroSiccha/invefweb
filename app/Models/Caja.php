@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Caja extends Model
 {
+    use HasFactory;
     protected $table = 'caja';
     protected $fillable = ['id', 'estado', 'monto', 'fecha', 'inicio', 'fin', 'montofin', 'empleado', 'sede_id', 'tipocaja_id'];
 

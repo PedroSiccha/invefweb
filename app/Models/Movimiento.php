@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movimiento extends Model
 {
+    use HasFactory;
     protected $table = 'movimiento';
     protected $fillable = ['id', 'codigo', 'serie', 'estado', 'monto', 'concepto', 'tipo', 'empleado', 'importe', 'codprestamo', 'condesembolso', 'codgarantia', 'garantia', 'interesPagar', 'moraPagar', 'caja_id'];
 

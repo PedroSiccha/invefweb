@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PrestamoNotificacion extends Model
 {
+    use HasFactory;
     protected $table = 'prestamo_notificacion';
     protected $fillable = ['id', 'estado', 'prestamo_id', 'notificacion_id'];
 

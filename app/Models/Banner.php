@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Banner extends Model
 {
+    use HasFactory;
     protected $table = 'banner';
     protected $fillable = ['id', 'nombre', 'descripcion', 'imagen', 'estado', 'fecinicio', 'fecfin'];
 }

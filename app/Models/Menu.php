@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
+    use HasFactory;
     protected $table = 'menu';
     protected $fillable = ['id', 'nombre', 'url', 'orden', 'icono', 'menu_id'];
 

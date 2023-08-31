@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoDocIde extends Model
 {
+    use HasFactory;
     protected $table = 'tipodocide';
     protected $fillable = ['id', 'nombre', 'descripcion'];
 }
