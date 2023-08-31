@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Caja\GetCajaByTipoUseCase;
 use App\Models\Caja;
 use App\Models\Departamento;
 use App\Models\Direccion;

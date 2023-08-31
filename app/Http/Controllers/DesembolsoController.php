@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Banco\GetBancoByIdUseCase;
+use App\Application\UseCases\Caja\GetCajaByTipoUseCase;
+use App\Application\UseCases\Desembolso\CreateDesembolsoUseCase;
+use App\Application\UseCases\Garantia\GetGarantiaByPrestamoUseCase;
 use App\Models\Desembolso;
 use App\Models\Prestamo;
 use App\Models\Proceso;

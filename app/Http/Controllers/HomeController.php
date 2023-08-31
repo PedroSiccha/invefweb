@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Cotizacion\SearchCotizacionUseCase;
 use App\Models\Cliente;
 use App\Models\Proceso;
 use App\Models\Sede;

@@ -33,7 +33,6 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
-            'throw' => false,
         ],
 
         'public' => [
@@ -41,7 +40,6 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'throw' => false,
         ],
 
         's3' => [
@@ -51,9 +49,71 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
+        ],
+        'perfil' => [
+            'driver' => 'local',
+            'root' => public_path('img/perfil'),
+            'visibility'=> 'public',
+        ],
+        'perfilEmpleado' => [
+            'driver' => 'local',
+            'root' => public_path('img/perfilEmpleado'),
+            'visibility'=> 'public',
+        ],
+        'pagosGa' => [
+            'driver' => 'local',
+            'root' => public_path('img/pagosGa'),
+            'visibility'=> 'public',
+        ],
+        'pagosBanco' => [
+            'driver' => 'local',
+            'root' => public_path('img/pagosBanco'),
+            'visibility'=> 'public',
+        ],
+        'notifiPrestamo' => [
+            'driver' => 'local',
+            'root' => public_path('img/notifiPrestamo'),
+            'visibility'=> 'public',
+        ],
+        'banner' => [
+            'driver' => 'local',
+            'root' => public_path('img/banner'),
+            'visibility'=> 'public',
+        ],
+        'resumenEmpresa' => [
+            'driver' => 'local',
+            'root' => public_path('img/resumenEmpresa'),
+            'visibility'=> 'public',
+        ],
+        'bannerNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerNosotros'),
+            'visibility'=> 'public',
+        ],
+        'detalleNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/detalleNosotros'),
+            'visibility'=> 'public',
+        ],
+        'imgNosotros' => [
+            'driver' => 'local',
+            'root' => public_path('img/imgNosotros'),
+            'visibility'=> 'public',
+        ],
+        'bannerServicio' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerServicio'),
+            'visibility'=> 'public',
+        ],
+        'imgServicio' => [
+            'driver' => 'local',
+            'root' => public_path('img/imgServicio'),
+            'visibility'=> 'public',
+        ],
+        'bannerPregunta' => [
+            'driver' => 'local',
+            'root' => public_path('img/bannerPregunta'),
+            'visibility'=> 'public',
         ],
 
     ],

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Cotizacion\CreateCotizacionUseCase;
+use App\Application\UseCases\Cotizacion\GetCotizacionCompletaUseCase;
+use App\Application\UseCases\Prestamo\CreatePrestamoUseCase;
 use App\Models\Casillero;
 use App\Models\Cliente;
 use App\Models\Cotizacion;

@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Banco\GetBancoUseCase;
+use App\Application\UseCases\Caja\GetCajaByTipoUseCase;
+use App\Application\UseCases\Inventario\GetMontoInventarioUseCase;
+use App\Application\UseCases\Liquidacion\GetMontoLiquidacionUseCase;
+use App\Application\UseCases\Patrimonio\GetListPatrimonioNetoMesUseCase;
+use App\Application\UseCases\Patrimonio\GetListPatrimonioNetoUseCase;
+use App\Application\UseCases\Patrimonio\GetPatrimonioNetoCase;
+use App\Application\UseCases\Prestamo\GetPrestamosColocadosUseCase;
 use App\Models\Caja;
+use App\Models\ControlPatrimonio;
 use App\Models\Empleado;
 use App\Models\Inventario;
 use App\Models\Movimiento;
 use App\Models\MovimientoDocumento;
 use App\Models\Proceso;
 use App\Models\TipoInventario;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

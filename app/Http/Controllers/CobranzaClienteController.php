@@ -2,6 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UseCases\Banco\CreateBancoUseCase;
+use App\Application\UseCases\Banco\GetBancoByIdUseCase;
+use App\Application\UseCases\Banco\GetBancoUseCase;
+use App\Application\UseCases\Caja\GetCajaByTipoUseCase;
+use App\Application\UseCases\Cliente\GetClienteByPrestamoUseCase;
+use App\Application\UseCases\Cliente\UpdatePuntajeClienteUseCase;
+use App\Application\UseCases\Garantia\GetGarantiaByPrestamoUseCase;
+use App\Application\UseCases\Pago\CreatePagoUseCase;
+use App\Application\UseCases\Prestamo\CreatePrestamoUseCase;
 use App\Models\Caja;
 use App\Models\Casillero;
 use App\Models\Cliente;
