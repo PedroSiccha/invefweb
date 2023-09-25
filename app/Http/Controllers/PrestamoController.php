@@ -28,11 +28,7 @@ class PrestamoController extends Controller
     protected $getCotizacionCompletaUseCase;
     protected $createPrestamoUseCase;
     
-    public function __construct(
-        CreateCotizacionUseCase $createCotizacionUseCase, 
-        GetCotizacionCompletaUseCase $getCotizacionCompletaUseCase, 
-        CreatePrestamoUseCase $createPrestamoUseCase
-        )
+    public function __construct(CreateCotizacionUseCase $createCotizacionUseCase, GetCotizacionCompletaUseCase $getCotizacionCompletaUseCase, CreatePrestamoUseCase $createPrestamoUseCase)
     {
         $this->createCotizacionUseCase = $createCotizacionUseCase;
         $this->getCotizacionCompletaUseCase = $getCotizacionCompletaUseCase;
@@ -42,7 +38,7 @@ class PrestamoController extends Controller
     public function generarCotizacion(Request $request)
     {
         try {
-            $Proceso = new Proceso();
+            $Proceso = new proceso();
             $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
             $idEmpleado = $Proceso->obtenerSucursal()->id;
             $cliente = Cliente::where('id', $request->input('cliente_id'))->first();
@@ -581,4 +577,5 @@ class PrestamoController extends Controller
 
         return response()->json(['correo'=>$correo]);
     }
+
 }

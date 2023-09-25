@@ -14,29 +14,24 @@ class HomeController extends Controller
 {
     protected $searchCotizacionUseCase;
     
-    public function __construct(
-        SearchCotizacionUseCase $searchCotizacionUseCase
-    )
+    public function __construct(SearchCotizacionUseCase $searchCotizacionUseCase)
     {
         $this->middleware('auth');
         $this->searchCotizacionUseCase = $searchCotizacionUseCase;
     }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+     
     public function index()
     {
         $id = auth()->user()->id;
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $rol = DB::SELECT('SELECT * FROM userrol ur
                             JOIN rol r ON r.id = ur.rol_id
                             WHERE ur.users_id = "'.$id.'"');
+                            
+        // dd($rol);
                         
         
         if ($rol == "Cliente") {
@@ -204,7 +199,8 @@ class HomeController extends Controller
             ]);
             //return view('home', compact('informes', 'usuario', 'rol', 'sucursales'));
             
-        }          
+        }                        
+        
     }
 
     public function web()

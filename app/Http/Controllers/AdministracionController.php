@@ -27,14 +27,15 @@ use Illuminate\Support\Facades\Storage;
 
 class AdministracionController extends Controller
 {
+    
     protected $getCajaByTipoUseCase;
-
+    
     public function __construct(GetCajaByTipoUseCase $getCajaByTipoUseCase)
     {
         $this->middleware('auth');
         $this->getCajaByTipoUseCase = $getCajaByTipoUseCase;
     }
-
+    
     public function configuracion()
     {
         $user = Auth::user();
@@ -94,7 +95,7 @@ class AdministracionController extends Controller
         if ($interes->save()) {
             $interes_id = $interes->id;
             
-            $tipocreditoInteres = new TipoCreditoInteres();
+            $tipocreditoInteres = new TipocreditoInteres();
             $tipocreditoInteres->tipocredito_id = $tipoCredito;
             $tipocreditoInteres->interes_id = $interes_id;
             if ($tipocreditoInteres->save()) {
@@ -108,6 +109,7 @@ class AdministracionController extends Controller
     
     public function editarInteres(Request $request)
     {
+        
         switch ($request->tipoCredito) {
           case "cp":
             $tipoCredito = 1;
@@ -139,6 +141,12 @@ class AdministracionController extends Controller
                                         RIGHT JOIN interes i ON ti.interes_id = i.id');
                 return response()->json(["view"=>view('administracion.tabInteres',compact('interes'))->render(), 'inte'=>$request->interes]);    
             }
+            /*
+            $interes = DB::SELECT('SELECT ti.id AS tcinteres_id, ti.tipocredito_id AS tipocredito_id, i.id AS interes_id, i.porcentaje AS porcentaje, i.dias AS dias
+                                        FROM tipocredito_interes ti
+                                        RIGHT JOIN interes i ON ti.interes_id = i.id');
+            return response()->json(["view"=>view('administracion.tabInteres',compact('interes'))->render(), 'inte'=>$request->interes]);
+            */
         }
     }
 
@@ -160,7 +168,7 @@ class AdministracionController extends Controller
         $detalle = $request->precmaximo;
         $pureza = $request->detalle;
 
-        $tgar = new TipoGarantia();
+        $tgar = new Tipogarantia();
         $tgar->nombre = $nombre;
         $tgar->precMax = $precMax;
         $tgar->precMin = $precMin;
@@ -172,6 +180,7 @@ class AdministracionController extends Controller
             
             return response()->json(["view"=>view('administracion.tabTipoGarantia',compact('tipogarantia'))->render()]);
         }
+
     }
 
     public function guardarDepartamento(Request $request)
@@ -181,6 +190,7 @@ class AdministracionController extends Controller
         if ($dep->save()) {
             $departamento = DB::SELECT('SELECT * FROM departamento');
             $resp = 1;
+
         }else {
             $resp = 0;
         }
@@ -198,6 +208,7 @@ class AdministracionController extends Controller
                                   FROM provincia p, departamento d 
                                   WHERE p.departamento_id = d.id');
             $resp = 1;
+
         }else {
             $resp = 0;
         }
@@ -215,12 +226,15 @@ class AdministracionController extends Controller
                                         FROM distrito di, provincia p, departamento d 
                                         WHERE di.provincia_id = p.id AND p.departamento_id = d.id');
             $resp = 1;
+
         }else {
             $resp = 0;
         }
 
         return response()->json(["view"=>view('administracion.tabDistrito',compact('distrito'))->render(), 'resp'=>$resp]);
     }
+
+    
 
     public function editarMora(Request $request)
     {
@@ -254,6 +268,7 @@ class AdministracionController extends Controller
            $mora=Mora::get();
 
             return response()->json(["view"=>view('administracion.tabMora',compact('mora'))->render(), 'mor'=>$request->mora]);
+
         }
     }
     
@@ -265,6 +280,7 @@ class AdministracionController extends Controller
         if ($rec->save()) {
             $recomendacion = DB::SELECT('SELECT * FROM recomendacion');
             $resp = 1;
+
         }else {
             $resp = 0;
         }
@@ -289,7 +305,9 @@ class AdministracionController extends Controller
         if ($rec->delete()) {
 
            $recomendacion=Recomendacion::get();
+
             return response()->json(["view"=>view('administracion.tabRecomendacion',compact('recomendacion'))->render(), 'rec'=>$request->recomendacion]);
+
         }
     }
 
@@ -427,9 +445,14 @@ class AdministracionController extends Controller
         return response()->json(["view"=>view('administracion.listSede',compact('sede'))->render()]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function guardarSede(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         
         $nombre = $request->nombre;
@@ -508,6 +531,12 @@ class AdministracionController extends Controller
                 
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function gestionPrestamo()
     {
 
@@ -531,6 +560,12 @@ class AdministracionController extends Controller
         return view('administracion.gestionPrestamo', compact('usuario', 'prestamo', 'interes', 'mora', 'sede'));
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function mostrarPrestamo(Request $request)
     {
         $prestamo_id = $request->id;
@@ -543,6 +578,12 @@ class AdministracionController extends Controller
         return response()->json(['prestamo_id'=>$prestamo[0]->id, 'monto'=>$prestamo[0]->monto, 'fecinicio'=>$prestamo[0]->fecinicio, 'fecfin'=>$prestamo[0]->fecfin, 'total'=>$prestamo[0]->total, 'macro'=>$prestamo[0]->macro, 'intpagar'=>$prestamo[0]->intpagar, 'estado'=>$prestamo[0]->estado, 'tipocredito_interes_id'=>$prestamo[0]->tipocredito_interes_id, 'mora_id'=>$prestamo[0]->mora_id, 'sede_id'=>$prestamo[0]->sede_id]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function verifGestionPrestamo(Request $request)
     {
         $pass = $request->pass;
@@ -560,6 +601,13 @@ class AdministracionController extends Controller
         return response()->json(['resp'=>$resp]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function editarPrestamo(Request $request)
     {
         $prestamo_id = $request->prestamo_id;
@@ -600,6 +648,12 @@ class AdministracionController extends Controller
 
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function guardarGasto(Request $request)
     {
         $serie = $request->serie;
@@ -607,7 +661,7 @@ class AdministracionController extends Controller
         $concepto = $request->concepto;
         $resp = "";
         
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
                              
@@ -619,7 +673,11 @@ class AdministracionController extends Controller
                              
         $caja = $this->getCajaByTipoUseCase->execute($dataCaja);
         
-        $nuevoMonto = Proceso::actualizarCaja($caja->monto, $monto, 1);
+        $nuevoMonto = proceso::actualizarCaja($caja->monto, $monto, 1);
+
+        // $cajaM = DB::SELECT('SELECT monto FROM caja WHERE id = "'.$caja[0]->id.'"');
+
+        // $actualizarCaja = $cajaM[0]->monto - $monto;
 
         $mov = new Movimiento();
         $mov->estado = "ACTIVO";
@@ -681,7 +739,7 @@ class AdministracionController extends Controller
                               FROM caja 
                               WHERE tipocaja_id = "2"');
                               
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
                              
@@ -693,6 +751,8 @@ class AdministracionController extends Controller
                              
         $caja = $this->getCajaByTipoUseCase->execute($dataCaja);
         
+        // dd($caja);
+
         $cm = DB::SELECT('SELECT monto
                            FROM caja
                            WHERE id = "'.$cajaG[0]->id.'"');
@@ -705,11 +765,12 @@ class AdministracionController extends Controller
         $actualizarCaja = $caja->monto - $monto;
         $subido="";
         $urlGuardar="";
-        
+        // dd($actualizarCaja);
+
         if ($request->hasFile('recibo')) { 
             
             $nombre=$rec->getClientOriginalName();
-            
+            //dd($nombre);
             $extension=$rec->getClientOriginalExtension();
             $nuevoNombre=$nombre.".".$extension;
             $subido = Storage::disk('pagosGa')->put($nombre, File::get($rec));
@@ -918,6 +979,7 @@ class AdministracionController extends Controller
     {
         $caja_id = $request->id;
         
+
         $caja = DB::SELECT('SELECT id AS caja_id, monto FROM caja WHERE id = "'.$caja_id.'"');
 
         return response()->json(['caja_id'=>$caja[0]->caja_id, 'monto'=>$caja[0]->monto]);
@@ -1074,6 +1136,7 @@ class AdministracionController extends Controller
                                   FROM provincia p, departamento d 
                                   WHERE p.departamento_id = d.id');
         
+
             return response()->json(["view"=>view('administracion.tabProvincia',compact('provincia'))->render()]);
         }
     }

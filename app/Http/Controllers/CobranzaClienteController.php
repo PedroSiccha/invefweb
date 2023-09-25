@@ -42,17 +42,7 @@ class CobranzaClienteController extends Controller
     protected $createBancoUseCase;
     protected $getBancoByIdUseCase;
     
-    public function __construct(
-        GetCajaByTipoUseCase $getCajaByTipoUseCase, 
-        GetGarantiaByPrestamoUseCase $getGarantiaByPrestamoUseCase, 
-        GetClienteByPrestamoUseCase $getClienteByPrestamoUseCase, 
-        UpdatePuntajeClienteUseCase $updatePuntajeClienteUseCase, 
-        CreatePrestamoUseCase $createPrestamoUseCase, 
-        CreatePagoUseCase $createPagoUseCase, 
-        GetBancoUseCase $getBancoUseCase, 
-        CreateBancoUseCase $createBancoUseCase, 
-        GetBancoByIdUseCase $getBancoByIdUseCase
-        )
+    public function __construct(GetCajaByTipoUseCase $getCajaByTipoUseCase, GetGarantiaByPrestamoUseCase $getGarantiaByPrestamoUseCase, GetClienteByPrestamoUseCase $getClienteByPrestamoUseCase, UpdatePuntajeClienteUseCase $updatePuntajeClienteUseCase, CreatePrestamoUseCase $createPrestamoUseCase, CreatePagoUseCase $createPagoUseCase, GetBancoUseCase $getBancoUseCase, CreateBancoUseCase $createBancoUseCase, GetBancoByIdUseCase $getBancoByIdUseCase)
     {
         $this->middleware('auth');
         $this->getCajaByTipoUseCase = $getCajaByTipoUseCase;
@@ -68,7 +58,7 @@ class CobranzaClienteController extends Controller
     
     public function renovarPrestamo(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $idUsuario = Auth::user()->id;
@@ -993,7 +983,7 @@ class CobranzaClienteController extends Controller
 
     public function crearCaja(Request $request) 
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -1023,9 +1013,8 @@ class CobranzaClienteController extends Controller
 
     public function consultarCaja(Request $request) 
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
-        $idEmpleado = $Proceso->obtenerSucursal()->id;
 
         $maxCaja = DB::SELECT('SELECT MAX(id) AS id 
                                 FROM caja 
@@ -1077,7 +1066,7 @@ class CobranzaClienteController extends Controller
         $banco = $request->banco;
         $resp = 0;
         $renovar = $request->renovar;
-        
+        // dd($request);
         $prestamo = Prestamo::where('id', $idPrestamo)->first();
         $tipocaja = TipoCaja::where('codigo', $banco)->first();
         $dataBanco = [
@@ -1123,7 +1112,7 @@ class CobranzaClienteController extends Controller
                     $pag->serie = $idPrestamo;
                     $pag->monto = $monto;
                     $pag->importe = $pago;
-                    $pag->vuelto = $pago - $pago;
+                    $pag->vuelto = "0.00";
                     $pag->intpago = $interes;
                     $pag->mora = $mora;
                     $pag->diaspasados = $dias;
@@ -1156,6 +1145,8 @@ class CobranzaClienteController extends Controller
                                                                   
                             $garantia_casillero = GarantiaCasillero::where('garantia_id', $garantia->id)
                                                              ->value('casillero_id');
+                                                             
+                            // dd($garantia->id);
     
                             $cas = Casillero::where('id', '=',  $garantia_casillero)->first();
                             $cas->estado = "RECOGER";
@@ -1401,6 +1392,8 @@ class CobranzaClienteController extends Controller
             $conError = "";
             
         }
+        
+        // dd($idPago);
 
         $prestamo =DB::SELECT('SELECT p.id AS prestamo_id, p.monto, p.fecinicio, p.fecfin, p.total, cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, g.nombre AS garantia, p.intpagar, m.mora AS morapagar, i.porcentaje
                                 FROM prestamo p, cotizacion c, cliente cl, garantia g, mora m, tipocredito_interes tci, interes i
@@ -1943,4 +1936,5 @@ class CobranzaClienteController extends Controller
                         
         return view('cobranza.banco', compact('listBanco', 'misBancos'));
     }
+    
 }

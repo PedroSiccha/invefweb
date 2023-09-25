@@ -11,7 +11,7 @@ class SemaforoController extends Controller
 {
     public function actualizarSemaforo(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $cliente_id = $request->cliente_id;
@@ -210,4 +210,5 @@ class SemaforoController extends Controller
         return response()->json(["view"=>view('atencioncliente.tabSemaforo',compact('aux', 'resultSemaforo'))->render()]);
         
     }
+
 }

@@ -21,18 +21,21 @@ class AtencionClienteController extends Controller
     public function cartera()
     {
         $user = Auth::user();
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $usuario = DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
                                 FROM empleado e, users u 
                                 WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
+
+        
 
         $clientes = DB::SELECT(' SELECT cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, cl.correo, dr.direccion, cl.fecnac, cl.edad, cl.genero, cl.foto, cl.facebook, cl.ingmax, cl.ingmin, cl.gasmax, cl.gasmin, o.nombre AS ocupacion, r.recomendacion AS recomendacion , cl.whatsapp 
                                   FROM cliente cl 
                                   INNER JOIN ocupacion o ON cl.ocupacion_id = o.id 
                                   INNER JOIN recomendacion r ON cl.recomendacion_id = r.id 
                                   INNER JOIN direccion dr ON cl.direccion_id = dr.id
-                                  WHERE cl.sede_id = "'.$idSucursal.'"');
+                                  WHERE cl.sede_id = "'.$idSucursal.'"
+                                  GROUP BY cl.id');
 
         $cantClientes = count($clientes);
 
@@ -41,7 +44,7 @@ class AtencionClienteController extends Controller
 
     public function buscarCliente(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $clientes = DB::SELECT('SELECT cl.id AS cliente_id, cl.nombre, cl.apellido, cl.dni, cl.correo, dr.direccion, cl.fecnac, cl.edad, cl.genero, cl.foto, cl.facebook, cl.ingmax, cl.ingmin, cl.gasmax, cl.gasmin, o.nombre AS ocupacion, r.recomendacion AS recomendacion , cl.whatsapp 
@@ -78,7 +81,7 @@ class AtencionClienteController extends Controller
     public function cliente()
     {
         $user = Auth::user();
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $usuario = DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
                                 FROM empleado e, users u 
@@ -97,7 +100,7 @@ class AtencionClienteController extends Controller
     public function guadarCliente(Request $request)
     {
         $user_id = 1;
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
 
@@ -201,7 +204,7 @@ class AtencionClienteController extends Controller
 
     public function editarCliente(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $img=$request->editFotoA;
@@ -216,9 +219,9 @@ class AtencionClienteController extends Controller
         $nuevoNombre=$dni.".".$extension;
         $subido = Storage::disk('perfil')->put($nuevoNombre, File::get($img));
 
-            if($subido){
-                $urlGuardar='img/perfil/'.$nuevoNombre;
-            }
+        if($subido){
+            $urlGuardar='img/perfil/'.$nuevoNombre;
+        }
 
         }
 
@@ -281,11 +284,11 @@ class AtencionClienteController extends Controller
 
     public function guardarTipoDocumento(Request $request){
         $tipodoc = $request->tipodocumento;
-        $td = new TipoDocIde();
+        $td = new Tipodocide();
         $td->nombre = $tipodoc;
 
         if ($td->save()) {
-            $tipodoc = TipoDocIde::all();
+            $tipodoc = Tipodocide::all();
             return response()->json(["view"=>view('atencioncliente.listTipoDocumento', compact('tipodoc'))->render(), '$tipodoc'=>$tipodoc]);
         }
     }
@@ -300,12 +303,10 @@ class AtencionClienteController extends Controller
                                 FROM empleado e, users u 
                                 WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
 
-        $cliente = Cliente::select('cliente.id as cliente_id', 'cliente.nombre', 'cliente.apellido', 'cliente.dni', 'cliente.correo', 'direccion.direccion', 'cliente.fecnac', 'cliente.edad', 'cliente.genero', 'cliente.foto', 'cliente.facebook', 'cliente.ingmax', 'cliente.ingmin', 'cliente.gasmax', 'cliente.gasmin', 'cliente.created_at', 'ocupacion.nombre AS ocupacion', 'recomendacion.recomendacion AS recomendacion', 'cliente.evaluacion AS evaluacion', 'cliente.telefono', 'cliente.whatsapp', 'cliente.referencia')
-                            ->join('ocupacion', 'cliente.ocupacion_id', '=', 'ocupacion.id')
-                            ->join('recomendacion', 'cliente.recomendacion_id', '=', 'recomendacion.id')
-                            ->join('direccion', 'cliente.direccion_id', '=', 'direccion.id')
-                            ->where('cliente.id', $id)
-                            ->first();
+        $cliente = DB::SELECT('SELECT c.id as cliente_id, c.nombre, c.apellido, c.dni, c.correo, dr.direccion, c.fecnac, c.edad, c.genero, c.foto, c.facebook, c.ingmax, c.ingmin, c.gasmax, c.gasmin, c.created_at, o.nombre AS ocupacion, r.recomendacion AS recomendacion, c.evaluacion AS evaluacion, c.telefono, c.whatsapp, c.referencia 
+                                FROM cliente c, ocupacion o, recomendacion r, direccion dr
+                                WHERE c.ocupacion_id = o.id AND c.recomendacion_id = r.id AND c.direccion_id = dr.id AND c.id = "'.$id.'" GROUP BY c.id');
+        
 
         $cantPrestamo = DB::SELECT('SELECT COUNT(p.id) AS catPrestamo 
                                      FROM prestamo p, cotizacion c 

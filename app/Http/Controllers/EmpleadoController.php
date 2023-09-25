@@ -21,7 +21,7 @@ class EmpleadoController extends Controller
 
     public function perfil()
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -73,5 +73,5 @@ class EmpleadoController extends Controller
                                  WHERE empleado_id = "'.$empleado[0]->empleado_id.'" AND sede_id = "'.$idSucursal.'"');
 
         return view('empleado.perfil', compact('empleado', 'prestamo', 'evaluacion', 'usuario', 'tipodocumento', 'distrito', 'provincia', 'departamento', 'listPrestamos', 'listCotizacion', 'listPago'));
-    }
+    }   
 }

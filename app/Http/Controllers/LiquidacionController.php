@@ -21,7 +21,7 @@ class LiquidacionController extends Controller
                                 FROM empleado e, users u 
                                 WHERE e.users_id = u.id AND u.id = "' . $user->id . '"');
                                 
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -35,7 +35,7 @@ class LiquidacionController extends Controller
     
     public function buscarProdLiquidacion(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -100,6 +100,8 @@ class LiquidacionController extends Controller
             
         } else {
             
+            //if ($montoExtra > 0) {
+                
                 $pag = new Pago();
                 $pag->codigo = "V";
                 $pag->serie = $idPrestamo;
@@ -115,7 +117,7 @@ class LiquidacionController extends Controller
                 $pag->sede_id = $idSucursal;
                 $pag->save();
                 
-            
+            //}
             
             $tipocaja = DB::SELECT('SELECT * FROM tipocaja WHERE codigo = "cc"');
             $cajaGrande = DB::SELECT('SELECT MAX(id) AS id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id = "' . $tipocaja[0]->id . '"');
@@ -286,4 +288,5 @@ class LiquidacionController extends Controller
         return response()->json(["view" => view('liquidacion.tabAgendado', compact('listAgendado', 'aux'))->render()]);
         
     }
+
 }

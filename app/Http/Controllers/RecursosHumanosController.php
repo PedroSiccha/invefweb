@@ -23,7 +23,7 @@ class RecursosHumanosController extends Controller
 {
     public function empleado()
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -53,8 +53,16 @@ class RecursosHumanosController extends Controller
         $provincia = DB::SELECT('SELECT * FROM provincia');
 
         $departamento = DB::SELECT('SELECT * FROM departamento');
+        
+        $userRol = RoleUser::where('users_id', $users_id)->first();
+        
+        if ($userRol->rol_id == 29) {
+            $tipoUsuario = DB::SELECT('SELECT * FROM rol');    
+        } else {
+            $tipoUsuario = DB::select('SELECT * FROM rol WHERE NOMBRE != "root"');
+        }
 
-        $tipoUsuario = DB::SELECT('SELECT * FROM rol');
+        
 
         $sede = DB::SELECT('SELECT s.id, s.nombre, d.direccion, di.distrito  
                              FROM sede s, direccion d, distrito di
@@ -229,6 +237,7 @@ class RecursosHumanosController extends Controller
     
     public function eliminarMenuRol(Request $request)
     {
+        
         $menuRol = $request->idMenuRol;
         $resp = 0;
         

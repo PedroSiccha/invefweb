@@ -12,6 +12,7 @@ use App\Models\PreguntaFrecuente;
 use App\Models\Resumen;
 use App\Models\ResumenEmpresa;
 use App\Models\Servicio;
+use App\Models\DetalleNosotros;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1010,14 +1011,14 @@ class WebController extends Controller
             }
         }
 
-        // $det = new DetalleNosotros();
-        // $det->subtitulo = $request->subtitulo;
-        // $det->descripcion = $request->descripcion;
-        // $det->imagen = $urlGuardar;
-        // $det->nosotros_id = $request->idNosotros;
-        // if ($det->save()) {
-        //     $res = "1";
-        // }
+        $det = new DetalleNosotros();
+        $det->subtitulo = $request->subtitulo;
+        $det->descripcion = $request->descripcion;
+        $det->imagen = $urlGuardar;
+        $det->nosotros_id = $request->idNosotros;
+        if ($det->save()) {
+            $res = "1";
+        }
 
         $detalleNosotros = DB::SELECT('SELECT * FROM detalles_nosotros');
 

@@ -22,7 +22,7 @@ class MarketingController extends Controller
         $usuario = DB::SELECT('SELECT e.nombre, e.apellido, e.id, u.name AS area, e.foto AS foto, e.sede_id AS sede
                                 FROM empleado e, users u 
                                 WHERE e.users_id = u.id AND u.id = "'.$user->id.'"');
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -461,8 +461,13 @@ class MarketingController extends Controller
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
-        $fecha_inicial = "2023-01-01";
-        $fecha_final = "2023-12-31";
+        $anio = 2023;
+        $mes = 10;
+
+        $primer_dia=1;
+        $ultimo_dia=$this->getUltimoDiaMes($anio,$mes);
+        $fecha_inicial=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$primer_dia) );
+        $fecha_final=date("Y-m-d H:i:s", strtotime($anio."-".$mes."-".$ultimo_dia) );
         
         $clientes = DB::SELECT('SELECT cl.*  
                                  FROM cliente cl

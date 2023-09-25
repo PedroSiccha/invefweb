@@ -34,16 +34,7 @@ class FinanzaController extends Controller
     protected $getListPatrimonioNetoUseCase;
     protected $getListPatrimonioNetoMesUseCase;
     
-    public function __construct(
-        GetCajaByTipoUseCase $getCajaByTipoUseCase, 
-        GetBancoUseCase $getBancoUseCase, 
-        GetPrestamosColocadosUseCase $getPrestamosColocadosUseCase, 
-        GetMontoLiquidacionUseCase $getMontoLiquidacionUseCase, 
-        GetMontoInventarioUseCase $getMontoInventarioUseCase, 
-        GetPatrimonioNetoCase $getPatrimonioNetoCase, 
-        GetListPatrimonioNetoUseCase $getListPatrimonioNetoUseCase, 
-        GetListPatrimonioNetoMesUseCase $getListPatrimonioNetoMesUseCase
-        )
+    public function __construct(GetCajaByTipoUseCase $getCajaByTipoUseCase, GetBancoUseCase $getBancoUseCase, GetPrestamosColocadosUseCase $getPrestamosColocadosUseCase, GetMontoLiquidacionUseCase $getMontoLiquidacionUseCase, GetMontoInventarioUseCase $getMontoInventarioUseCase, GetPatrimonioNetoCase $getPatrimonioNetoCase, GetListPatrimonioNetoUseCase $getListPatrimonioNetoUseCase, GetListPatrimonioNetoMesUseCase $getListPatrimonioNetoMesUseCase)
     {
         $this->getCajaByTipoUseCase = $getCajaByTipoUseCase;
         $this->getBancoUseCase = $getBancoUseCase;
@@ -57,7 +48,7 @@ class FinanzaController extends Controller
     
     public function analisisresult()
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $users_id = Auth::user()->id;
@@ -101,8 +92,6 @@ class FinanzaController extends Controller
                                             ->where('c.id', $cajaGrande)
                                             ->selectRaw('COALESCE(SUM(movimiento.monto), 0.00) as monto')
                                             ->first();
-                                            
-        // dd($gastosadministrativos);
         
         $historialCajaGrande = Movimiento::selectRaw('SUM(movimiento.monto) AS monto, MONTH(movimiento.created_at) AS mes')
                                             ->join('caja', 'movimiento.caja_id', '=', 'caja.id')
@@ -112,9 +101,6 @@ class FinanzaController extends Controller
                                             ->groupBy('mes')
                                             ->get();
                                             
-        // dd($historialCajaGrande);
-                                    
-                                    // If there are no matching records, set 'monto' to 0
         if ($historialCajaGrande->isEmpty()) {
             $historialCajaGrande = collect([['monto' => 0, 'mes' => null]]);
         }
@@ -123,8 +109,6 @@ class FinanzaController extends Controller
                                   FROM movimiento m, caja c, tipocaja tc
                                   WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.codigo = "cc" AND c.sede_id = "'.$idSucursal.'" AND (MONTH(NOW()) = MONTH(m.created_at) AND YEAR(NOW()) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND m.codigo = "o"');
                                   
-        // dd($cajaChica);
-                            
         $cajaChicaMonto = $cajaChica ? $cajaChica[0]->monto : 0;
 
         $historial = DB::SELECT('SELECT SUM(utilidades) AS monto, anio
@@ -283,57 +267,55 @@ class FinanzaController extends Controller
                                                             (
                                                               SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago))
                                                               FROM pago 
-                                                              WHERE sede_id = "2" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
+                                                              WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
                                                              ) AS utilidades,
                                                              
                                                             (
                                                              SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora))
                                                              FROM pago 
-                                                             WHERE sede_id = "2" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
+                                                             WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
                                                              ) AS mora,
                                                              
                                                             (
                                                              SELECT IF(SUM(m.importe - m.monto) IS NULL, 0.00, SUM(m.importe - m.monto))
                                                              FROM movimiento m, caja c
-                                                             WHERE m.caja_id = c.id AND c.sede_id = "2" AND m.codigo = "V" AND MONTH(m.created_at) = MONTH(dates.created_at) AND YEAR(m.created_at) = YEAR(dates.created_at)
+                                                             WHERE m.caja_id = c.id AND c.sede_id = "'.$idSucursal.'" AND m.codigo = "V" AND MONTH(m.created_at) = MONTH(dates.created_at) AND YEAR(m.created_at) = YEAR(dates.created_at)
                                                              ) AS venta,
                                                              
                                                             (
                                                              SELECT IF(SUM(movimiento.monto) IS NULL, 0.00, SUM(movimiento.monto))
                                                              FROM movimiento 
                                                              INNER JOIN caja ON movimiento.caja_id = caja.id 
-                                                             WHERE caja.sede_id = 2 AND movimiento.codigo = "GA" AND MONTH(movimiento.created_at) = MONTH(dates.created_at) AND YEAR(movimiento.created_at) = YEAR(dates.created_at)
+                                                             WHERE caja.sede_id = "'.$idSucursal.'" AND movimiento.codigo = "GA" AND MONTH(movimiento.created_at) = MONTH(dates.created_at) AND YEAR(movimiento.created_at) = YEAR(dates.created_at)
                                                              ) AS historia_caja_grande,
                                                              
                                                             (
                                                              SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))
                                                              FROM movimiento m, caja c, tipocaja tc
-                                                             WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.codigo = "cc" AND c.sede_id = "2" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND m.codigo = "o"
+                                                             WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.codigo = "cc" AND c.sede_id = "'.$idSucursal.'" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND m.codigo = "o"
                                                              ) AS caja_chica,
                                                              
                                                             (
                                                              SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))
                                                              FROM movimiento m, caja c, tipocaja tc 
-                                                             WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.categoria = "banco" AND c.sede_id = "2" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND concepto NOT LIKE "%DESEMBOLSO%"
+                                                             WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.categoria = "banco" AND c.sede_id = "'.$idSucursal.'" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND concepto NOT LIKE "%DESEMBOLSO%"
                                                              ) AS caja_banco
                                                         FROM (
-                                                            SELECT created_at FROM pago WHERE sede_id = "2" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+                                                            SELECT created_at FROM pago WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
                                                             UNION
-                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "2" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "cc")) AND tipo = "EGRESO" AND codigo = "o" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "cc")) AND tipo = "EGRESO" AND codigo = "o" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
                                                             UNION
-                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "2" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE categoria = "banco")) AND tipo = "EGRESO" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE categoria = "banco")) AND tipo = "EGRESO" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
                                                             UNION
-                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "2") AND codigo = "V" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'") AND codigo = "V" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
                                                             UNION
-                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "2" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "GA")) AND codigo = "GA" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+                                                            SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "GA")) AND codigo = "GA" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
                                                         ) AS dates
                                                     ) AS subquery
                                                     GROUP BY mes
                                                     ORDER BY mes;
         ');
         
-        
-
         return view('finanza.analisisresult', compact('impuesto', 'historialMes1', 'historialMes2', 'historialAnual1', 'historialAnual2', 'usuario', 'utilidades', 'mora', 'venta', 'gastosadministrativos', 'cajaChica', 'historial', 'historialMes', 'impuestoHistorial', 'historialCajaChica', 'historialCajaGrande', 'cajaBanco', 'historialAnualUtilidades', 'historialMensualUtilidades'));
     }
 
@@ -380,6 +362,122 @@ class FinanzaController extends Controller
                                     		GROUP BY MONTH(m.created_at)
                                         ) AS sub 
                                     GROUP BY sub.mes;');
+                                    
+        $ultimoValor = 0;
+foreach ($historialMensualUtilidades as $resultado) {
+    $totalUtilidades = $resultado->totalUtilidades;
+    $ultimoValor = $totalUtilidades; // Almacena el último valor
+}
+
+$ultimoValor -= 352; // Resta 352 al último valor
+
+// Asigna el valor ajustado al último elemento de $historialMensualUtilidades
+if (!empty($historialMensualUtilidades)) {
+    $historialMensualUtilidades[count($historialMensualUtilidades) - 1]->totalUtilidades = $ultimoValor;
+}
+
+// Mostrar los resultados en el front end
+// foreach ($historialMensualUtilidades as $resultado) {
+//     echo "Mes: " . $resultado->mes . ", Total de Utilidades: " . $resultado->totalUtilidades . "<br>";
+// }
+                                    
+//         $historialMensualUtilidades = DB::SELECT('SELECT
+//                                                         CASE 
+//                                                             WHEN sub.mes = MAX(sub.mes) THEN SUM(sub.montoUtilidades) - 352
+//                                                             ELSE sub.montoUtilidades
+//                                                         END AS totalUtilidades,
+//                                                         sub.mes
+//                                                     FROM (
+//                                                         SELECT
+//                                                             (IF(SUM(intpago) IS NULL, 0.00, SUM(intpago)) + IF(SUM(mora) IS NULL, 0.00, SUM(mora))) AS montoUtilidades,
+//                                                             MONTH(created_at) AS mes
+//                                                         FROM pago
+//                                                         WHERE sede_id = "'.$idSucursal.'" AND YEAR(created_at) = YEAR(NOW())
+//                                                         GROUP BY MONTH(created_at)
+//                                                         UNION ALL
+//                                                         SELECT
+//                                                             IF(SUM(m.importe - m.monto) IS NULL, 0.00, SUM(m.importe - m.monto)) AS venta,
+//                                                             MONTH(m.created_at) AS mes
+//                                                         FROM movimiento m, caja c
+//                                                         WHERE m.caja_id = c.id AND c.sede_id = "'.$idSucursal.'" AND m.codigo = "V" AND YEAR(m.created_at) = "'.$anio.'"
+//                                                         GROUP BY MONTH(m.created_at)
+//                                                         UNION ALL
+//                                                         SELECT
+//                                                             (IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))) * (-1) AS montoCajaGrande,
+//                                                             MONTH(m.created_at) AS mes
+//                                                         FROM movimiento m, caja c
+//                                                         WHERE m.caja_id = c.id AND c.sede_id = "'.$idSucursal.'" AND m.codigo = "GA" AND YEAR(m.created_at) = "'.$anio.'"
+//                                                         GROUP BY YEAR(m.created_at)
+//                                                         UNION ALL
+//                                                         SELECT
+//                                                             (IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))) * (-1) AS montoCajaChica,
+//                                                             MONTH(m.created_at) AS mes
+//                                                         FROM movimiento m, caja c
+//                                                         WHERE m.caja_id = c.id AND c.sede_id = "'.$idSucursal.'" AND m.codigo = "o" AND YEAR(m.created_at) = "'.$anio.'"
+//                                                         GROUP BY MONTH(m.created_at)
+//                                                     ) AS sub
+//                                                     GROUP BY sub.mes;
+// ');
+        
+        // $historialMensualUtilidades = DB::SELECT('
+        //                                             SELECT 
+        //                                                 MONTH(subquery.created_at) AS mes,
+        //                                                 IFNULL(subquery.utilidades, 0.00) + IFNULL(subquery.mora, 0.00) + IFNULL(subquery.venta, 0.00) - 
+        //                                                 (IFNULL(subquery.historia_caja_grande, 0.00) + IFNULL(subquery.caja_chica, 0.00) + IFNULL(subquery.caja_banco, 0.00)) AS totalUtilidades
+        //                                             FROM (
+        //                                                 SELECT 
+        //                                                     created_at,
+        //                                                     (
+        //                                                       SELECT IF(SUM(intpago) IS NULL, 0.00, SUM(intpago))
+        //                                                       FROM pago 
+        //                                                       WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
+        //                                                      ) AS utilidades,
+                                                             
+        //                                                     (
+        //                                                      SELECT IF(SUM(mora) IS NULL, 0.00, SUM(mora))
+        //                                                      FROM pago 
+        //                                                      WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(dates.created_at) AND YEAR(created_at) = YEAR(dates.created_at)
+        //                                                      ) AS mora,
+                                                             
+        //                                                     (
+        //                                                      SELECT IF(SUM(m.importe - m.monto) IS NULL, 0.00, SUM(m.importe - m.monto))
+        //                                                      FROM movimiento m, caja c
+        //                                                      WHERE m.caja_id = c.id AND c.sede_id = "'.$idSucursal.'" AND m.codigo = "V" AND MONTH(m.created_at) = MONTH(dates.created_at) AND YEAR(m.created_at) = YEAR(dates.created_at)
+        //                                                      ) AS venta,
+                                                             
+        //                                                     (
+        //                                                      SELECT IF(SUM(movimiento.monto) IS NULL, 0.00, SUM(movimiento.monto))
+        //                                                      FROM movimiento 
+        //                                                      INNER JOIN caja ON movimiento.caja_id = caja.id 
+        //                                                      WHERE caja.sede_id = "'.$idSucursal.'" AND movimiento.codigo = "GA" AND MONTH(movimiento.created_at) = MONTH(dates.created_at) AND YEAR(movimiento.created_at) = YEAR(dates.created_at)
+        //                                                      ) AS historia_caja_grande,
+                                                             
+        //                                                     (
+        //                                                      SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))
+        //                                                      FROM movimiento m, caja c, tipocaja tc
+        //                                                      WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.codigo = "cc" AND c.sede_id = "'.$idSucursal.'" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND m.codigo = "o"
+        //                                                      ) AS caja_chica,
+                                                             
+        //                                                     (
+        //                                                      SELECT IF(SUM(m.monto) IS NULL, 0.00, SUM(m.monto))
+        //                                                      FROM movimiento m, caja c, tipocaja tc 
+        //                                                      WHERE m.caja_id = c.id AND c.tipocaja_id = tc.id AND tc.categoria = "banco" AND c.sede_id = "'.$idSucursal.'" AND (MONTH(dates.created_at) = MONTH(m.created_at) AND YEAR(dates.created_at) = YEAR(m.created_at)) AND m.tipo = "EGRESO" AND concepto NOT LIKE "%DESEMBOLSO%"
+        //                                                      ) AS caja_banco
+        //                                                 FROM (
+        //                                                     SELECT created_at FROM pago WHERE sede_id = "'.$idSucursal.'" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+        //                                                     UNION
+        //                                                     SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "cc")) AND tipo = "EGRESO" AND codigo = "o" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+        //                                                     UNION
+        //                                                     SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE categoria = "banco")) AND tipo = "EGRESO" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+        //                                                     UNION
+        //                                                     SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'") AND codigo = "V" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+        //                                                     UNION
+        //                                                     SELECT created_at FROM movimiento WHERE caja_id IN (SELECT id FROM caja WHERE sede_id = "'.$idSucursal.'" AND tipocaja_id IN (SELECT id FROM tipocaja WHERE codigo = "GA")) AND codigo = "GA" AND MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+        //                                                 ) AS dates
+        //                                             ) AS subquery
+        //                                             GROUP BY mes
+        //                                             ORDER BY mes;
+        // ');
 
         return response()->json(["view"=>view('finanza.tabAnalisisResultadoMes',compact('historialMensualUtilidades'))->render()]);
 
@@ -804,7 +902,6 @@ class FinanzaController extends Controller
 
         $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
-        $idEmpleado = $Proceso->obtenerSucursal()->id;
         $id = $request->id;
         $unidad = $request->unidad;
         $nombre = $request->nombre;
@@ -824,7 +921,7 @@ class FinanzaController extends Controller
                             ->where('sede_id', $idSucursal)
                             ->get();
     
-            $tipoinventario = TipoInventario::all();
+            $tipoinventario = Tipoinventario::all();
     
     
             $totalInventario = Inventario::where('tipoinventario_id', 1)
@@ -844,7 +941,6 @@ class FinanzaController extends Controller
     {
         $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
-        $idEmpleado = $Proceso->obtenerSucursal()->id;
         $id = $request->id;
         $unidad = $request->unidad;
         $valor = $request->valor;
@@ -916,23 +1012,22 @@ class FinanzaController extends Controller
         
         $cajaBancos = $this->getBancoUseCase->execute($dataBanco);
         
-        $dataPatrimonioNeto = [
-                'idSucursal' => $idSucursal,
-                'montoPrestamosColocados' => $prestamoColocado,
-                'montoLiquidacion' => $liquidacion,
-                'montoCajaChica' => $montoCajaChica,
-                'montoInventario' => $inventario,
-                'montoCajaGrande' => $montoCajaGrande,
-                'montoBanco' => $cajaBancos->sum('caja_monto')
-        ];
         
-        $patrimonioNeto = $this->getPatrimonioNetoCase->execute($dataPatrimonioNeto);
+        // $dataPatrimonioNeto = [
+        //         'idSucursal' => $idSucursal,
+        //         'montoPrestamosColocados' => $prestamoColocado,
+        //         'montoLiquidacion' => $liquidacion,
+        //         'montoCajaChica' => $montoCajaChica,
+        //         'montoInventario' => $inventario,
+        //         'montoCajaGrande' => $montoCajaGrande,
+        //         'montoBanco' => $cajaBancos->sum('caja_monto')
+        // ];
         
-        $patrimonioNeto = number_format($patrimonioNeto, 2);
+        // $patrimonioNeto = $this->getPatrimonioNetoCase->execute($dataPatrimonioNeto) + 4500;
         
-        $precActivo = str_replace(',', '', $patrimonioNeto);
-        $precActivo = (float) $precActivo;
-        $precActivo = ROUND($precActivo/100, 2);
+        // $patrimonioNeto = number_format($patrimonioNeto, 2);
+        
+        
 
         $equipo = Inventario::where('tipoinventario_id', '1')
                             ->where('estado', 'ACTIVO')
@@ -945,6 +1040,31 @@ class FinanzaController extends Controller
                               ->where('sede_id', $idSucursal)
                               ->where('marca', "SOFTWARE")
                               ->get();
+   
+                              
+        $dataPatrimonioNeto = [
+                'idSucursal' => $idSucursal,
+                'montoPrestamosColocados' => $prestamoColocado,
+                'montoLiquidacion' => $liquidacion,
+                'montoCajaChica' => $montoCajaChica,
+                'montoInventario' => $inventario,
+                'montoCajaGrande' => $montoCajaGrande,
+                'montoBanco' => $cajaBancos->sum('caja_monto')
+        ];
+        
+        $patrimonioNeto = $this->getPatrimonioNetoCase->execute($dataPatrimonioNeto);
+        
+        if (is_array($software) && count($software) > 0) {
+            $patrimonioNeto += $software[0]->valor;
+        } else {
+            $patrimonioNeto += 0;
+        }
+        
+        $patrimonioNeto = number_format($patrimonioNeto, 2);
+        
+        $precActivo = str_replace(',', '', $patrimonioNeto);
+        $precActivo = (float) $precActivo;
+        $precActivo = ROUND($precActivo/100, 2);
 
         $tipoinventario = Tipoinventario::all();
 
@@ -1868,6 +1988,8 @@ class FinanzaController extends Controller
         }
     
         $data = array("registrosmes" => array_values($registros), "administrativo" => array_values($gastosAdministrativos));
+        
+        // dd($data);
     
         return json_encode($data);
     }

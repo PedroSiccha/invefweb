@@ -15,9 +15,14 @@ use Illuminate\Support\Facades\DB;
 
 class AlmacenController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
 
@@ -50,7 +55,7 @@ class AlmacenController extends Controller
 
     public function cargarAlmacen(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
 
@@ -85,7 +90,7 @@ class AlmacenController extends Controller
 
     public function editarAlmacen(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         
@@ -131,7 +136,7 @@ class AlmacenController extends Controller
 
     public function buscargarantia()
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         $user = Auth::user();
@@ -342,7 +347,7 @@ class AlmacenController extends Controller
     public function guardarAlmacen(Request $request)
     {
         
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         $idEmpleado = $Proceso->obtenerSucursal()->id;
         
@@ -368,6 +373,7 @@ class AlmacenController extends Controller
                     
                 }
                 
+                
                 $almacen = DB::SELECT('SELECT a.id AS almacen_id, a.nombre, CONCAT(d.direccion," - ", di.distrito, " - ", p.provincia, " - ", de.departamento) AS direccion, COUNT(s.id) AS cantstand
                                         FROM almacen a
                                         LEFT JOIN stand s ON s.almacen_id = a.id
@@ -382,12 +388,17 @@ class AlmacenController extends Controller
                 return response()->json(["view"=>view('almacen.tabAlmacen',compact('almacen'))->render()]);
             }
         }
+
+        
+
+        
     }
 
     public function mostrarCantCasulleros(Request $request)
     {
         $almacen_id = $request->almacen_id;
         
+
         $numStand = DB::SELECT('SELECT a.id AS almacen_id, s.id AS stand_id, s.nombre AS stand, COUNT(c.id) AS cantCasilleros
                                  FROM almacen a
                                  LEFT JOIN stand s ON s.almacen_id = a.id
@@ -401,7 +412,7 @@ class AlmacenController extends Controller
 
     public function guardarStand(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $stand = new Stand();
@@ -424,11 +435,13 @@ class AlmacenController extends Controller
 
             return response()->json(["view"=>view('almacen.tabAlmacen',compact('almacen'))->render()]);
         }
+
+        
     }
 
     public function guardarCasillero(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $casillero = new Casillero();
@@ -451,6 +464,8 @@ class AlmacenController extends Controller
 
             return response()->json(["view"=>view('almacen.tabAlmacen',compact('almacen'))->render()]);
         }
+
+        
     }
 
     public function verProvinciaAlmacen(Request $request){
@@ -503,43 +518,15 @@ class AlmacenController extends Controller
             }
         }
 
-        $almacen = DB::SELECT('SELECT a.id AS almacen_id, a.nombre, a.estado, CONCAT(d.direccion, " - ", di.distrito, " - ", p.provincia, " - ", de.departamento) AS direccion 
-                                FROM almacen a, direccion d, distrito di, provincia p, departamento de
-                                WHERE a.direccion_id = d.id AND d.distrito_id = di.id AND di.provincia_id = p.id AND p.departamento_id = de.id');
+        /* Inicio */
 
-        $stand = DB::SELECT('SELECT * FROM stand');
+            $almacen = DB::SELECT('SELECT a.id AS almacen_id, a.nombre, a.estado, CONCAT(d.direccion, " - ", di.distrito, " - ", p.provincia, " - ", de.departamento) AS direccion 
+                                    FROM almacen a, direccion d, distrito di, provincia p, departamento de
+                                    WHERE a.direccion_id = d.id AND d.distrito_id = di.id AND di.provincia_id = p.id AND p.departamento_id = de.id');
 
-        $casillero1 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
-                                FROM garantia_casillero gc
-                                RIGHT JOIN casillero c ON gc.casillero_id = c.id
-                                LEFT JOIN garantia g ON gc.garantia_id = g.id
-                                LEFT JOIN cotizacion co ON co.garantia_id = g.id
-                                LEFT JOIN prestamo p ON p.cotizacion_id = co.id
-                                INNER JOIN stand s ON c.stand_id = s.id
-                                INNER JOIN almacen a ON s.almacen_id = a.id
-                                WHERE stand_id = "1"');
+            $stand = DB::SELECT('SELECT * FROM stand');
 
-        $casillero2 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
-                                FROM garantia_casillero gc
-                                RIGHT JOIN casillero c ON gc.casillero_id = c.id
-                                LEFT JOIN garantia g ON gc.garantia_id = g.id
-                                LEFT JOIN cotizacion co ON co.garantia_id = g.id
-                                LEFT JOIN prestamo p ON p.cotizacion_id = co.id
-                                INNER JOIN stand s ON c.stand_id = s.id
-                                INNER JOIN almacen a ON s.almacen_id = a.id
-                                WHERE stand_id = "2"');
-
-        $casillero3 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
-                                FROM garantia_casillero gc
-                                RIGHT JOIN casillero c ON gc.casillero_id = c.id
-                                LEFT JOIN garantia g ON gc.garantia_id = g.id
-                                LEFT JOIN cotizacion co ON co.garantia_id = g.id
-                                LEFT JOIN prestamo p ON p.cotizacion_id = co.id
-                                INNER JOIN stand s ON c.stand_id = s.id
-                                INNER JOIN almacen a ON s.almacen_id = a.id
-                                WHERE stand_id = "3"');
-
-        $casillero4 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+            $casillero1 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
                                     FROM garantia_casillero gc
                                     RIGHT JOIN casillero c ON gc.casillero_id = c.id
                                     LEFT JOIN garantia g ON gc.garantia_id = g.id
@@ -547,19 +534,9 @@ class AlmacenController extends Controller
                                     LEFT JOIN prestamo p ON p.cotizacion_id = co.id
                                     INNER JOIN stand s ON c.stand_id = s.id
                                     INNER JOIN almacen a ON s.almacen_id = a.id
-                                    WHERE stand_id = "4"');
+                                    WHERE stand_id = "1"');
 
-        $casillero5 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
-                                        FROM garantia_casillero gc
-                                        RIGHT JOIN casillero c ON gc.casillero_id = c.id
-                                        LEFT JOIN garantia g ON gc.garantia_id = g.id
-                                        LEFT JOIN cotizacion co ON co.garantia_id = g.id
-                                        LEFT JOIN prestamo p ON p.cotizacion_id = co.id
-                                        INNER JOIN stand s ON c.stand_id = s.id
-                                        INNER JOIN almacen a ON s.almacen_id = a.id
-                                        WHERE stand_id = "5"');
-
-        $casillero6 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+            $casillero2 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
                                     FROM garantia_casillero gc
                                     RIGHT JOIN casillero c ON gc.casillero_id = c.id
                                     LEFT JOIN garantia g ON gc.garantia_id = g.id
@@ -567,19 +544,9 @@ class AlmacenController extends Controller
                                     LEFT JOIN prestamo p ON p.cotizacion_id = co.id
                                     INNER JOIN stand s ON c.stand_id = s.id
                                     INNER JOIN almacen a ON s.almacen_id = a.id
-                                    WHERE stand_id = "6"');
+                                    WHERE stand_id = "2"');
 
-        $casillero7 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
-                                        FROM garantia_casillero gc
-                                        RIGHT JOIN casillero c ON gc.casillero_id = c.id
-                                        LEFT JOIN garantia g ON gc.garantia_id = g.id
-                                        LEFT JOIN cotizacion co ON co.garantia_id = g.id
-                                        LEFT JOIN prestamo p ON p.cotizacion_id = co.id
-                                        INNER JOIN stand s ON c.stand_id = s.id
-                                        INNER JOIN almacen a ON s.almacen_id = a.id
-                                        WHERE stand_id = "7"');
-
-        $casillero8 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+            $casillero3 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
                                     FROM garantia_casillero gc
                                     RIGHT JOIN casillero c ON gc.casillero_id = c.id
                                     LEFT JOIN garantia g ON gc.garantia_id = g.id
@@ -587,9 +554,9 @@ class AlmacenController extends Controller
                                     LEFT JOIN prestamo p ON p.cotizacion_id = co.id
                                     INNER JOIN stand s ON c.stand_id = s.id
                                     INNER JOIN almacen a ON s.almacen_id = a.id
-                                    WHERE stand_id = "8"');
+                                    WHERE stand_id = "3"');
 
-        $casillero9 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+            $casillero4 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
                                         FROM garantia_casillero gc
                                         RIGHT JOIN casillero c ON gc.casillero_id = c.id
                                         LEFT JOIN garantia g ON gc.garantia_id = g.id
@@ -597,14 +564,71 @@ class AlmacenController extends Controller
                                         LEFT JOIN prestamo p ON p.cotizacion_id = co.id
                                         INNER JOIN stand s ON c.stand_id = s.id
                                         INNER JOIN almacen a ON s.almacen_id = a.id
-                                        WHERE stand_id = "9"');
+                                        WHERE stand_id = "4"');
+
+            $casillero5 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+                                            FROM garantia_casillero gc
+                                            RIGHT JOIN casillero c ON gc.casillero_id = c.id
+                                            LEFT JOIN garantia g ON gc.garantia_id = g.id
+                                            LEFT JOIN cotizacion co ON co.garantia_id = g.id
+                                            LEFT JOIN prestamo p ON p.cotizacion_id = co.id
+                                            INNER JOIN stand s ON c.stand_id = s.id
+                                            INNER JOIN almacen a ON s.almacen_id = a.id
+                                            WHERE stand_id = "5"');
+
+            $casillero6 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+                                        FROM garantia_casillero gc
+                                        RIGHT JOIN casillero c ON gc.casillero_id = c.id
+                                        LEFT JOIN garantia g ON gc.garantia_id = g.id
+                                        LEFT JOIN cotizacion co ON co.garantia_id = g.id
+                                        LEFT JOIN prestamo p ON p.cotizacion_id = co.id
+                                        INNER JOIN stand s ON c.stand_id = s.id
+                                        INNER JOIN almacen a ON s.almacen_id = a.id
+                                        WHERE stand_id = "6"');
+
+            $casillero7 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+                                            FROM garantia_casillero gc
+                                            RIGHT JOIN casillero c ON gc.casillero_id = c.id
+                                            LEFT JOIN garantia g ON gc.garantia_id = g.id
+                                            LEFT JOIN cotizacion co ON co.garantia_id = g.id
+                                            LEFT JOIN prestamo p ON p.cotizacion_id = co.id
+                                            INNER JOIN stand s ON c.stand_id = s.id
+                                            INNER JOIN almacen a ON s.almacen_id = a.id
+                                            WHERE stand_id = "7"');
+
+            $casillero8 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+                                        FROM garantia_casillero gc
+                                        RIGHT JOIN casillero c ON gc.casillero_id = c.id
+                                        LEFT JOIN garantia g ON gc.garantia_id = g.id
+                                        LEFT JOIN cotizacion co ON co.garantia_id = g.id
+                                        LEFT JOIN prestamo p ON p.cotizacion_id = co.id
+                                        INNER JOIN stand s ON c.stand_id = s.id
+                                        INNER JOIN almacen a ON s.almacen_id = a.id
+                                        WHERE stand_id = "8"');
+
+            $casillero9 = DB::SELECT('SELECT p.id AS prestamo_id, p.total, g.nombre AS garantia, c.nombre, c.estado, s.nombre AS stand, a.nombre AS almacen
+                                            FROM garantia_casillero gc
+                                            RIGHT JOIN casillero c ON gc.casillero_id = c.id
+                                            LEFT JOIN garantia g ON gc.garantia_id = g.id
+                                            LEFT JOIN cotizacion co ON co.garantia_id = g.id
+                                            LEFT JOIN prestamo p ON p.cotizacion_id = co.id
+                                            INNER JOIN stand s ON c.stand_id = s.id
+                                            INNER JOIN almacen a ON s.almacen_id = a.id
+                                            WHERE stand_id = "9"');
+
+        /* Fin */
 
         return response()->json(["view"=>view('almacen.verAlmacen',compact('almacen', 'stand', 'casillero1', 'casillero2', 'casillero3', 'casillero4', 'casillero5', 'casillero6', 'casillero7', 'casillero8', 'casillero9'))->render()]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function buscarGarantiaPrestamo(Request $request)
     {
-        $Proceso = new Proceso();
+        $Proceso = new proceso();
         $idSucursal = $Proceso->obtenerSucursal()->sucursal_id;
         
         $prestamo_id = $request->dato;
@@ -623,6 +647,12 @@ class AlmacenController extends Controller
         return response()->json(["view"=>view('prestamo.tabGarantiaAlmacen',compact('garantia'))->render()]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function recogerGarantia(Request $request)
     {
         $prestamo_id = $request->id;
@@ -632,6 +662,8 @@ class AlmacenController extends Controller
                               FROM prestamo p, cotizacion c, garantia g, garantia_casillero gc, casillero ca, cliente cl
                               WHERE p.cotizacion_id = c.id AND c.garantia_id = g.id AND gc.garantia_id = g.id AND gc.casillero_id = ca.id AND c.cliente_id = cl.id AND p.id = "'.$prestamo_id.'"');
 
+        
+        //dd($dni);
         if ( $datos[0]->dni == $dni ) {
             $garCas = GarantiaCasillero::where('id', '=',  $datos[0]->garantiacasillero_id)->first();
             $garCas->estado = "LIBRE";
@@ -654,4 +686,5 @@ class AlmacenController extends Controller
             return response()->json(["view"=>view('prestamo.tabGarantiaAlmacen',compact('garantia'))->render(), 'mensaje'=>$mensaje]);
         }
     }
+
 }
